@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark">
-<title>CIC Flower Spectral Studio v6 · Lotus & Glow</title>
+<title>CIC Flower Spectral Studio v7 · Adaptive Research Lab</title>
 <style>
 :root {--bg:#070e15;--panel:#0d1b25;--panel2:#102431;--border:#254456;--text:#e5f8fa;--muted:#9aafb9;--accent:#6ee5d0;--cyan:#8feafb;}
 * {box-sizing:border-box}
@@ -55,7 +55,7 @@ progress {width:100%;height:8px;accent-color:var(--accent);display:none}
 </head>
 <body>
 <header>
-<h1>CIC Flower Spectral Studio <span style="color:#6ee5d0">v6</span></h1>
+<h1>CIC Flower Spectral Studio <span style="color:#6ee5d0">v7</span></h1>
 <p>Натуральные светящиеся цветы · вертикальный iPhone 17 · тонкие прожилки · математическая спектральная модель · анимация · экспорт серий PNG в ZIP</p>
 </header>
 <main>
@@ -139,7 +139,27 @@ progress {width:100%;height:8px;accent-color:var(--accent);display:none}
 <small>Параллельная отдельная модель импеданса пассивного конденсатора; это не эквивалент физического действия пикселей.</small>
 </fieldset>
 <fieldset>
-<legend>06 · Серии и экспорт</legend>
+<legend>06 · Adaptive Research Engine</legend>
+<p class="hint">В отличие от оценки по весам лепестков, 2D FFT ниже анализирует фактическую уменьшенную копию картинки. Отдельно от этого электрический расчёт показывает модельное поведение конденсатора, не свойства пикселей.</p>
+<label class="control" for="adaptiveGoal">Что оптимизировать?</label>
+<select id="adaptiveGoal">
+<option value="balanced">Баланс: структура + мягкость</option>
+<option value="smooth">Мягкие формы / меньше мелких деталей</option>
+<option value="detail">Максимальная детализация</option>
+<option value="contrast">Читаемость цветка на фоне</option>
+</select>
+<label class="check"><input type="checkbox" id="adaptiveEnabled" checked>Адаптивный подбор спектра при AUTO-генерации</label>
+<label class="control" for="targetImpedance">Целевой |Z| (Ом), только модель <output id="targetImpedanceValue">10</output></label>
+<input type="range" id="targetImpedance" min="0.05" max="50" step="0.05" value="10">
+<label class="control" for="analysisMinMhz">Мин. частота анализа (МГц) <output id="analysisMinMhzValue">0.1</output></label>
+<input type="range" id="analysisMinMhz" min="0.1" max="30" step="0.1" value="0.1">
+<label class="control" for="analysisMaxMhz">Макс. частота анализа (МГц) <output id="analysisMaxMhzValue">200</output></label>
+<input type="range" id="analysisMaxMhz" min="10" max="200" step="1" value="200">
+<div class="buttons"><button class="primary" id="optimizeMeasured">Подобрать спектр по FFT</button><button id="diagnoseButton">Полная диагностика</button></div>
+<small>Автоподбор использует приближённый FFT 128×128, квантильное распределение энергии и критерий детализации. Он не находит «полезные для организма частоты».</small>
+</fieldset>
+<fieldset>
+<legend>07 · Серии и экспорт</legend>
 <label class="control" for="batchCount">Число обоев</label>
 <select id="batchCount"><option value="4">4 варианта</option><option value="8" selected>8 вариантов</option><option value="12">12 вариантов</option></select>
 <label class="control" for="batchSize">Размер набора</label>
@@ -153,15 +173,22 @@ progress {width:100%;height:8px;accent-color:var(--accent);display:none}
 <section class="display">
 <div class="preview-card">
 <div class="topline"><strong id="previewTitle">Лотос · iPhone 17</strong><span class="tag" id="renderTag">Live mathematical pattern</span></div>
-<div class="stage"><canvas id="preview" width="480" height="1044" aria-label="Предпросмотр цветка"></canvas><span class="watermark">CIC • Spectral Lotus v6</span></div>
+<div class="stage"><canvas id="preview" width="480" height="1044" aria-label="Предпросмотр цветка"></canvas><span class="watermark">CIC • Spectral Lotus v7</span></div>
 </div>
 <div class="analysis-card">
-<h2 class="analysis-title">Параметры расчёта и характеристика фильтра</h2>
+<h2 class="analysis-title">Расширенная диагностика математической модели</h2>
 <div class="charts">
 <div class="chart"><p>Передаточная функция H(k)</p><canvas id="transfer" width="510" height="165"></canvas></div>
 <div class="chart"><p>Электрическая модель |Z(f)|, Ом</p><canvas id="impedance" width="510" height="165"></canvas></div>
 </div>
-<div class="metrics"><div class="metric"><span>Оценка энергии в полосе</span><strong id="bandMetric">—</strong></div><div class="metric"><span>|Z| при опорной f</span><strong id="impMetric">—</strong></div><div class="metric"><span>Резонанс модели</span><strong id="resMetric">—</strong></div></div>
+<div class="metrics"><div class="metric"><span>Оценка по весам лепестков</span><strong id="bandMetric">—</strong></div><div class="metric"><span>|Z| при опорной f</span><strong id="impMetric">—</strong></div><div class="metric"><span>Резонанс модели</span><strong id="resMetric">—</strong></div></div>
+<div class="charts" style="margin-top:12px">
+<div class="chart"><p>Измеренный FFT изображения · пространственные частоты</p><canvas id="measuredSpectrum" width="510" height="165"></canvas></div>
+<div class="chart"><p>Широкополосный модельный |Z(f)| · одиночный и банк</p><canvas id="bankChart" width="510" height="165"></canvas></div>
+</div>
+<div class="metrics"><div class="metric"><span>FFT: энергия в полосе*</span><strong id="measuredBand">—</strong></div><div class="metric"><span>FFT: спектральная энтропия</span><strong id="spectrumEntropy">—</strong></div><div class="metric"><span>Контраст / яркость</span><strong id="contrastMetric">—</strong></div></div>
+<div id="detailedReport" class="spectrum-explain" style="white-space:pre-wrap"></div>
+<small>*Измерение выполняется на уменьшенной 128×128 копии PNG после цветовой обработки, с окном Хэнна. Отчёт приблизительный: полноразмерный спектр не рассчитывается.</small>
 <pre id="metadata"></pre>
 </div>
 </section>
@@ -169,7 +196,7 @@ progress {width:100%;height:8px;accent-color:var(--accent);display:none}
 <script>
 'use strict';
 /**
- * CIC Flower Spectral Studio v6
+ * CIC Flower Spectral Studio v7
  * No external dependencies, no network requests, no sensors.
  * The spectral filter weights authored spatial components. It is not an FFT
  * of the finished colored image, and the capacitance model is independent of
@@ -512,9 +539,223 @@ function updateCharts(p) {
     ctx.stroke();ctx.fillStyle='#98c0c4';ctx.fillText('0.1 MHz',31,h-3);ctx.fillText('200 MHz',w-69,h-3);
   }
 }
+
+/** Research functions are intentionally readable, independent, and deterministic. */
+const measuredSpectrumCanvas=byId('measuredSpectrum');
+const measuredSpectrumContext=measuredSpectrumCanvas.getContext('2d');
+const bankChartCanvas=byId('bankChart');
+const bankChartContext=bankChartCanvas.getContext('2d');
+const analysisCache={ latest:null, bank:null, at:0 };
+const FFT_SIDE=128;
+const fftSourceCanvas=document.createElement('canvas');
+fftSourceCanvas.width=FFT_SIDE;fftSourceCanvas.height=FFT_SIDE;
+const fftSourceContext=fftSourceCanvas.getContext('2d',{willReadFrequently:true});
+
+/** Iterative, in-place radix-2 FFT. Supports both forward and inverse. */
+function fftComplex(real,imag,inverse=false){
+  const n=real.length;
+  if(n<2||(n&(n-1)))throw new Error('FFT: length must be power of two');
+  for(let i=1,j=0;i<n;i++){
+    let bit=n>>1;
+    for(;j&bit;bit>>=1)j^=bit;
+    j^=bit;
+    if(i<j){[real[i],real[j]]=[real[j],real[i]];[imag[i],imag[j]]=[imag[j],imag[i]];}
+  }
+  for(let length=2;length<=n;length*=2){
+    const angle=(inverse?2:-2)*Math.PI/length;
+    const wcos=Math.cos(angle),wsin=Math.sin(angle);
+    for(let base=0;base<n;base+=length){
+      let wr=1,wi=0;
+      for(let j=0;j<length/2;j++){
+        const a=base+j,b=a+length/2;
+        const tr=real[b]*wr-imag[b]*wi;
+        const ti=real[b]*wi+imag[b]*wr;
+        real[b]=real[a]-tr;imag[b]=imag[a]-ti;
+        real[a]+=tr;imag[a]+=ti;
+        const nextR=wr*wcos-wi*wsin;
+        wi=wr*wsin+wi*wcos;wr=nextR;
+      }
+    }
+  }
+  if(inverse)for(let i=0;i<n;i++){real[i]/=n;imag[i]/=n;}
+}
+/** Real 2D FFT of the displayed, colored preview, sampled at 128x128. */
+function analyzeActualImage(canvas,parameters){
+  const size=FFT_SIDE,total=size*size;
+  fftSourceContext.clearRect(0,0,size,size);
+  // Contain without stretching: sample the *actual rendered pixels*, padded with black.
+  const ratio=Math.min(size/canvas.width,size/canvas.height);
+  const dw=canvas.width*ratio,dh=canvas.height*ratio;
+  fftSourceContext.drawImage(canvas,(size-dw)/2,(size-dh)/2,dw,dh);
+  const pixels=fftSourceContext.getImageData(0,0,size,size).data;
+  const real=new Float64Array(total),imag=new Float64Array(total);
+  const rowR=new Float64Array(size),rowI=new Float64Array(size);
+  const window=new Float64Array(size);
+  for(let i=0;i<size;i++)window[i]=.5-.5*Math.cos(2*Math.PI*i/(size-1));
+  let sum=0,sumSq=0,edge=0;
+  for(let y=0;y<size;y++)for(let x=0;x<size;x++){
+    const i=y*size+x,idx=4*i;
+    const lum=(.2126*pixels[idx]+.7152*pixels[idx+1]+.0722*pixels[idx+2])/255;
+    sum+=lum;sumSq+=lum*lum;
+    real[i]=lum*window[x]*window[y];
+    if(x>0){const a=idx-4;edge+=Math.abs(lum-(.2126*pixels[a]+.7152*pixels[a+1]+.0722*pixels[a+2])/255);}
+  }
+  for(let y=0;y<size;y++){
+    const offset=y*size;
+    rowR.set(real.subarray(offset,offset+size));rowI.fill(0);
+    fftComplex(rowR,rowI);
+    real.set(rowR,offset);imag.set(rowI,offset);
+  }
+  for(let x=0;x<size;x++){
+    for(let y=0;y<size;y++){rowR[y]=real[y*size+x];rowI[y]=imag[y*size+x];}
+    fftComplex(rowR,rowI);
+    for(let y=0;y<size;y++){real[y*size+x]=rowR[y];imag[y*size+x]=rowI[y];}
+  }
+  const maxRadius=size/Math.SQRT2;
+  const bucketCount=64;
+  const bins=new Float64Array(bucketCount);
+  let energy=0,passing=0;
+  for(let y=0;y<size;y++)for(let x=0;x<size;x++){
+    const fx=Math.min(x,size-x),fy=Math.min(y,size-y);
+    if(fx===0&&fy===0)continue; // ignore mean brightness/DC
+    const radius=Math.hypot(fx,fy);
+    const k=radius/4; // 4 cycles per normalized unit, documented in JSON
+    const idx=y*size+x;
+    const e=real[idx]*real[idx]+imag[idx]*imag[idx];
+    if(!Number.isFinite(e))continue;
+    energy+=e;
+    if(k>=parameters.kMin&&k<=parameters.kMax)passing+=e;
+    bins[Math.min(bucketCount-1,Math.floor(radius/maxRadius*bucketCount))]+=e;
+  }
+  let entropy=0;
+  if(energy>0)for(const b of bins)if(b>0){const prob=b/energy;entropy-=prob*Math.log(prob);}
+  entropy/=Math.log(bucketCount);
+  const mean=sum/total,contrast=Math.sqrt(Math.max(0,sumSq/total-mean*mean));
+  return {sampleSize:size,spatialScale:'k = radial FFT bins / 4; not Hz',
+    actualEnergyFraction:energy>0?passing/energy:0,
+    entropy:clamp(entropy,0,1),luminanceMean:mean,luminanceStd:contrast,
+    horizontalEdgeMean:edge/(size*(size-1)),
+    radialEnergy:Array.from(bins),analysisMethod:'windowed 2D FFT of contain-fitted RGB preview; DC excluded'};
+}
+function spectralEnergyQuantile(analysis,quantile){
+  const bins=analysis.radialEnergy,total=bins.reduce((a,b)=>a+b,0);
+  if(total<=0)return 1;
+  let sum=0;
+  for(let i=0;i<bins.length;i++){sum+=bins[i];if(sum/total>=quantile)return ((i+.5)/bins.length)*(FFT_SIDE/Math.SQRT2)/4;}
+  return (FFT_SIDE/Math.SQRT2)/4;
+}
+function optimizeMeasuredSpectrum({automatic=false}={}){
+  if(state.exporting)return;
+  const parameters=readParameters();
+  const analysis=analyzeActualImage(previewCanvas,parameters);
+  const choice=byId('adaptiveGoal').value;
+  const levels={balanced:[.07,.91],smooth:[.01,.72],detail:[.14,.985],contrast:[.04,.87]};
+  const [q0,q1]=levels[choice];
+  const proposedMin=clamp(spectralEnergyQuantile(analysis,q0),.2,7.9);
+  const proposedMax=clamp(Math.max(proposedMin+.25,spectralEnergyQuantile(analysis,q1)),2,24);
+  byId('kMin').value=proposedMin.toFixed(2);
+  byId('kMax').value=proposedMax.toFixed(2);
+  byId('order').value=choice==='smooth'?4:choice==='detail'?6:choice==='contrast'?7:5;
+  byId('attenuation').value=choice==='detail'?.85:choice==='contrast'?.90:.78;
+  byId('boost').value=choice==='detail'?1.5:choice==='smooth'?.85:1.20;
+  byId('spectrumPreset').value='manual';
+  byId('spectrumExplain').textContent='Автоподбор по распределению энергии 2D FFT уменьшенного изображения. Полученная полоса применяется к весам геометрии при следующем рендере.';
+  updateLabels();
+  drawPreview(true);
+  runFullDiagnostics({silent:true});
+  if(!automatic)setStatus(`FFT автоподбор: kmin=${proposedMin.toFixed(2)}, kmax=${proposedMax.toFixed(2)}; цель — ${choice}.`);
+}
+/** Series impedance, complex-admittance model for capacitors in parallel. */
+function complexParallelImpedance(components,frequencyMHz){
+  const frequency=Math.max(.001,frequencyMHz)*1e6;
+  let admittanceReal=0,admittanceImag=0;
+  for(const component of components){
+    const reactance=TAU*frequency*component.esl*1e-9-1/(TAU*frequency*component.c*1e-12);
+    const denominator=component.esr*component.esr+reactance*reactance;
+    admittanceReal+=component.esr/denominator;
+    admittanceImag-=reactance/denominator;
+  }
+  return 1/Math.max(1e-12,Math.hypot(admittanceReal,admittanceImag));
+}
+function broadbandCapacitorAnalysis(p){
+  const minMHz=Math.max(.1,Number(byId('analysisMinMhz').value));
+  const maxMHz=Math.max(minMHz+.1,Number(byId('analysisMaxMhz').value));
+  const target=Number(byId('targetImpedance').value);
+  const single=[{c:p.capacitance,esr:p.esr,esl:p.esl}];
+  const bank=[
+    {c:p.capacitance,esr:p.esr,esl:p.esl},
+    {c:Math.max(.01,p.capacitance/10),esr:p.esr*1.25,esl:p.esl*.75},
+    {c:p.capacitance*10,esr:p.esr*1.15,esl:p.esl*1.3}
+  ];
+  const samples=[];
+  let worstSingle=0,worstBank=0,passesSingle=0,passesBank=0;
+  let sumSingle=0,sumBank=0;
+  for(let i=0;i<256;i++){
+    const f=minMHz*Math.pow(maxMHz/minMHz,i/255);
+    const z1=complexParallelImpedance(single,f),z3=complexParallelImpedance(bank,f);
+    samples.push({frequencyMHz:f,singleOhm:z1,bankOhm:z3});
+    worstSingle=Math.max(worstSingle,z1);worstBank=Math.max(worstBank,z3);
+    sumSingle+=z1;sumBank+=z3;
+    if(z1<=target)passesSingle++;if(z3<=target)passesBank++;
+  }
+  return {rangeMHz:[minMHz,maxMHz],targetOhm:target,components:bank,
+    worstSingleOhm:worstSingle,worstBankOhm:worstBank,
+    meanSingleOhm:sumSingle/256,meanBankOhm:sumBank/256,
+    complianceSinglePercent:passesSingle/256*100,complianceBankPercent:passesBank/256*100,
+    samples,
+    caveat:'Idealized lumped parallel network, not PCB layout, not a physical capacitor in GPU memory. Anti-resonance can increase impedance at some frequencies.'};
+}
+function drawMeasuredSpectrum(analysis){
+  const ctx=measuredSpectrumContext,w=measuredSpectrumCanvas.width,h=measuredSpectrumCanvas.height;
+  ctx.fillStyle='#07151d';ctx.fillRect(0,0,w,h);
+  const bins=analysis.radialEnergy,max=Math.max(...bins,1e-12);
+  ctx.lineWidth=2;ctx.strokeStyle='#6eebd5';ctx.beginPath();
+  bins.forEach((e,i)=>{const x=25+i/(bins.length-1)*(w-36);const y=h-16-(h-32)*Math.sqrt(e/max);i?ctx.lineTo(x,y):ctx.moveTo(x,y);});ctx.stroke();
+  ctx.fillStyle='#9ebdc7';ctx.font='11px system-ui';ctx.fillText('низкие k',23,h-2);ctx.fillText('высокие k',w-92,h-2);
+  const p=readParameters(),kMax=(FFT_SIDE/Math.SQRT2)/4;
+  const x1=25+(w-36)*p.kMin/kMax,x2=25+(w-36)*p.kMax/kMax;
+  ctx.fillStyle='rgba(100,220,200,.1)';ctx.fillRect(x1,7,Math.max(0,x2-x1),h-23);
+  ctx.strokeStyle='rgba(100,220,200,.45)';ctx.strokeRect(x1,7,Math.max(0,x2-x1),h-23);
+}
+function drawBroadbandChart(bank){
+  const ctx=bankChartContext,w=bankChartCanvas.width,h=bankChartCanvas.height;
+  ctx.fillStyle='#07151d';ctx.fillRect(0,0,w,h);
+  const s=bank.samples,values=s.flatMap(v=>[Math.log10(v.singleOhm),Math.log10(v.bankOhm)]);
+  const low=Math.min(...values),high=Math.max(...values),span=Math.max(.001,high-low);
+  for(const [key,color] of [['singleOhm','#9db5ff'],['bankOhm','#62e6cd']]){
+    ctx.strokeStyle=color;ctx.lineWidth=2;ctx.beginPath();
+    s.forEach((sample,i)=>{const x=29+i/(s.length-1)*(w-42);const y=8+(h-24)*(1-(Math.log10(sample[key])-low)/span);i?ctx.lineTo(x,y):ctx.moveTo(x,y);});ctx.stroke();
+  }
+  ctx.fillStyle='#9fbec7';ctx.font='11px system-ui';ctx.fillText('один',30,14);ctx.fillStyle='#9db5ff';ctx.fillRect(67,7,12,3);
+  ctx.fillStyle='#9fbec7';ctx.fillText('3 элемента',90,14);ctx.fillStyle='#62e6cd';ctx.fillRect(161,7,12,3);
+  ctx.fillText(`${bank.rangeMHz[0].toFixed(1)} МГц`,30,h-3);ctx.fillText(`${bank.rangeMHz[1].toFixed(0)} МГц`,w-79,h-3);
+}
+function runFullDiagnostics({silent=false}={}){
+  const p=readParameters();
+  if(state.exporting)return;
+  const actual=analyzeActualImage(previewCanvas,p),bank=broadbandCapacitorAnalysis(p);
+  analysisCache.latest=actual;analysisCache.bank=bank;analysisCache.at=performance.now();
+  drawMeasuredSpectrum(actual);drawBroadbandChart(bank);
+  byId('measuredBand').textContent=(actual.actualEnergyFraction*100).toFixed(1)+'%';
+  byId('spectrumEntropy').textContent=actual.entropy.toFixed(3);
+  byId('contrastMetric').textContent=actual.luminanceStd.toFixed(3)+' / '+actual.luminanceMean.toFixed(3);
+  const advantage=bank.worstBankOhm<bank.worstSingleOhm?'ниже':'не ниже';
+  byId('detailedReport').textContent=
+    `2D FFT: ${(actual.actualEnergyFraction*100).toFixed(1)}% внутри выбранной полосы по уменьшенной картинке · энтропия ${actual.entropy.toFixed(3)}\n`+
+    `Диапазон электрической модели: ${bank.rangeMHz[0].toFixed(1)}–${bank.rangeMHz[1].toFixed(0)} МГц. Цель |Z| ≤ ${bank.targetOhm} Ω\n`+
+    `Максимальный |Z|: один ${bank.worstSingleOhm.toFixed(2)} Ω; 3 параллельных ${bank.worstBankOhm.toFixed(2)} Ω (${advantage} одиночного).\n`+
+    `Доля точек, выполняющих цель: ${bank.complianceSinglePercent.toFixed(0)}% → ${bank.complianceBankPercent.toFixed(0)}%.\n`+
+    `Это расчёт идеализированных компонентов; реальные платы и резонансы не моделируются.`;
+  const record=JSON.parse(byId('metadata').textContent||'{}');
+  record.measuredImageSpectrum=actual;
+  record.broadbandModel={...bank,samples:bank.samples.filter((_,i)=>i%8===0)};
+  byId('metadata').textContent=JSON.stringify(record,null,2);
+  if(!silent)setStatus('Полная диагностика: окно Хэнна → 2D FFT (128×128) → оценка контраста → sweep C/ESR/ESL.');
+}
+
 function metadataObject(p,measure,seed) {
   return {
-    generator:'CIC Flower Spectral Studio v6',
+    generator:'CIC Flower Spectral Studio v7',
     imageType:'layered parametric botanical filaments',
     settings:{...p},seed,
     filterModel:{
@@ -692,7 +933,7 @@ async function exportBatch(){
       records.push({file:filename,seed:baseSeed+i*7711,parameters:pp,measure});
       prog.value=(i+1)/count*85;
     }
-    const meta=new TextEncoder().encode(JSON.stringify({generator:'CIC Flower Spectral Studio v6',files:records,
+    const meta=new TextEncoder().encode(JSON.stringify({generator:'CIC Flower Spectral Studio v7',files:records,
       note:'Generated pattern weights spatial components; not physical frequency therapy'},null,2));
     files.push({name:'CIC_Parameters.json',data:meta});
     setStatus('Упаковываю ZIP…');await new Promise(resolve=>setTimeout(resolve,30));
@@ -704,7 +945,10 @@ async function exportBatch(){
 }
 function saveJSON(){
   const p=readParameters(),m=state.metrics||{energyInBand:0,impedanceOhm:capModel(p),resonanceMHz:resonanceMHz(p)};
-  const data=JSON.stringify(metadataObject(p,m,state.seed),null,2);
+  const record=metadataObject(p,m,state.seed);
+  if(analysisCache.latest)record.measuredImageSpectrum=analysisCache.latest;
+  if(analysisCache.bank)record.broadbandModel={...analysisCache.bank,samples:analysisCache.bank.samples.filter((_,i)=>i%8===0)};
+  const data=JSON.stringify(record,null,2);
   triggerDownload(new Blob([data],{type:'application/json'}),'CIC_Flower_Spectral_v6_parameters.json');
   setStatus('Параметры сохранены в JSON.');
 }
@@ -778,6 +1022,8 @@ function autoGenerateNow() {
   byId('fullAuto').checked=true;
   applyAutomaticSettings();
   drawPreview(true);
+  if(byId('adaptiveEnabled').checked)optimizeMeasuredSpectrum({automatic:true});
+  runFullDiagnostics({silent:true});
   lastAutoCycle=performance.now();
 }
 let lastAutoCycle=0;
@@ -824,19 +1070,25 @@ function bindUI(){
   });
   byId('generate').addEventListener('click',()=>{
     if(byId('fullAuto').checked)autoGenerateNow();
-    else {drawPreview(true);setStatus('Параметры пересчитаны.')}
+    else {drawPreview(true);runFullDiagnostics({silent:true});setStatus('Параметры и реальный FFT пересчитаны.')}
   });
   byId('random').addEventListener('click',()=>{
     if(byId('fullAuto').checked)autoGenerateNow();
     else randomize();
   });
+  byId('optimizeMeasured').addEventListener('click',()=>optimizeMeasuredSpectrum());
+  byId('diagnoseButton').addEventListener('click',()=>runFullDiagnostics());
+  for(const id of ['targetImpedance','analysisMinMhz','analysisMaxMhz']) {
+    byId(id).addEventListener('input',()=>{byId(id+'Value').textContent=Number(byId(id).value).toFixed(id==='targetImpedance'?2:1);});
+  }
+  byId('adaptiveGoal').addEventListener('change',()=>setStatus('Критерий адаптивного подбора выбран. Нажмите «Подобрать спектр по FFT».'));
   byId('savePhone').addEventListener('click',()=>exportSingle(1206,2622,'CIC_Lotus_iPhone17_1206x2622.png'));
   byId('save4k').addEventListener('click',()=>exportSingle(3840,2160,'CIC_Lotus_4K_3840x2160.png'));
   byId('saveBatch').addEventListener('click',exportBatch);
   byId('saveJSON').addEventListener('click',saveJSON);
   document.addEventListener('visibilitychange',()=>{state.lastTimestamp=0});
 }
-updateLabels();bindUI();setSpectrumProfile('balanced');applyAutomaticSettings();drawPreview(true);requestAnimationFrame(animationFrame);
+updateLabels();bindUI();setSpectrumProfile('balanced');applyAutomaticSettings();drawPreview(true);runFullDiagnostics({silent:true});requestAnimationFrame(animationFrame);
 setStatus('Автоматический режим запущен. Для ручного выбора спектра выбери готовый профиль в разделе 04.');
 </script>
 </body>
