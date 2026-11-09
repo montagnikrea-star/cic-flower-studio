@@ -1,0 +1,843 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>CIC Flower Spectral Studio v6 · Lotus & Glow</title>
+<style>
+:root {--bg:#070e15;--panel:#0d1b25;--panel2:#102431;--border:#254456;--text:#e5f8fa;--muted:#9aafb9;--accent:#6ee5d0;--cyan:#8feafb;}
+* {box-sizing:border-box}
+html,body {margin:0;min-height:100%;font:14px/1.55 system-ui,'Segoe UI',sans-serif;color:var(--text);background:radial-gradient(ellipse at 78% -10%,#163c43,transparent 50%),var(--bg)}
+header {padding:19px clamp(16px,3vw,42px) 14px;border-bottom:1px solid #21414c}
+header h1 {font-size:clamp(22px,2.5vw,30px);line-height:1.2;margin:0 0 6px;font-weight:780;letter-spacing:-.03em}
+header p {margin:0;color:var(--muted);font-size:13px;max-width:900px}
+main {display:grid;grid-template-columns:minmax(315px,365px) minmax(0,1fr);gap:18px;max-width:1570px;padding:18px;margin:auto;align-items:start}
+aside {background:linear-gradient(155deg,#122b35,#0b1823);border:1px solid var(--border);border-radius:17px;padding:16px;max-height:calc(100vh - 122px);overflow-y:auto;scrollbar-color:#305362 transparent}
+fieldset {border:0;padding:0 0 15px;margin:0 0 16px;border-bottom:1px solid #29414a;min-width:0}
+fieldset:last-child {border:0;margin:0;padding:0}
+legend {padding:0 0 12px;font-weight:750;color:#e4fffa;font-size:14px}
+label.control {display:block;font-size:12px;color:#cbdfe0;margin:10px 0 4px}
+label.control output {float:right;color:#82f1db;font-variant-numeric:tabular-nums}
+input[type=range] {width:100%;accent-color:var(--accent);cursor:pointer}
+select,input[type=number] {width:100%;background:#081722;border:1px solid #335563;color:var(--text);border-radius:9px;padding:9px 10px;font-size:13px}
+.check {display:flex;gap:9px;align-items:center;margin:9px 0;font-size:12px;color:#d6ebeb}
+.check input {accent-color:var(--accent)}
+.spectrum-explain {margin:8px 0;padding:10px;border:1px solid #34606a;border-radius:9px;background:#0a2630;color:#c9efe9;font-size:12px}
+.spectrum-scale {display:flex;justify-content:space-between;gap:3px;color:#91b5be;font-size:10px;border-top:3px solid transparent;border-image:linear-gradient(90deg,#426e8f,#51d2c3,#cbf3ff) 1;padding-top:6px;margin:12px 0}
+.color-swatches {display:flex;gap:10px;margin:8px 0 13px}.color-swatches button {width:35px;height:30px;border-radius:9px;border:2px solid #648391;padding:0}.color-swatches button:hover{transform:scale(1.1)}
+.buttons {display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:9px}
+button {background:#193d49;border:1px solid #426879;color:#edffff;border-radius:10px;padding:10px 8px;font:700 12px system-ui,sans-serif;cursor:pointer}
+button.primary {background:#64dec9;border-color:#64dec9;color:#06252b}
+button:hover {filter:brightness(1.1)}button:disabled {opacity:.4;cursor:wait}
+small,.hint {color:var(--muted);font-size:11px;line-height:1.5;display:block}
+#status {font-size:12px;color:#b3f8e3;min-height:34px;margin-top:8px;white-space:pre-wrap}
+progress {width:100%;height:8px;accent-color:var(--accent);display:none}
+.display {min-width:0;display:grid;gap:15px}
+.preview-card,.analysis-card {border:1px solid var(--border);background:linear-gradient(145deg,#0f2630,#091720);border-radius:18px;padding:14px}
+.topline {display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;padding:0 3px 11px;color:#c6e7e5;font-size:12px}
+.tag {border:1px solid #315761;border-radius:100px;padding:3px 10px;color:#b5fbe8;background:#0d2b34}
+.stage {height:min(76vh,790px);min-height:450px;display:grid;place-items:center;position:relative;border-radius:13px;overflow:hidden;background:#020809}
+#preview {height:100%;max-width:100%;width:auto;object-fit:contain;display:block;box-shadow:0 0 55px #061d21}
+.watermark {position:absolute;bottom:11px;left:12px;font-size:10px;color:#8aa7a7;background:#061016bb;padding:4px 8px;border-radius:5px;pointer-events:none}
+.analysis-title {font-size:13px;font-weight:740;margin:0 0 10px;color:#dffcf6}
+.charts {display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.chart {min-width:0;background:#06131b;border-radius:10px;border:1px solid #2b4954;padding:8px}
+.chart canvas {width:100%;height:145px;display:block}
+.chart p {margin:2px 5px 6px;font-size:11px;color:#b0cfd0}
+.metrics {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:12px}
+.metric {padding:11px;background:#081925;border:1px solid #284653;border-radius:10px;min-width:0}
+.metric span {color:#8eabb1;font-size:10px;display:block}.metric strong {display:block;font:720 15px/1.25 ui-monospace,Consolas,monospace;color:#d3fff2;overflow:hidden;text-overflow:ellipsis}
+#metadata {margin:12px 0 0;max-height:195px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;font:11px/1.45 Consolas,ui-monospace,monospace;color:#a6c6c5;background:#071823;border:1px solid #274552;border-radius:10px;padding:10px}
+@media(max-width:950px){main{grid-template-columns:1fr}aside{max-height:none}.stage{height:72vh}.charts{grid-template-columns:1fr}}
+@media(max-width:500px){header{padding:14px 14px 10px}main{padding:10px;gap:11px}.preview-card,.analysis-card{padding:9px}.stage{height:65vh;min-height:350px}.metrics{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header>
+<h1>CIC Flower Spectral Studio <span style="color:#6ee5d0">v6</span></h1>
+<p>Натуральные светящиеся цветы · вертикальный iPhone 17 · тонкие прожилки · математическая спектральная модель · анимация · экспорт серий PNG в ZIP</p>
+</header>
+<main>
+<aside>
+<fieldset>
+<legend>01 · Профиль изображения</legend>
+<label class="control" for="mode">Режим генерации</label>
+<select id="mode">
+<option value="lotus">Натуральный лотос</option>
+<option value="reference">Свечение как на примере</option>
+<option value="minimal">Минималистичный цветок</option>
+</select>
+<label class="control" for="flower">Ботанический характер</label>
+<select id="flower"><option value="lotus">Лотос</option><option value="waterlily">Кувшинка</option><option value="iris">Ирис</option><option value="lily">Лилия</option></select>
+<label class="control" for="orientation">Формат просмотра</label>
+<select id="orientation"><option value="portrait">Вертикальный · iPhone 17</option><option value="landscape">Горизонтальный · 4K</option></select>
+</fieldset>
+<fieldset>
+<legend>00 · Полностью автоматический режим</legend>
+<label class="check"><input type="checkbox" id="fullAuto" checked>Автоподбор формы, спектра, ёмкостной модели и сочетания цветов</label>
+<label class="check"><input type="checkbox" id="autoCycle">Периодически генерировать новый цветок (раз в 45 секунд)</label>
+<div class="buttons"><button class="primary" id="autoGenerate">Автоматически подобрать всё</button><button id="manualMode">Ручная настройка</button></div>
+<small id="autoDescription">При включении выбираются гармоничная палитра, параметры цветка, спектральный профиль и согласованная модель C/ESR/ESL. Это художественная математическая оптимизация, а не поиск лечебных частот.</small>
+</fieldset>
+<fieldset>
+<legend>02 · Ботаническая геометрия</legend>
+<label class="control" for="petals">Лепестки на слое <output id="petalsValue"></output></label><input type="range" id="petals" min="5" max="18" value="9" step="1">
+<label class="control" for="layers">Слои цветка <output id="layersValue"></output></label><input type="range" id="layers" min="2" max="9" value="5" step="1">
+<label class="control" for="curvature">Изгиб <output id="curvatureValue"></output></label><input type="range" id="curvature" min="0.35" max="2.3" value="1.16" step="0.01">
+<label class="control" for="taper">Заострение лепестка <output id="taperValue"></output></label><input type="range" id="taper" min="0.25" max="1.6" value="0.91" step="0.01">
+<label class="control" for="veins">Прозрачные прожилки <output id="veinsValue"></output></label><input type="range" id="veins" min="2" max="16" value="10" step="1">
+<label class="control" for="lineDensity">Детализация контуров <output id="lineDensityValue"></output></label><input type="range" id="lineDensity" min="120" max="1200" value="460" step="10">
+<label class="control" for="stemStrength">Центральная ось <output id="stemStrengthValue"></output></label><input type="range" id="stemStrength" min="0" max="2.2" value="1.25" step="0.01">
+<label class="control" for="sway">Закручивание слоёв <output id="swayValue"></output></label><input type="range" id="sway" min="0" max="1.6" value="0.38" step="0.01">
+</fieldset>
+<fieldset>
+<legend>03 · Цвет цветка, фон и анимация</legend>
+<label class="control" for="hue">Оттенок цветка <output id="hueValue"></output></label><input type="range" id="hue" min="0" max="360" value="170" step="1">
+<label class="control" for="saturation">Насыщенность <output id="saturationValue"></output></label><input type="range" id="saturation" min="0.2" max="1" value="0.78" step="0.01">
+<label class="control" for="glow">Свечение <output id="glowValue"></output></label><input type="range" id="glow" min="0.1" max="2.8" value="1.42" step="0.01">
+<label class="control" for="brightness">Яркость свечения <output id="brightnessValue"></output></label><input type="range" id="brightness" min="0.1" max="1" value="0.95" step="0.01">
+<label class="control" for="glowRadius">Радиус свечения <output id="glowRadiusValue"></output></label><input type="range" id="glowRadius" min="1" max="80" value="28" step="1">
+<label class="control" for="backgroundHue">Оттенок фона <output id="backgroundHueValue"></output></label><input type="range" id="backgroundHue" min="0" max="360" value="193" step="1">
+<label class="control" for="backgroundSaturation">Насыщенность фона <output id="backgroundSaturationValue"></output></label><input type="range" id="backgroundSaturation" min="0" max="1" value="0.48" step="0.01">
+<label class="control" for="backgroundDarkness">Темнота фона <output id="backgroundDarknessValue"></output></label><input type="range" id="backgroundDarkness" min="0.45" max="1" value="0.88" step="0.01">
+<div class="color-swatches" id="backgroundSwatches"><button type="button" data-bghue="193" data-bgsat="0.48" title="Сине-бирюзовый" style="background:#092730"></button><button type="button" data-bghue="265" data-bgsat="0.6" title="Фиолетовый" style="background:#231434"></button><button type="button" data-bghue="145" data-bgsat="0.5" title="Изумрудный" style="background:#09271e"></button><button type="button" data-bghue="24" data-bgsat="0.48" title="Тёплый" style="background:#302018"></button><button type="button" data-bghue="220" data-bgsat="0.03" title="Почти чёрный" style="background:#131519"></button></div>
+<label class="control" for="backgroundLift">Фоновое свечение <output id="backgroundLiftValue"></output></label><input type="range" id="backgroundLift" min="0" max="1" value="0.32" step="0.01">
+<label class="control" for="lineAlpha">Прозрачность линий <output id="lineAlphaValue"></output></label><input type="range" id="lineAlpha" min="0.05" max="0.6" value="0.20" step="0.01">
+<label class="control" for="lineWidth">Толщина линий <output id="lineWidthValue"></output></label><input type="range" id="lineWidth" min="0.2" max="2.5" value="0.66" step="0.01">
+<label class="control" for="speed">Скорость анимации <output id="speedValue"></output></label><input type="range" id="speed" min="0.01" max="1" value="0.17" step="0.01">
+<label class="check"><input type="checkbox" id="animate" checked>Плавная анимация без вспышек</label>
+<label class="check"><input type="checkbox" id="autoQuality" checked>Автоснижение нагрузки</label>
+</fieldset>
+<fieldset>
+<legend>04 · Понятный выбор спектра</legend>
+<label class="control" for="spectrumPreset">Какую детализацию сохранить?</label>
+<select id="spectrumPreset">
+<option value="balanced">Сбалансированный — чёткие лепестки и плавные линии</option>
+<option value="soft">Мягкий — широкие плавные контуры</option>
+<option value="fine">Тонкие прожилки — больше мелких деталей</option>
+<option value="contour">Выразительный контур — чёткая форма цветка</option>
+<option value="wide">Широкий спектр — максимум деталей рисунка</option>
+<option value="manual">Ручной выбор kmin / kmax</option>
+</select>
+<div class="spectrum-explain" id="spectrumExplain" aria-live="polite"></div>
+<div class="spectrum-scale"><span>Плавные формы</span><span>Средние детали</span><span>Тонкие линии</span></div>
+<small><strong>Это пространственные частоты изображения, не герцы.</strong> Более низкие значения k отвечают крупным формам, высокие — мелким линиям. Модель электрических частот в МГц находится отдельно ниже.</small>
+<label class="control" for="kMin">Нижняя граница детализации kmin <output id="kMinValue"></output></label><input type="range" id="kMin" min="0.2" max="8" value="0.9" step="0.01">
+<label class="control" for="kMax">Верхняя граница детализации kmax <output id="kMaxValue"></output></label><input type="range" id="kMax" min="2" max="24" value="11.5" step="0.01">
+<label class="control" for="order">Крутизна n <output id="orderValue"></output></label><input type="range" id="order" min="1" max="10" value="5" step="1">
+<label class="control" for="boost">Усиление в полосе <output id="boostValue"></output></label><input type="range" id="boost" min="0" max="2.5" value="1.15" step="0.01">
+<label class="control" for="attenuation">Подавление вне полосы <output id="attenuationValue"></output></label><input type="range" id="attenuation" min="0" max="0.98" value="0.75" step="0.01">
+<small>График показывает расчётный вес геометрических компонент, а не измеренный FFT спектр готовой PNG. Цветовой рендер может содержать частоты за пределами выбранной полосы.</small>
+</fieldset>
+<fieldset>
+<legend>05 · Электрическая модель</legend>
+<label class="control" for="capacitance">C, пФ <output id="capacitanceValue"></output></label><input type="range" id="capacitance" min="10" max="2000" value="220" step="1">
+<label class="control" for="esr">ESR, Ом <output id="esrValue"></output></label><input type="range" id="esr" min="0.001" max="5" value="0.08" step="0.001">
+<label class="control" for="esl">ESL, нГн <output id="eslValue"></output></label><input type="range" id="esl" min="0.01" max="100" value="2.4" step="0.01">
+<label class="control" for="frequency">Опорная частота, МГц <output id="frequencyValue"></output></label><input type="range" id="frequency" min="0.1" max="200" value="12.5" step="0.1">
+<small>Параллельная отдельная модель импеданса пассивного конденсатора; это не эквивалент физического действия пикселей.</small>
+</fieldset>
+<fieldset>
+<legend>06 · Серии и экспорт</legend>
+<label class="control" for="batchCount">Число обоев</label>
+<select id="batchCount"><option value="4">4 варианта</option><option value="8" selected>8 вариантов</option><option value="12">12 вариантов</option></select>
+<label class="control" for="batchSize">Размер набора</label>
+<select id="batchSize"><option value="1206x2622" selected>iPhone 17 · 1206×2622</option><option value="1920x1080">Full HD · 1920×1080</option><option value="3840x2160">4K · 3840×2160</option></select>
+<div class="buttons"><button class="primary" id="generate">Пересчитать</button><button id="random">Другой цветок</button></div>
+<div class="buttons"><button id="savePhone">PNG · iPhone 17</button><button id="save4k">PNG · 4K</button></div>
+<div class="buttons"><button class="primary" id="saveBatch">Серия PNG → ZIP</button><button id="saveJSON">Параметры JSON</button></div>
+<progress id="progress" max="100" value="0"></progress><div id="status" role="status" aria-live="polite"></div>
+</fieldset>
+</aside>
+<section class="display">
+<div class="preview-card">
+<div class="topline"><strong id="previewTitle">Лотос · iPhone 17</strong><span class="tag" id="renderTag">Live mathematical pattern</span></div>
+<div class="stage"><canvas id="preview" width="480" height="1044" aria-label="Предпросмотр цветка"></canvas><span class="watermark">CIC • Spectral Lotus v6</span></div>
+</div>
+<div class="analysis-card">
+<h2 class="analysis-title">Параметры расчёта и характеристика фильтра</h2>
+<div class="charts">
+<div class="chart"><p>Передаточная функция H(k)</p><canvas id="transfer" width="510" height="165"></canvas></div>
+<div class="chart"><p>Электрическая модель |Z(f)|, Ом</p><canvas id="impedance" width="510" height="165"></canvas></div>
+</div>
+<div class="metrics"><div class="metric"><span>Оценка энергии в полосе</span><strong id="bandMetric">—</strong></div><div class="metric"><span>|Z| при опорной f</span><strong id="impMetric">—</strong></div><div class="metric"><span>Резонанс модели</span><strong id="resMetric">—</strong></div></div>
+<pre id="metadata"></pre>
+</div>
+</section>
+</main>
+<script>
+'use strict';
+/**
+ * CIC Flower Spectral Studio v6
+ * No external dependencies, no network requests, no sensors.
+ * The spectral filter weights authored spatial components. It is not an FFT
+ * of the finished colored image, and the capacitance model is independent of
+ * optical behavior. This is visual art and a mathematical demonstration.
+ */
+const byId = (id) => document.getElementById(id);
+const parameterIds = [
+  'petals','layers','curvature','taper','veins','lineDensity','stemStrength','sway','hue','saturation','glow','brightness','glowRadius','backgroundLift',
+  'lineAlpha','lineWidth','speed','backgroundHue','backgroundSaturation','backgroundDarkness','kMin','kMax','order','boost','attenuation',
+  'capacitance','esr','esl','frequency'
+];
+const state = { seed: 20261109, phase: 0, lastTimestamp: 0, lastRender: 0,
+  frameTime: 0, renderWidth: 480, renderHeight: 1044, dirty: true,
+  exporting: false, metrics: null, frames: 0 };
+const previewCanvas = byId('preview');
+const previewContext = previewCanvas.getContext('2d',{alpha:false});
+const transferCanvas = byId('transfer');
+const transferContext = transferCanvas.getContext('2d');
+const impedanceCanvas = byId('impedance');
+const impedanceContext = impedanceCanvas.getContext('2d');
+const clamp = (x, minimum, maximum) => Math.max(minimum, Math.min(maximum, x));
+const lerp = (a,b,t) => a + (b-a)*t;
+const TAU = 2*Math.PI;
+
+function readParameters() {
+  const settings = {};
+  for (const id of parameterIds) settings[id] = Number(byId(id).value);
+  settings.mode = byId('mode').value;
+  settings.flower = byId('flower').value;
+  settings.orientation = byId('orientation').value;
+  settings.animate = byId('animate').checked;
+  settings.autoQuality = byId('autoQuality').checked;
+  settings.spectrumPreset = byId('spectrumPreset').value;
+  settings.fullAuto = byId('fullAuto').checked;
+  settings.kMax = Math.max(settings.kMin+0.05,settings.kMax);
+  return settings;
+}
+function updateLabels() {
+  for (const id of parameterIds) {
+    const value = Number(byId(id).value);
+    byId(id+'Value').textContent = Number.isInteger(value) ? value : value.toFixed(id==='esr'?3:2);
+  }
+}
+function hueColor(hue, saturation, lightness, alpha=1) {
+  return `hsla(${((hue%360)+360)%360},${clamp(saturation,0,1)*100}%,${clamp(lightness,0,1)*100}%,${clamp(alpha,0,1)})`;
+}
+function smoothstep(x) { const t=clamp(x,0,1); return t*t*(3-2*t); }
+function capModel(p, frequencyMHz = p.frequency) {
+  const f=Math.max(1,frequencyMHz*1e6), C=p.capacitance*1e-12;
+  const L=p.esl*1e-9, ESR=p.esr;
+  const reactance=TAU*f*L-1/(TAU*f*C);
+  return Math.hypot(ESR,reactance);
+}
+function resonanceMHz(p) {
+  return 1/(TAU*Math.sqrt(p.esl*1e-9*p.capacitance*1e-12))/1e6;
+}
+function spectralTransfer(k,p) {
+  k=Math.max(1e-6,k);
+  const low=1/Math.sqrt(1+Math.pow(p.kMin/k,2*p.order));
+  const high=1/Math.sqrt(1+Math.pow(k/p.kMax,2*p.order));
+  return (1-p.attenuation) + p.attenuation*(1+p.boost)*low*high;
+}
+/** Deterministic PRNG; same seed reproduces wallpaper variants. */
+function randomGenerator(seed) {
+  let a=seed>>>0;
+  return () => {
+    let t=a+=0x6D2B79F5;
+    t=Math.imul(t^(t>>>15),t|1);
+    t^=t+Math.imul(t^(t>>>7),t|61);
+    return ((t^(t>>>14))>>>0)/4294967296;
+  };
+}
+function variantSettings(p,seed,index=0) {
+  const rand=randomGenerator(seed + index*1979);
+  const copy={...p};
+  copy.hue=(p.hue + rand()*24-12+360)%360;
+  copy.backgroundHue=(p.backgroundHue + rand()*18-9+360)%360;
+  copy.petals=Math.round(clamp(p.petals+Math.floor(rand()*5)-2,5,18));
+  copy.layers=Math.round(clamp(p.layers+Math.floor(rand()*3)-1,2,9));
+  copy.curvature=clamp(p.curvature+(rand()-.5)*.22,.35,2.3);
+  copy.sway=clamp(p.sway+(rand()-.5)*.22,0,1.6);
+  copy.glow=clamp(p.glow+(rand()-.5)*.22,.1,2.8);
+  copy.seed=seed;
+  return copy;
+}
+function createTextureBackground(ctx,w,h,p,phase) {
+  ctx.save();
+  const hue = p.backgroundHue;
+  const sat = p.backgroundSaturation;
+  const base = p.backgroundDarkness;
+  const centerLight = 0.12 * (1-base) + 0.036;
+  const middleLight = 0.055 * (1-base) + 0.015;
+  const outerLight = 0.013 * (1-base) + 0.004;
+  const gradient = ctx.createRadialGradient(w*.5,h*.53,0,w*.5,h*.53,Math.max(w,h)*.75);
+  gradient.addColorStop(0,hueColor(hue,sat,centerLight));
+  gradient.addColorStop(.42,hueColor(hue,sat*.78,middleLight));
+  gradient.addColorStop(1,hueColor(hue,sat*.5,outerLight));
+  ctx.fillStyle=gradient;
+  ctx.fillRect(0,0,w,h);
+  if(p.backgroundLift>0) {
+    const aura=ctx.createRadialGradient(w*.5,h*.50,0,w*.5,h*.50,Math.min(w,h)*.66);
+    aura.addColorStop(0,hueColor(hue,sat,.36,.10*p.backgroundLift));
+    aura.addColorStop(.76,hueColor(hue,sat,.22,.023*p.backgroundLift));
+    aura.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=aura;ctx.fillRect(0,0,w,h);
+  }
+  ctx.restore();
+}
+/**
+ * A petal is defined in local coordinates around a centerline. Width vanishes
+ * at the base and apex; a controllable asymmetry creates natural curvature.
+ * t in [0,1], lateral in [-1,1].
+ */
+function petalPoint(t,lateral,shape) {
+  const tip=smoothstep(t);
+  const botanical=shape.botanical;
+  const widthFactor=Math.pow(Math.max(0,Math.sin(Math.PI*t)),shape.taper);
+  const width=shape.width*widthFactor*(1+.14*Math.sin(Math.PI*t*1.6));
+  const curve=shape.curvature*Math.sin(Math.PI*t)*shape.length*.115;
+  const asymmetric=botanical*.10*shape.width*Math.sin(Math.PI*t*1.8);
+  return {
+    x:lateral*width + curve*(t+.25) + asymmetric,
+    y:-shape.length*t + Math.abs(lateral)*shape.length*.06*Math.sin(Math.PI*t) + (1-tip)*shape.length*.015
+  };
+}
+function petalPath(ctx,shape,offset=1) {
+  const steps=25;
+  ctx.beginPath();
+  for(let i=0;i<=steps;i++) {
+    const q=petalPoint(i/steps,-offset,shape);
+    if(i===0)ctx.moveTo(q.x,q.y);else ctx.lineTo(q.x,q.y);
+  }
+  for(let i=steps;i>=0;i--) {
+    const q=petalPoint(i/steps,offset,shape);
+    ctx.lineTo(q.x,q.y);
+  }
+  ctx.closePath();
+}
+function glowLine(ctx, callback, color, width, alpha, glowRadius,scale) {
+  ctx.save();ctx.globalCompositeOperation='lighter';
+  ctx.beginPath();callback(ctx);
+  ctx.strokeStyle=color;ctx.globalAlpha=clamp(alpha,0,1);
+  ctx.lineWidth=Math.max(.22*scale,width*scale);
+  ctx.lineCap='round';ctx.lineJoin='round';
+  ctx.shadowColor=color;ctx.shadowBlur=glowRadius*scale;
+  ctx.stroke();ctx.restore();
+}
+function renderPetal(ctx,p,centerX,centerY,shape,angle,scale,filterGain,phase,seed) {
+  ctx.save();ctx.translate(centerX,centerY);ctx.rotate(angle);
+  const broadening=clamp(filterGain/(1+p.boost),.22,1.25);
+  const color=hueColor(p.hue+shape.tint,p.saturation,.68*p.brightness);
+  petalPath(ctx,shape);
+  const fill=ctx.createLinearGradient(0,0,0,-shape.length);
+  fill.addColorStop(0,hueColor(p.hue,.80,.31,.05));
+  fill.addColorStop(.36,hueColor(p.hue+shape.tint,p.saturation,.47,.20*broadening));
+  fill.addColorStop(.78,hueColor(p.hue+13,p.saturation,.54,.085*broadening));
+  fill.addColorStop(1,hueColor(p.hue,.8,.8,.08));
+  ctx.fillStyle=fill;ctx.fill();
+  ctx.strokeStyle=hueColor(p.hue+shape.tint,p.saturation,.68,p.lineAlpha*1.70*broadening);
+  ctx.lineWidth=Math.max(.2,scale*p.lineWidth*.7);
+  ctx.shadowColor=color;ctx.shadowBlur=scale*(p.glowRadius*.08+2*p.glow);
+  ctx.stroke();ctx.shadowBlur=0;
+  // Main vein: a natural stem through the middle of each petal.
+  glowLine(ctx,(g)=>{for(let j=0;j<=32;j++){const pt=petalPoint(j/32,0,shape);if(j===0)g.moveTo(pt.x,pt.y);else g.lineTo(pt.x,pt.y)}},
+    hueColor(p.hue+12,p.saturation,.77),p.lineWidth*.64,p.lineAlpha*.70*broadening,4*p.glow,scale);
+  // Combine all semitransparent filaments into ONE path for efficiency.
+  // Avoid expensive per-line shadowBlur, especially during 4K export.
+  const filaments=Math.max(2,Math.floor(p.veins));
+  const filamentSteps=clamp(Math.floor(p.lineDensity/16),16,58);
+  ctx.beginPath();
+  for(let v=1;v<=filaments;v++) {
+    const ratio=v/(filaments+1);
+    for(const sign of [-1,1]) {
+      const lateral=sign*ratio;
+      const variation=1+.06*Math.sin(v*2.4+seed*.01);
+      for(let j=0;j<=filamentSteps;j++){
+        const t=.04+j/filamentSteps*.92;
+        const pt=petalPoint(t,lateral*(.63+.32*Math.sin(Math.PI*t))*variation,shape);
+        if(j===0)ctx.moveTo(pt.x,pt.y);else ctx.lineTo(pt.x,pt.y);
+      }
+    }
+  }
+  ctx.save();
+  ctx.globalCompositeOperation='lighter';
+  ctx.lineCap='round';
+  ctx.strokeStyle=hueColor(p.hue+shape.tint+7,p.saturation*.82,.77);
+  ctx.globalAlpha=clamp(p.lineAlpha*.67*broadening,0,.35);
+  ctx.lineWidth=Math.max(.16,scale*p.lineWidth*.43);
+  ctx.stroke();
+  ctx.restore();
+  ctx.restore();
+}
+function buildLayers(p,seed) {
+  const random=randomGenerator(seed);
+  const elements=[];
+  for(let layer=0;layer<p.layers;layer++) {
+    const depth=layer/(p.layers-1||1);
+    const petals=Math.max(3,Math.round(p.petals+(1-depth)*2));
+    for(let k=0;k<petals;k++){
+      elements.push({layer,k,depth,angle:-Math.PI/2+TAU*k/petals+(layer%2)*.20+(random()-.5)*.07,
+        widthJitter:.95+random()*.12,lengthJitter:.93+random()*.14,
+        tint:(random()-.5)*13,botanical:random()-.5});
+    }
+  }
+  return elements;
+}
+function botanicalFactors(type) {
+  switch(type) {
+    case 'waterlily': return {width:1.22,length:.92,curvature:.67};
+    case 'iris': return {width:1.08,length:1.10,curvature:1.26};
+    case 'lily': return {width:.92,length:1.22,curvature:1.10};
+    default: return {width:1,length:1,curvature:1};
+  }
+}
+function renderLotus(ctx,w,h,p,phase=0,seed=state.seed,options={}) {
+  const scale=Math.min(w/480,h/1000);
+  const centerX=w*.5,centerY=h*(p.mode==='reference'?.58:.55);
+  const bloom=1+.025*Math.sin(phase*.37);
+  const motif=botanicalFactors(p.flower);
+  const items=buildLayers(p,seed);
+  const maxDimension=Math.min(w,h);
+  let energyTotal=0,energyBand=0;
+  let lowH=Infinity,highH=0;
+  createTextureBackground(ctx,w,h,p,phase);
+  // Reference preset: long continuous flow lines (as in uploaded image).
+  if(p.mode==='reference') {
+    drawReferenceFilaments(ctx,w,h,p,phase,scale);
+  }
+  // Petals are rendered back-to-front, with controlled fading in reference mode.
+  for(const el of items) {
+    const d=el.depth;
+    const k=lerp(.75,p.kMax*1.25,d);
+    const H=spectralTransfer(k,p);
+    const weight=H*H;
+    energyTotal+=weight;
+    if(k>=p.kMin&&k<=p.kMax)energyBand+=weight;
+    lowH=Math.min(lowH,H);highH=Math.max(highH,H);
+    const length=maxDimension*(.43-.16*d)*el.lengthJitter*motif.length*bloom;
+    const width=maxDimension*(.155-.048*d)*el.widthJitter*motif.width;
+    const shape={length,width,curvature:p.curvature*motif.curvature*(.82+.18*d),taper:p.taper,
+      tint:el.tint,botanical:el.botanical};
+    const alphaScale=p.mode==='minimal'?.72:p.mode==='reference'?.69:1;
+    const localP={...p,lineAlpha:p.lineAlpha*alphaScale*p.brightness};
+    const angle=el.angle+p.sway*.16*d + .025*Math.sin(phase*.3+el.k*1.15);
+    renderPetal(ctx,localP,centerX,centerY,shape,angle,scale,H,phase,seed);
+  }
+  // Faint luminous flower center: no violent high-contrast flickering.
+  const centerGlow=ctx.createRadialGradient(centerX,centerY,0,centerX,centerY,maxDimension*.12);
+  centerGlow.addColorStop(0,hueColor(p.hue-5,.35,.93,.34*p.glow));
+  centerGlow.addColorStop(.17,hueColor(p.hue,.78,.61,.17*p.glow));
+  centerGlow.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.save();ctx.globalCompositeOperation='lighter';ctx.fillStyle=centerGlow;
+  ctx.fillRect(centerX-maxDimension*.12,centerY-maxDimension*.12,maxDimension*.24,maxDimension*.24);ctx.restore();
+  // Gentle natural vignette, independent of filter statistics.
+  const vignette=ctx.createRadialGradient(w*.5,h*.51,Math.min(w,h)*.22,w*.5,h*.51,Math.max(w,h)*.72);
+  vignette.addColorStop(0,'rgba(0,0,0,0)');vignette.addColorStop(1,'rgba(0,0,0,.46)');
+  ctx.fillStyle=vignette;ctx.fillRect(0,0,w,h);
+  return {energyInBand:energyTotal?energyBand/energyTotal:0,
+    layerCount:p.layers,petalCount:items.length,transferMin:lowH,transferMax:highH,
+    impedanceOhm:capModel(p),resonanceMHz:resonanceMHz(p)};
+}
+function drawReferenceFilaments(ctx,w,h,p,phase,scale) {
+  const cx=w*.5;
+  // Vertical breathing field, represented as multiple smooth symmetric curves.
+  // No fast flashing: phase evolves slowly with animation speed.
+  const lobes=[.19,.39,.60,.81];
+  const amount=15;
+  const centerColor=hueColor(p.hue+4,p.saturation,.79);
+  for(let j=0;j<lobes.length;j++) {
+    const cy=h*lobes[j];
+    const radius=Math.min(w*.43,h*.17)*(j%2===0?.80:1.1);
+    for(let i=0;i<amount;i++) {
+      const u=(i+.5)/amount;
+      const wave=2*u-1;
+      const width=radius*(1-wave*wave)*(.45+.35*Math.cos(phase*.24+j));
+      glowLine(ctx,(g)=>{
+        for(let a=0;a<=36;a++) {
+          const t=a/36;
+          const yy=cy+(t-.5)*h*.37;
+          const xx=cx+width*Math.sin(Math.PI*2*t)*Math.sin(Math.PI*t)*Math.cos(j*.4);
+          if(a===0)g.moveTo(xx,yy);else g.lineTo(xx,yy);
+        }
+      },centerColor,.32,p.lineAlpha*.24,4*p.glow,scale);
+      glowLine(ctx,(g)=>{
+        for(let a=0;a<=36;a++) {
+          const t=a/36;
+          const yy=cy+(t-.5)*h*.37;
+          const xx=cx-width*Math.sin(Math.PI*2*t)*Math.sin(Math.PI*t)*Math.cos(j*.4);
+          if(a===0)g.moveTo(xx,yy);else g.lineTo(xx,yy);
+        }
+      },centerColor,.32,p.lineAlpha*.24,4*p.glow,scale);
+    }
+  }
+  glowLine(ctx,(g)=>{g.moveTo(cx,h*.045);g.lineTo(cx,h*.96);},hueColor(p.hue,.5,.85*p.brightness),.3+p.stemStrength*.7,p.lineAlpha*.65,15*p.glow,scale);
+  for(const position of [.19,.39,.60,.81]){
+    const g=ctx.createRadialGradient(cx,h*position,0,cx,h*position,Math.min(w,h)*.14);
+    g.addColorStop(0,'rgba(225,255,255,.25)');
+    g.addColorStop(.15,hueColor(p.hue,.8,.7,.19*p.glow));
+    g.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.save();ctx.globalCompositeOperation='lighter';ctx.fillStyle=g;
+    ctx.fillRect(cx-w*.3,h*position-w*.3,w*.6,w*.6);ctx.restore();
+  }
+}
+function renderField(ctx,w,h,p,phase=0,seed=state.seed) {
+  return renderLotus(ctx,w,h,p,phase,seed);
+}
+function updateCharts(p) {
+  function axes(ctx,w,h,title) {
+    ctx.clearRect(0,0,w,h);ctx.fillStyle='#07151d';ctx.fillRect(0,0,w,h);
+    ctx.strokeStyle='#1c3944';ctx.lineWidth=1;
+    for(let i=0;i<=4;i++){const y=14+i*(h-30)/4;ctx.beginPath();ctx.moveTo(33,y);ctx.lineTo(w-10,y);ctx.stroke()}
+    ctx.fillStyle='#96b5be';ctx.font='11px system-ui';ctx.fillText(title,38,11);
+  }
+  {
+    const ctx=transferContext,w=transferCanvas.width,h=transferCanvas.height;
+    axes(ctx,w,h,'H(k)');
+    const max=1+p.boost+.1;
+    ctx.strokeStyle='#70e6d1';ctx.lineWidth=2.3;ctx.beginPath();
+    for(let i=0;i<=w-45;i++){
+      const k=.1+i/(w-45)*24;
+      const y=14+(h-30)*(1-clamp(spectralTransfer(k,p)/max,0,1));
+      if(i===0)ctx.moveTo(34+i,y);else ctx.lineTo(34+i,y);
+    }
+    ctx.stroke();ctx.fillStyle='#98c0c4';ctx.fillText('0.1',31,h-3);ctx.fillText('24',w-26,h-3);
+  }
+  {
+    const ctx=impedanceContext,w=impedanceCanvas.width,h=impedanceCanvas.height;
+    axes(ctx,w,h,'|Z|, Ω · log scale');
+    const values=[];
+    for(let i=0;i<=w-45;i++){
+      const f=.1*Math.pow(2000,i/(w-45));
+      values.push(Math.log10(Math.max(.001,capModel(p,f))));
+    }
+    const min=Math.min(...values),max=Math.max(...values),span=Math.max(.01,max-min);
+    ctx.strokeStyle='#9cccf9';ctx.lineWidth=2.3;ctx.beginPath();
+    for(let i=0;i<values.length;i++){
+      const y=14+(h-30)*(1-(values[i]-min)/span);
+      if(!i)ctx.moveTo(34+i,y);else ctx.lineTo(34+i,y);
+    }
+    ctx.stroke();ctx.fillStyle='#98c0c4';ctx.fillText('0.1 MHz',31,h-3);ctx.fillText('200 MHz',w-69,h-3);
+  }
+}
+function metadataObject(p,measure,seed) {
+  return {
+    generator:'CIC Flower Spectral Studio v6',
+    imageType:'layered parametric botanical filaments',
+    settings:{...p},seed,
+    filterModel:{
+      formula:'H(k)=(1-a)+a(1+b)/sqrt(1+(kmin/k)^(2n))/sqrt(1+(k/kmax)^(2n))',
+      spatialFrequencyUnit:'arbitrary normalized scale',
+      note:'Weights assigned to generated geometric components; not FFT measurement of PNG',
+      estimatedEnergyFraction:measure.energyInBand
+    },
+    electricalModel:{
+      formula:'|Z(f)|=sqrt(ESR^2+(2*pi*f*ESL-1/(2*pi*f*C))^2)',
+      impedanceOhm:measure.impedanceOhm,
+      resonanceMHz:measure.resonanceMHz,
+      note:'Independent capacitor model, not an electromagnetic function of the screen'
+    },
+    display:{mode:p.mode,orientation:p.orientation,animated:p.animate,backgroundHue:p.backgroundHue,backgroundSaturation:p.backgroundSaturation,backgroundDarkness:p.backgroundDarkness},
+    userSpectrum:{preset:p.spectrumPreset,explanation:'Spatial geometry frequency, not electromagnetic or biological frequency'},
+    disclaimer:'Decorative mathematical image, not a health treatment or EMF filter'
+  };
+}
+function updateMetrics(p,measure) {
+  byId('bandMetric').textContent=(measure.energyInBand*100).toFixed(1)+'%';
+  byId('impMetric').textContent=measure.impedanceOhm.toFixed(3)+' Ω';
+  byId('resMetric').textContent=measure.resonanceMHz.toFixed(1)+' MHz';
+  byId('metadata').textContent=JSON.stringify(metadataObject(p,measure,state.seed),null,2);
+}
+function resizePreview(p) {
+  const portrait=p.orientation==='portrait';
+  const w=portrait?480:900,h=portrait?1044:506;
+  if(previewCanvas.width!==w||previewCanvas.height!==h) {
+    previewCanvas.width=w;previewCanvas.height=h;
+    state.renderWidth=w;state.renderHeight=h;
+  }
+  byId('previewTitle').textContent=(p.mode==='reference'?'Свечение по образцу':p.mode==='minimal'?'Минималистичный цветок':'Натуральный '+p.flower)+(portrait?' · iPhone 17':' · 4K');
+}
+function drawPreview(updateAnalytics=false) {
+  const p=readParameters();resizePreview(p);
+  const measure=renderField(previewContext,previewCanvas.width,previewCanvas.height,p,state.phase,state.seed);
+  if(updateAnalytics||!state.metrics){state.metrics=measure;updateCharts(p);updateMetrics(p,measure)}
+  state.dirty=false;
+}
+function animationFrame(timestamp) {
+  if(!state.lastTimestamp)state.lastTimestamp=timestamp;
+  let dt=clamp((timestamp-state.lastTimestamp)/1000,0,.05);
+  state.lastTimestamp=timestamp;
+  if(byId('autoCycle').checked && byId('fullAuto').checked && !state.exporting && !document.hidden && timestamp-lastAutoCycle>45000) {
+    autoGenerateNow();
+  }
+  const p=readParameters();
+  if(p.animate&&!document.hidden&&!state.exporting){
+    state.phase+=dt*p.speed;
+    // Rendering is deliberately capped at 24 fps: no strobing or GPU saturation.
+    const interval=(p.autoQuality&&state.frameTime>.060)?160:80;
+    if(timestamp-state.lastRender>=interval){
+      const t0=performance.now();drawPreview(false);
+      state.frameTime=.85*state.frameTime+.15*(performance.now()-t0)/1000;
+      state.lastRender=timestamp;state.frames++;
+    }
+  } else if(state.dirty&&!state.exporting){drawPreview(true)}
+  requestAnimationFrame(animationFrame);
+}
+function setStatus(text){byId('status').textContent=text}
+function markDirty(){updateLabels();state.dirty=true;if(!readParameters().animate)drawPreview(true)}
+function randomize(){
+  const r=randomGenerator((Math.random()*0xFFFFFFFF)>>>0);
+  state.seed=(r()*0xFFFFFFFF)>>>0;
+  byId('petals').value=7+Math.floor(r()*7);
+  byId('layers').value=3+Math.floor(r()*5);
+  byId('curvature').value=(.80+r()*.65).toFixed(2);
+  byId('taper').value=(.64+r()*.46).toFixed(2);
+  byId('veins').value=6+Math.floor(r()*8);
+  byId('lineDensity').value=300+Math.floor(r()*500);
+  byId('sway').value=(r()*.75).toFixed(2);
+  byId('hue').value=Math.floor(145+r()*45);
+  byId('glow').value=(.85+r()*1.25).toFixed(2);
+  byId('glowRadius').value=20+Math.floor(r()*25);
+  byId('flower').value=['lotus','lotus','waterlily','iris','lily'][Math.floor(r()*5)];
+  markDirty();drawPreview(true);setStatus('Новый цветок создан; физическая модель сохранена.');
+}
+function applyReferencePreset(){
+  byId('flower').value='lotus';byId('petals').value=8;byId('layers').value=5;
+  byId('curvature').value=1.10;byId('taper').value=.86;
+  byId('veins').value=13;byId('sway').value=.40;
+  byId('hue').value=168;byId('saturation').value=.82;
+  byId('glow').value=1.9;byId('glowRadius').value=35;byId('lineAlpha').value=.16;
+  byId('lineWidth').value=.46;
+}
+function setBusy(busy){state.exporting=busy;for(const id of ['savePhone','save4k','saveBatch','saveJSON','random','generate'])byId(id).disabled=busy}
+function canvasToBlob(canvas) {
+  return new Promise((resolve,reject)=>canvas.toBlob(blob=>blob?resolve(blob):reject(new Error('PNG conversion failed')),'image/png'));
+}
+function triggerDownload(blob,filename) {
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),2000);
+}
+async function exportSingle(w,h,name) {
+  if(state.exporting)return;
+  setBusy(true);setStatus(`Вычисляю ${w}×${h}…`);
+  try{
+    await new Promise(resolve=>setTimeout(resolve,40));
+    const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+    const ctx=canvas.getContext('2d',{alpha:false});
+    const p=readParameters();renderField(ctx,w,h,p,state.phase,state.seed);
+    const blob=await canvasToBlob(canvas);triggerDownload(blob,name);
+    setStatus(`Сохранён ${name} (${(blob.size/1024/1024).toFixed(2)} МиБ).`);
+  }catch(error){setStatus('Ошибка экспорта: '+error.message)}finally{setBusy(false)}
+}
+/** Standard ZIP (method 0 / STORE), generated offline without libraries. */
+const crcTable=(()=>{
+  const table=new Uint32Array(256);
+  for(let n=0;n<256;n++){
+    let c=n;for(let k=0;k<8;k++)c=(c&1)?0xEDB88320^(c>>>1):(c>>>1);
+    table[n]=c>>>0;
+  }
+  return table;
+})();
+function checksumCRC32(bytes) {
+  let crc=0xFFFFFFFF;
+  for(let i=0;i<bytes.length;i++)crc=crcTable[(crc^bytes[i])&255]^(crc>>>8);
+  return (crc^0xFFFFFFFF)>>>0;
+}
+function encodeZip(files) {
+  const encoder=new TextEncoder(),localParts=[],centralParts=[];
+  let offset=0;
+  const now=new Date();
+  const dosTime=((now.getHours()&31)<<11)|((now.getMinutes()&63)<<5)|(Math.floor(now.getSeconds()/2)&31);
+  const dosDate=(((Math.max(1980,now.getFullYear())-1980)&127)<<9)|(((now.getMonth()+1)&15)<<5)|(now.getDate()&31);
+  for(const file of files){
+    const name=encoder.encode(file.name),data=file.data,crc=checksumCRC32(data);
+    const local=new Uint8Array(30+name.length),lv=new DataView(local.buffer);
+    lv.setUint32(0,0x04034b50,true);lv.setUint16(4,20,true);
+    lv.setUint16(6,0x0800,true);lv.setUint16(8,0,true);
+    lv.setUint16(10,dosTime,true);lv.setUint16(12,dosDate,true);
+    lv.setUint32(14,crc,true);lv.setUint32(18,data.length,true);
+    lv.setUint32(22,data.length,true);lv.setUint16(26,name.length,true);
+    lv.setUint16(28,0,true);local.set(name,30);
+    localParts.push(local,data);
+    const central=new Uint8Array(46+name.length),cv=new DataView(central.buffer);
+    cv.setUint32(0,0x02014b50,true);cv.setUint16(4,20,true);cv.setUint16(6,20,true);
+    cv.setUint16(8,0x0800,true);cv.setUint16(10,0,true);
+    cv.setUint16(12,dosTime,true);cv.setUint16(14,dosDate,true);
+    cv.setUint32(16,crc,true);cv.setUint32(20,data.length,true);
+    cv.setUint32(24,data.length,true);cv.setUint16(28,name.length,true);
+    cv.setUint16(30,0,true);cv.setUint16(32,0,true);cv.setUint16(34,0,true);
+    cv.setUint16(36,0,true);cv.setUint32(38,0,true);cv.setUint32(42,offset,true);
+    central.set(name,46);centralParts.push(central);
+    offset+=local.length+data.length;
+  }
+  let centralSize=0;for(const part of centralParts)centralSize+=part.length;
+  if(offset+centralSize>0xFFFFFFFF)throw new Error('ZIP exceeds 4 GiB format limit');
+  const end=new Uint8Array(22),view=new DataView(end.buffer);
+  view.setUint32(0,0x06054b50,true);view.setUint16(4,0,true);view.setUint16(6,0,true);
+  view.setUint16(8,files.length,true);view.setUint16(10,files.length,true);
+  view.setUint32(12,centralSize,true);view.setUint32(16,offset,true);
+  return new Blob([...localParts,...centralParts,end],{type:'application/zip'});
+}
+async function exportBatch(){
+  if(state.exporting)return;
+  const count=Number(byId('batchCount').value),[w,h]=byId('batchSize').value.split('x').map(Number);
+  const files=[],p=readParameters(),baseSeed=state.seed;
+  const prog=byId('progress');prog.style.display='block';prog.value=0;setBusy(true);
+  try{
+    const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+    const ctx=canvas.getContext('2d',{alpha:false});
+    const records=[];
+    for(let i=0;i<count;i++){
+      setStatus(`Генерирую цветок ${i+1} / ${count} (${w}×${h})…`);
+      await new Promise(resolve=>setTimeout(resolve,25));
+      const pp=variantSettings(p,baseSeed+i*7711,i);
+      const measure=renderField(ctx,w,h,pp,state.phase,baseSeed+i*7711);
+      const blob=await canvasToBlob(canvas);
+      const data=new Uint8Array(await blob.arrayBuffer());
+      const filename=`CIC_Lotus_${String(i+1).padStart(2,'0')}_${w}x${h}.png`;
+      files.push({name:filename,data});
+      records.push({file:filename,seed:baseSeed+i*7711,parameters:pp,measure});
+      prog.value=(i+1)/count*85;
+    }
+    const meta=new TextEncoder().encode(JSON.stringify({generator:'CIC Flower Spectral Studio v6',files:records,
+      note:'Generated pattern weights spatial components; not physical frequency therapy'},null,2));
+    files.push({name:'CIC_Parameters.json',data:meta});
+    setStatus('Упаковываю ZIP…');await new Promise(resolve=>setTimeout(resolve,30));
+    const zip=encodeZip(files);prog.value=100;
+    triggerDownload(zip,`CIC_Lotus_Wallpapers_${count}_${w}x${h}.zip`);
+    setStatus(`Готово: ${count} PNG + JSON в ZIP (${(zip.size/1024/1024).toFixed(1)} МиБ).`);
+  }catch(error){setStatus('Ошибка при создании серии: '+error.message)}
+  finally{setBusy(false);setTimeout(()=>{prog.style.display='none'},2000)}
+}
+function saveJSON(){
+  const p=readParameters(),m=state.metrics||{energyInBand:0,impedanceOhm:capModel(p),resonanceMHz:resonanceMHz(p)};
+  const data=JSON.stringify(metadataObject(p,m,state.seed),null,2);
+  triggerDownload(new Blob([data],{type:'application/json'}),'CIC_Flower_Spectral_v6_parameters.json');
+  setStatus('Параметры сохранены в JSON.');
+}
+
+/** Human-readable presets of spatial geometry frequencies (not electrical Hz). */
+const spectrumProfiles = {
+  balanced: {min:0.9,max:11.5,order:5,boost:1.15,attenuation:.75,
+    text:'Сбалансированный: сохраняет форму лепестков и тонкие прожилки без чрезмерно резких линий.'},
+  soft: {min:.25,max:5.2,order:4,boost:.75,attenuation:.86,
+    text:'Мягкий: преимущество плавных форм и широких световых переходов; мелких деталей меньше.'},
+  fine: {min:2.0,max:21,order:5,boost:1.4,attenuation:.88,
+    text:'Тонкие прожилки: больше веса у мелких пространственных деталей и светящихся волокон.'},
+  contour: {min:.8,max:9.0,order:7,boost:1.5,attenuation:.9,
+    text:'Выразительный контур: более избирательная полоса, подчёркивающая структуру лепестков.'},
+  wide: {min:.2,max:24,order:2,boost:.75,attenuation:.35,
+    text:'Широкий спектр: меньшая фильтрация, сохраняется больше деталей исходной геометрии.'},
+  manual: {text:'Ручная настройка: перемещай границы kmin и kmax. Это масштаб деталей рисунка, а не частоты, воздействующие на тело.'}
+};
+function setSpectrumProfile(name){
+  const profile=spectrumProfiles[name]||spectrumProfiles.balanced;
+  byId('spectrumExplain').textContent=profile.text;
+  if(name!=='manual'){
+    byId('kMin').value=profile.min;
+    byId('kMax').value=profile.max;
+    byId('order').value=profile.order;
+    byId('boost').value=profile.boost;
+    byId('attenuation').value=profile.attenuation;
+  }
+  updateLabels();state.dirty=true;
+}
+function applyAutomaticSettings() {
+  // Visually-balanced defaults with independent capacitor-model parameters.
+  const random=randomGenerator(state.seed);
+  const palette=[
+    {flower:170,background:218}, {flower:162,background:266},
+    {flower:198,background:215}, {flower:315,background:227},
+    {flower:38,background:215}, {flower:115,background:250}
+  ];
+  const combo=palette[Math.floor(random()*palette.length)];
+  byId('flower').value=['lotus','waterlily','lotus','iris','lily'][Math.floor(random()*5)];
+  byId('hue').value=combo.flower;
+  byId('backgroundHue').value=combo.background;
+  byId('backgroundSaturation').value=(.28+random()*.3).toFixed(2);
+  byId('backgroundDarkness').value=(.80+random()*.18).toFixed(2);
+  byId('backgroundLift').value=(.18+random()*.2).toFixed(2);
+  byId('petals').value=7+Math.floor(random()*5);
+  byId('layers').value=4+Math.floor(random()*3);
+  byId('curvature').value=(.82+random()*.5).toFixed(2);
+  byId('taper').value=(.69+random()*.34).toFixed(2);
+  byId('veins').value=8+Math.floor(random()*5);
+  byId('lineDensity').value=320+Math.floor(random()*360);
+  byId('sway').value=(random()*.57).toFixed(2);
+  byId('glow').value=(1.2+random()*.5).toFixed(2);
+  byId('brightness').value=(.85+random()*.12).toFixed(2);
+  byId('lineAlpha').value=(.13+random()*.11).toFixed(2);
+  byId('lineWidth').value=(.36+random()*.32).toFixed(2);
+  byId('spectrumPreset').value='balanced';
+  setSpectrumProfile('balanced');
+  // A plausible passive component model, NOT a therapeutic frequency match.
+  byId('capacitance').value=150+Math.round(random()*250);
+  byId('esr').value=(.03+random()*.08).toFixed(3);
+  byId('esl').value=(1.1+random()*3.4).toFixed(2);
+  byId('frequency').value=(8+random()*30).toFixed(1);
+  state.phase=0;
+  updateLabels();
+  state.dirty=true;
+  setStatus('Автоматически рассчитана композиция: геометрия + спектр + палитра цветка и фона + ёмкостная модель.');
+}
+function autoGenerateNow() {
+  state.seed=(Math.random()*0xFFFFFFFF)>>>0;
+  byId('fullAuto').checked=true;
+  applyAutomaticSettings();
+  drawPreview(true);
+  lastAutoCycle=performance.now();
+}
+let lastAutoCycle=0;
+function switchToManual() {
+  byId('fullAuto').checked=false;
+  byId('spectrumPreset').value='manual';
+  setSpectrumProfile('manual');
+  setStatus('Ручной режим: все параметры можно менять независимо.');
+}
+function bindUI(){
+  const manualParameters = new Set(parameterIds);
+  for(const id of parameterIds){
+    byId(id).addEventListener('input',()=>{
+      if(manualParameters.has(id)) byId('fullAuto').checked=false;
+      if(['kMin','kMax','order','boost','attenuation'].includes(id)) {
+        byId('spectrumPreset').value='manual';
+        byId('spectrumExplain').textContent=spectrumProfiles.manual.text;
+      }
+      markDirty();
+    });
+  }
+  for(const id of ['mode','flower','orientation','animate','autoQuality'])byId(id).addEventListener('change',()=>{
+    if(id==='mode'&&byId('mode').value==='reference'&&!byId('fullAuto').checked)applyReferencePreset();
+    state.dirty=true;updateLabels();drawPreview(true);
+  });
+  byId('spectrumPreset').addEventListener('change',()=>{
+    const name=byId('spectrumPreset').value;
+    byId('fullAuto').checked=false;
+    setSpectrumProfile(name);drawPreview(true);
+  });
+  byId('fullAuto').addEventListener('change',()=>{
+    if(byId('fullAuto').checked)autoGenerateNow();
+    else setStatus('Ручной режим включён.');
+  });
+  byId('autoGenerate').addEventListener('click',autoGenerateNow);
+  byId('manualMode').addEventListener('click',switchToManual);
+  byId('backgroundSwatches').addEventListener('click',event=>{
+    const target=event.target.closest('button[data-bghue]');
+    if(!target)return;
+    byId('fullAuto').checked=false;
+    byId('backgroundHue').value=target.dataset.bghue;
+    byId('backgroundSaturation').value=target.dataset.bgsat;
+    markDirty();drawPreview(true);
+  });
+  byId('generate').addEventListener('click',()=>{
+    if(byId('fullAuto').checked)autoGenerateNow();
+    else {drawPreview(true);setStatus('Параметры пересчитаны.')}
+  });
+  byId('random').addEventListener('click',()=>{
+    if(byId('fullAuto').checked)autoGenerateNow();
+    else randomize();
+  });
+  byId('savePhone').addEventListener('click',()=>exportSingle(1206,2622,'CIC_Lotus_iPhone17_1206x2622.png'));
+  byId('save4k').addEventListener('click',()=>exportSingle(3840,2160,'CIC_Lotus_4K_3840x2160.png'));
+  byId('saveBatch').addEventListener('click',exportBatch);
+  byId('saveJSON').addEventListener('click',saveJSON);
+  document.addEventListener('visibilitychange',()=>{state.lastTimestamp=0});
+}
+updateLabels();bindUI();setSpectrumProfile('balanced');applyAutomaticSettings();drawPreview(true);requestAnimationFrame(animationFrame);
+setStatus('Автоматический режим запущен. Для ручного выбора спектра выбери готовый профиль в разделе 04.');
+</script>
+</body>
+</html>
