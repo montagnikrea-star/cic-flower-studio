@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark">
-<title>CIC Flower Spectral Studio v7 · Adaptive Research Lab</title>
+<title>CIC Flower Spectral Studio v7.1 · 50–100 Ω · Adaptive Research Lab</title>
 <style>
 :root {--bg:#070e15;--panel:#0d1b25;--panel2:#102431;--border:#254456;--text:#e5f8fa;--muted:#9aafb9;--accent:#6ee5d0;--cyan:#8feafb;}
 * {box-sizing:border-box}
@@ -155,6 +155,17 @@ progress {width:100%;height:8px;accent-color:var(--accent);display:none}
 <input type="range" id="analysisMinMhz" min="0.1" max="30" step="0.1" value="0.1">
 <label class="control" for="analysisMaxMhz">Макс. частота анализа (МГц) <output id="analysisMaxMhzValue">200</output></label>
 <input type="range" id="analysisMaxMhz" min="10" max="200" step="1" value="200">
+<div class="impedance-target-panel" style="padding:12px;border:1px solid #34605e;border-radius:12px;margin:12px 0;background:#0a2529">
+<strong>Согласование 50–100 Ом на всей выбранной полосе</strong>
+<p class="hint">Частоты задаются ниже в МГц. Модель: R согласования параллельно ветви конденсатора C+ESR+ESL. Расчёт не меняет физические свойства изображения.</p>
+<label class="check"><input type="checkbox" id="matchingEnabled" checked>Учитывать резистивную ветвь согласования</label>
+<label class="control" for="matchingResistor">R согласования, Ом <output id="matchingResistorValue">90</output></label>
+<input type="range" id="matchingResistor" min="50" max="100" step="1" value="90">
+<label class="check"><input type="checkbox" id="autoMatchEnabled" checked>При AUTO-генерации подбирать 50–100 Ом автоматически</label>
+<div class="buttons"><button class="primary" id="optimizeMatching">Автоподбор 50–100 Ом</button><button id="checkMatching">Проверить все частоты</button></div>
+<div class="metrics" style="margin-top:12px"><div class="metric"><span>Мин. |Z| за диапазон</span><strong id="matchingMin">—</strong></div><div class="metric"><span>Макс. |Z| за диапазон</span><strong id="matchingMax">—</strong></div><div class="metric"><span>Точек 50–100 Ом</span><strong id="matchingPass">—</strong></div></div>
+<div id="matchingStatus" class="hint" style="margin-top:8px" aria-live="polite">Проверка не проводилась.</div>
+</div>
 <div class="buttons"><button class="primary" id="optimizeMeasured">Подобрать спектр по FFT</button><button id="diagnoseButton">Полная диагностика</button></div>
 <small>Автоподбор использует приближённый FFT 128×128, квантильное распределение энергии и критерий детализации. Он не находит «полезные для организма частоты».</small>
 </fieldset>
@@ -173,7 +184,7 @@ progress {width:100%;height:8px;accent-color:var(--accent);display:none}
 <section class="display">
 <div class="preview-card">
 <div class="topline"><strong id="previewTitle">Лотос · iPhone 17</strong><span class="tag" id="renderTag">Live mathematical pattern</span></div>
-<div class="stage"><canvas id="preview" width="480" height="1044" aria-label="Предпросмотр цветка"></canvas><span class="watermark">CIC • Spectral Lotus v7</span></div>
+<div class="stage"><canvas id="preview" width="480" height="1044" aria-label="Предпросмотр цветка"></canvas><span class="watermark">CIC • Spectral Lotus v7.1</span></div>
 </div>
 <div class="analysis-card">
 <h2 class="analysis-title">Расширенная диагностика математической модели</h2>
@@ -184,7 +195,7 @@ progress {width:100%;height:8px;accent-color:var(--accent);display:none}
 <div class="metrics"><div class="metric"><span>Оценка по весам лепестков</span><strong id="bandMetric">—</strong></div><div class="metric"><span>|Z| при опорной f</span><strong id="impMetric">—</strong></div><div class="metric"><span>Резонанс модели</span><strong id="resMetric">—</strong></div></div>
 <div class="charts" style="margin-top:12px">
 <div class="chart"><p>Измеренный FFT изображения · пространственные частоты</p><canvas id="measuredSpectrum" width="510" height="165"></canvas></div>
-<div class="chart"><p>Широкополосный модельный |Z(f)| · одиночный и банк</p><canvas id="bankChart" width="510" height="165"></canvas></div>
+<div class="chart"><p>Широкополосный |Z(f)| · конденсаторы и согласование 50–100 Ω</p><canvas id="bankChart" width="510" height="165"></canvas></div>
 </div>
 <div class="metrics"><div class="metric"><span>FFT: энергия в полосе*</span><strong id="measuredBand">—</strong></div><div class="metric"><span>FFT: спектральная энтропия</span><strong id="spectrumEntropy">—</strong></div><div class="metric"><span>Контраст / яркость</span><strong id="contrastMetric">—</strong></div></div>
 <div id="detailedReport" class="spectrum-explain" style="white-space:pre-wrap"></div>
@@ -196,7 +207,7 @@ progress {width:100%;height:8px;accent-color:var(--accent);display:none}
 <script>
 'use strict';
 /**
- * CIC Flower Spectral Studio v7
+ * CIC Flower Spectral Studio v7.1 · 50–100 Ω
  * No external dependencies, no network requests, no sensors.
  * The spectral filter weights authored spatial components. It is not an FFT
  * of the finished colored image, and the capacitance model is independent of
@@ -677,6 +688,76 @@ function complexParallelImpedance(components,frequencyMHz){
   }
   return 1/Math.max(1e-12,Math.hypot(admittanceReal,admittanceImag));
 }
+/** Impedance of a resistor R in parallel with a series C/ESR/ESL capacitor branch. */
+function matchedImpedance(frequencyMHz, capacitancePf, esrOhm, eslNh, matchingResistorOhm){
+  const f=Math.max(.000001,frequencyMHz)*1e6;
+  const x=TAU*f*eslNh*1e-9-1/(TAU*f*capacitancePf*1e-12);
+  const d=esrOhm*esrOhm+x*x;
+  const real=esrOhm/d+1/matchingResistorOhm;
+  const imaginary=-x/d;
+  return 1/Math.hypot(real,imaginary);
+}
+function analyzeMatching(p, capacitorPf=p.capacitance, resistorOhm=Number(byId('matchingResistor').value)){
+  const enabled=byId('matchingEnabled').checked;
+  const minMHz=Math.max(.1,Number(byId('analysisMinMhz').value));
+  const maxMHz=Math.max(minMHz+.1,Number(byId('analysisMaxMhz').value));
+  const count=512;
+  let minimum=Infinity,maximum=0,passes=0,worstDeviation=0;
+  const samples=[];
+  for(let i=0;i<count;i++){
+    const f=minMHz*Math.pow(maxMHz/minMHz,i/(count-1));
+    const z=enabled?matchedImpedance(f,capacitorPf,p.esr,p.esl,resistorOhm):capModel({...p,capacitance:capacitorPf},f);
+    samples.push({frequencyMHz:f,ohm:z});
+    minimum=Math.min(minimum,z);maximum=Math.max(maximum,z);
+    if(z>=50-1e-8&&z<=100+1e-8)passes++;
+    worstDeviation=Math.max(worstDeviation,Math.abs(z-75));
+  }
+  return {rangeMHz:[minMHz,maxMHz],capacitorPf,resistorOhm:enabled?resistorOhm:null,
+    enabled,minimumOhm:minimum,maximumOhm:maximum,
+    passPercent:100*passes/count,allPass:passes===count,
+    worstDeviationFrom75Ohm:worstDeviation,samples,
+    note:'Lumped ideal model; real-world resistor tolerances, conductor parasitics and PCB layout not included.'};
+}
+function updateMatchingUI(result){
+  byId('matchingMin').textContent=result.minimumOhm.toFixed(2)+' Ω';
+  byId('matchingMax').textContent=result.maximumOhm.toFixed(2)+' Ω';
+  byId('matchingPass').textContent=result.passPercent.toFixed(1)+'%';
+  byId('matchingStatus').textContent=result.allPass
+    ?`✓ Модель укладывается в 50–100 Ω на ${result.rangeMHz[0].toFixed(1)}–${result.rangeMHz[1].toFixed(1)} МГц (512 точек). C=${result.capacitorPf.toFixed(1)} пФ, R=${result.resistorOhm?.toFixed(0)??'нет'} Ω. Допуск реального монтажа не проверен.`
+    :`⚠ Условие 50–100 Ω НЕ выполнено: минимум ${result.minimumOhm.toFixed(2)} Ω, максимум ${result.maximumOhm.toFixed(2)} Ω. Измените схему или диапазон.`;
+}
+function optimizeMatching({silent=false}={}){
+  const p=readParameters();
+  byId('matchingEnabled').checked=true;
+  const originalC=p.capacitance;
+  // Finite, reproducible search over values available in the UI.
+  const candidatesC=[10,11,12,13,15,18,22,27,33,39,47,56,68,82,100,120,150,180,220,270,330,390,470,560,680,820,1000,1200,1500,2000];
+  const candidatesR=[55,60,65,70,75,80,85,90,95,100];
+  let best=null;
+  for(const c of candidatesC){
+    for(const r of candidatesR){
+      const value=analyzeMatching(p,c,r);
+      // Feasibility is the primary requirement; favor a flat response near 75 Ω.
+      const penalty=value.allPass?0:10000+Math.max(0,50-value.minimumOhm)*100+Math.max(0,value.maximumOhm-100)*100;
+      const score=penalty+value.worstDeviationFrom75Ohm+0.00002*Math.abs(c-originalC);
+      if(!best||score<best.score)best={...value,score};
+    }
+  }
+  if(best){
+    byId('capacitance').value=String(best.capacitorPf);
+    byId('matchingResistor').value=String(best.resistorOhm);
+    updateLabels();
+    byId('matchingResistorValue').textContent=String(best.resistorOhm);
+    const updated=analyzeMatching(readParameters());
+    updateMatchingUI(updated);
+    state.dirty=true;
+    if(!silent)setStatus(updated.allPass
+      ?`Согласование подобрано: C=${updated.capacitorPf} пФ, R=${updated.resistorOhm} Ω, ${updated.minimumOhm.toFixed(1)}–${updated.maximumOhm.toFixed(1)} Ω.`
+      :'Невозможно выполнить 50–100 Ω на всей полосе доступными элементами; показан лучший из проверенных вариантов.');
+    return updated;
+  }
+  return null;
+}
 function broadbandCapacitorAnalysis(p){
   const minMHz=Math.max(.1,Number(byId('analysisMinMhz').value));
   const maxMHz=Math.max(minMHz+.1,Number(byId('analysisMaxMhz').value));
@@ -717,25 +798,40 @@ function drawMeasuredSpectrum(analysis){
   ctx.fillStyle='rgba(100,220,200,.1)';ctx.fillRect(x1,7,Math.max(0,x2-x1),h-23);
   ctx.strokeStyle='rgba(100,220,200,.45)';ctx.strokeRect(x1,7,Math.max(0,x2-x1),h-23);
 }
-function drawBroadbandChart(bank){
+function drawBroadbandChart(bank,matched){
   const ctx=bankChartContext,w=bankChartCanvas.width,h=bankChartCanvas.height;
   ctx.fillStyle='#07151d';ctx.fillRect(0,0,w,h);
-  const s=bank.samples,values=s.flatMap(v=>[Math.log10(v.singleOhm),Math.log10(v.bankOhm)]);
-  const low=Math.min(...values),high=Math.max(...values),span=Math.max(.001,high-low);
-  for(const [key,color] of [['singleOhm','#9db5ff'],['bankOhm','#62e6cd']]){
-    ctx.strokeStyle=color;ctx.lineWidth=2;ctx.beginPath();
-    s.forEach((sample,i)=>{const x=29+i/(s.length-1)*(w-42);const y=8+(h-24)*(1-(Math.log10(sample[key])-low)/span);i?ctx.lineTo(x,y):ctx.moveTo(x,y);});ctx.stroke();
+  const samples=bank.samples;
+  const values=samples.flatMap(v=>[v.singleOhm,v.bankOhm]);
+  values.push(...matched.samples.map(v=>v.ohm),50,100);
+  const minLog=Math.log10(Math.max(1e-6,Math.min(...values)));
+  const maxLog=Math.log10(Math.max(...values,1e-6));
+  const span=Math.max(.001,maxLog-minLog);
+  const yFor=z=>8+(h-24)*(1-(Math.log10(Math.max(1e-9,z))-minLog)/span);
+  const y50=yFor(50),y100=yFor(100);
+  ctx.fillStyle='rgba(103,225,176,.13)';ctx.fillRect(28,Math.min(y50,y100),w-43,Math.abs(y50-y100));
+  const curves=[{data:samples,key:'singleOhm',color:'#9db5ff'},{data:samples,key:'bankOhm',color:'#62e6cd'},
+    {data:matched.samples,key:'ohm',color:'#ffd47b'}];
+  for(const curve of curves){
+    ctx.strokeStyle=curve.color;ctx.lineWidth=2;ctx.beginPath();
+    curve.data.forEach((sample,i)=>{
+      const x=28+i/(curve.data.length-1)*(w-43),y=yFor(sample[curve.key]);
+      if(i)ctx.lineTo(x,y);else ctx.moveTo(x,y);
+    });ctx.stroke();
   }
-  ctx.fillStyle='#9fbec7';ctx.font='11px system-ui';ctx.fillText('один',30,14);ctx.fillStyle='#9db5ff';ctx.fillRect(67,7,12,3);
-  ctx.fillStyle='#9fbec7';ctx.fillText('3 элемента',90,14);ctx.fillStyle='#62e6cd';ctx.fillRect(161,7,12,3);
-  ctx.fillText(`${bank.rangeMHz[0].toFixed(1)} МГц`,30,h-3);ctx.fillText(`${bank.rangeMHz[1].toFixed(0)} МГц`,w-79,h-3);
+  ctx.fillStyle='#a4bfc8';ctx.font='11px system-ui';ctx.fillText('C',30,13);ctx.fillText('3C',65,13);ctx.fillText('R∥C',100,13);
+  ctx.fillStyle='#9db5ff';ctx.fillRect(42,8,13,3);ctx.fillStyle='#62e6cd';ctx.fillRect(81,8,13,3);
+  ctx.fillStyle='#ffd47b';ctx.fillRect(131,8,13,3);
+  ctx.fillStyle='#a4bfc8';ctx.fillText(`${bank.rangeMHz[0].toFixed(1)} МГц`,28,h-3);
+  ctx.fillText(`${bank.rangeMHz[1].toFixed(0)} МГц`,w-80,h-3);
 }
 function runFullDiagnostics({silent=false}={}){
   const p=readParameters();
   if(state.exporting)return;
-  const actual=analyzeActualImage(previewCanvas,p),bank=broadbandCapacitorAnalysis(p);
+  const actual=analyzeActualImage(previewCanvas,p),bank=broadbandCapacitorAnalysis(p),matched=analyzeMatching(p);
+  updateMatchingUI(matched);
   analysisCache.latest=actual;analysisCache.bank=bank;analysisCache.at=performance.now();
-  drawMeasuredSpectrum(actual);drawBroadbandChart(bank);
+  drawMeasuredSpectrum(actual);drawBroadbandChart(bank,matched);
   byId('measuredBand').textContent=(actual.actualEnergyFraction*100).toFixed(1)+'%';
   byId('spectrumEntropy').textContent=actual.entropy.toFixed(3);
   byId('contrastMetric').textContent=actual.luminanceStd.toFixed(3)+' / '+actual.luminanceMean.toFixed(3);
@@ -745,17 +841,19 @@ function runFullDiagnostics({silent=false}={}){
     `Диапазон электрической модели: ${bank.rangeMHz[0].toFixed(1)}–${bank.rangeMHz[1].toFixed(0)} МГц. Цель |Z| ≤ ${bank.targetOhm} Ω\n`+
     `Максимальный |Z|: один ${bank.worstSingleOhm.toFixed(2)} Ω; 3 параллельных ${bank.worstBankOhm.toFixed(2)} Ω (${advantage} одиночного).\n`+
     `Доля точек, выполняющих цель: ${bank.complianceSinglePercent.toFixed(0)}% → ${bank.complianceBankPercent.toFixed(0)}%.\n`+
-    `Это расчёт идеализированных компонентов; реальные платы и резонансы не моделируются.`;
+    `Согласование 50–100 Ω: ${matched.minimumOhm.toFixed(2)}–${matched.maximumOhm.toFixed(2)} Ω; ${matched.passPercent.toFixed(1)}% точек (${matched.allPass?'ПРОЙДЕНО':'НЕ ПРОЙДЕНО'}).\n`+
+    `Модель идеализирована; геометрия платы, допуски, нагрузка и паразитные связи не учтены.`;
   const record=JSON.parse(byId('metadata').textContent||'{}');
   record.measuredImageSpectrum=actual;
   record.broadbandModel={...bank,samples:bank.samples.filter((_,i)=>i%8===0)};
+  record.matching50to100Ohm={...matched,samples:matched.samples.filter((_,i)=>i%16===0)};
   byId('metadata').textContent=JSON.stringify(record,null,2);
   if(!silent)setStatus('Полная диагностика: окно Хэнна → 2D FFT (128×128) → оценка контраста → sweep C/ESR/ESL.');
 }
 
 function metadataObject(p,measure,seed) {
   return {
-    generator:'CIC Flower Spectral Studio v7',
+    generator:'CIC Flower Spectral Studio v7.1 · 50–100 Ω',
     imageType:'layered parametric botanical filaments',
     settings:{...p},seed,
     filterModel:{
@@ -933,7 +1031,7 @@ async function exportBatch(){
       records.push({file:filename,seed:baseSeed+i*7711,parameters:pp,measure});
       prog.value=(i+1)/count*85;
     }
-    const meta=new TextEncoder().encode(JSON.stringify({generator:'CIC Flower Spectral Studio v7',files:records,
+    const meta=new TextEncoder().encode(JSON.stringify({generator:'CIC Flower Spectral Studio v7.1 · 50–100 Ω',files:records,
       note:'Generated pattern weights spatial components; not physical frequency therapy'},null,2));
     files.push({name:'CIC_Parameters.json',data:meta});
     setStatus('Упаковываю ZIP…');await new Promise(resolve=>setTimeout(resolve,30));
@@ -1021,6 +1119,7 @@ function autoGenerateNow() {
   state.seed=(Math.random()*0xFFFFFFFF)>>>0;
   byId('fullAuto').checked=true;
   applyAutomaticSettings();
+  if(byId('autoMatchEnabled').checked) optimizeMatching({silent:true});
   drawPreview(true);
   if(byId('adaptiveEnabled').checked)optimizeMeasuredSpectrum({automatic:true});
   runFullDiagnostics({silent:true});
@@ -1079,8 +1178,16 @@ function bindUI(){
   byId('optimizeMeasured').addEventListener('click',()=>optimizeMeasuredSpectrum());
   byId('diagnoseButton').addEventListener('click',()=>runFullDiagnostics());
   for(const id of ['targetImpedance','analysisMinMhz','analysisMaxMhz']) {
-    byId(id).addEventListener('input',()=>{byId(id+'Value').textContent=Number(byId(id).value).toFixed(id==='targetImpedance'?2:1);});
+    byId(id).addEventListener('input',()=>{byId(id+'Value').textContent=Number(byId(id).value).toFixed(id==='targetImpedance'?2:1);updateMatchingUI(analyzeMatching(readParameters()));});
   }
+  byId('matchingResistor').addEventListener('input',()=>{
+    byId('matchingResistorValue').textContent=byId('matchingResistor').value;
+    byId('fullAuto').checked=false;
+    updateMatchingUI(analyzeMatching(readParameters()));
+  });
+  byId('matchingEnabled').addEventListener('change',()=>updateMatchingUI(analyzeMatching(readParameters())));
+  byId('optimizeMatching').addEventListener('click',()=>{byId('fullAuto').checked=false;optimizeMatching();runFullDiagnostics({silent:true});});
+  byId('checkMatching').addEventListener('click',()=>runFullDiagnostics());
   byId('adaptiveGoal').addEventListener('change',()=>setStatus('Критерий адаптивного подбора выбран. Нажмите «Подобрать спектр по FFT».'));
   byId('savePhone').addEventListener('click',()=>exportSingle(1206,2622,'CIC_Lotus_iPhone17_1206x2622.png'));
   byId('save4k').addEventListener('click',()=>exportSingle(3840,2160,'CIC_Lotus_4K_3840x2160.png'));
@@ -1088,7 +1195,7 @@ function bindUI(){
   byId('saveJSON').addEventListener('click',saveJSON);
   document.addEventListener('visibilitychange',()=>{state.lastTimestamp=0});
 }
-updateLabels();bindUI();setSpectrumProfile('balanced');applyAutomaticSettings();drawPreview(true);runFullDiagnostics({silent:true});requestAnimationFrame(animationFrame);
+updateLabels();bindUI();setSpectrumProfile('balanced');applyAutomaticSettings();if(byId('autoMatchEnabled').checked)optimizeMatching({silent:true});drawPreview(true);runFullDiagnostics({silent:true});requestAnimationFrame(animationFrame);
 setStatus('Автоматический режим запущен. Для ручного выбора спектра выбери готовый профиль в разделе 04.');
 </script>
 </body>
