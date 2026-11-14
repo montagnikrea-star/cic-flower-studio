@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark">
-<title>CIC Flower × Mirror v8.1 · Unified Image Model</title>
+<title>CIC Flower × Mirror v8.2 · Display Matrix Lab</title>
 <style>
 :root {--bg:#070e15;--panel:#0d1b25;--panel2:#102431;--border:#254456;--text:#e5f8fa;--muted:#9aafb9;--accent:#6ee5d0;--cyan:#8feafb;}
 * {box-sizing:border-box}
@@ -70,6 +70,18 @@ progress {width:100%;height:8px;accent-color:var(--accent);display:none}
 .fusion-controls output{color:#7ef5dc}
 .fusion-controls .buttons{margin-top:5px}
 .fusion-controls .check{margin:4px 0}
+
+.display-controls {padding:13px;background:linear-gradient(135deg,#0e2731,#0a1d2c);border:1px solid #3b6975;border-radius:12px;margin-top:10px}
+.display-controls .group-row{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.display-lab{border:1px solid #315b6d;border-radius:13px;background:#091923;padding:13px;margin-top:14px}
+.display-lab .display-canvas-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:10px}
+.display-lab canvas{display:block;width:100%;background:#02070b;border:1px solid #345665;border-radius:8px}
+#dmSpectralPlot{height:190px;aspect-ratio:auto}
+.display-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:11px 0}
+.display-metrics>div{background:#0a2230;border:1px solid #274958;border-radius:9px;padding:9px}
+.display-metrics b{display:block;color:#8effe2;font:700 17px Consolas,monospace}
+.display-metrics small{font-size:10px;color:#9bced0}
+@media(max-width:610px){.display-lab .display-canvas-grid{grid-template-columns:1fr}.display-metrics{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
@@ -200,8 +212,42 @@ progress {width:100%;height:8px;accent-color:var(--accent);display:none}
 <progress id="progress" max="100" value="0"></progress><div id="status" role="status" aria-live="polite"></div>
 </fieldset>
 
+<fieldset id="cicDisplayControls">
+<legend>09 · Display Matrix Lab — тип матрицы и оптика</legend>
+<div class="spectrum-explain">Выбор конструкции дисплея меняет <b>расчётную симуляцию</b> изображения и отражений. Предустановки иллюстративные: свойства конкретной панели, её покрытия и поляризатора необходимо измерить. Сам HTML не может автоматически определить тип матрицы.</div>
+<div class="display-controls">
+<label class="control" for="dmType">Технология матрицы</label>
+<select id="dmType">
+<option value="ips">IPS LCD · RGB</option>
+<option value="va">VA LCD · RGB</option>
+<option value="tn">TN LCD · RGB</option>
+<option value="mini">Mini-LED LCD · RGB + local dimming</option>
+<option value="amoled" selected>AMOLED · RGB OLED (условно)</option>
+<option value="woled">WOLED · WRGB / RWBG</option>
+<option value="qdoled">QD-OLED · triangular RGB</option>
+<option value="custom">Свой дисплей · вручную</option>
+</select>
+<div id="dmTypeInfo" class="mirror-hint"></div>
+<label class="control" for="dmCoating">Покрытие стекла</label>
+<select id="dmCoating"><option value="gloss">Глянцевое</option><option value="matte">Матовое</option><option value="ar">Антибликовое / AR</option></select>
+<label class="control" for="dmGamma">Показатель гаммы <output id="dmGammaValue"></output></label><input id="dmGamma" type="range" min="1.6" max="2.8" step="0.05" value="2.2">
+<label class="control" for="dmContrast">Условная контрастность <output id="dmContrastValue"></output></label><input id="dmContrast" type="range" min="300" max="100000" step="100" value="100000">
+<label class="control" for="dmGamut">Цветовой охват / насыщенность <output id="dmGamutValue"></output></label><input id="dmGamut" type="range" min="70" max="130" step="1" value="105">
+<label class="control" for="dmReflect">Отражение передней поверхности <output id="dmReflectValue"></output></label><input id="dmReflect" type="range" min="0.2" max="15" step="0.1" value="3.0">
+<label class="control" for="dmCrosstalk">Перекрёстный вклад цветов <output id="dmCrosstalkValue"></output></label><input id="dmCrosstalk" type="range" min="0" max="20" step="0.5" value="2.0">
+<label class="control" for="dmBlur">Условное сглаживание границ <output id="dmBlurValue"></output></label><input id="dmBlur" type="range" min="0" max="3" step="0.1" value="0.4">
+<label class="control" for="dmAngle">Угол наблюдения <output id="dmAngleValue"></output></label><input id="dmAngle" type="range" min="0" max="75" value="0">
+<label class="control" for="dmAmbient">Внешняя засветка <output id="dmAmbientValue"></output></label><input id="dmAmbient" type="range" min="0" max="100" value="30">
+<label class="control" for="dmPpi">Плотность пикселей PPI <output id="dmPpiValue"></output></label><input id="dmPpi" type="range" min="70" max="600" value="460">
+<label class="check"><input id="dmApplyMirror" type="checkbox"> Анализировать зеркальную корреляцию ПОСЛЕ модели матрицы</label>
+<div class="buttons"><button id="dmReset" class="primary">Применить профиль</button><button id="dmExport">Экспорт симуляции PNG</button></div>
+<div class="buttons"><button id="dmJson">Скачать расчёт дисплея JSON</button></div>
+<small>Параметры матрицы применяются <b>после</b> композиции исходных слоёв. Файлы PNG цветка и Fusion остаются математически исходными. Матрица не меняет C/ESR/ESL и 50–100 Ω — они независимы.</small>
+</div>
+</fieldset>
+
 <fieldset id="cicMirrorControls">
-<legend>09 · Mirror Decorrelation — зеркальный анализ</legend>
+<legend>10 · Mirror Decorrelation — зеркальный анализ</legend>
 <div class="spectrum-explain">Источник: рассчитанный цветок v7.1 или самостоятельный хиральный паттерн v2. Выбор отражений не изменяет физическую отражательную способность экрана.</div>
 <label class="control" for="mdSource">Что анализировать</label>
 <select id="mdSource"><option value="fusion" selected>Единое изображение (цветок + хиральный слой)</option><option value="flower">Цветок с фоновым слоем</option><option value="chiral">Только хиральный исходник (диагностика)</option></select>
@@ -264,6 +310,29 @@ progress {width:100%;height:8px;accent-color:var(--accent);display:none}
 <div id="detailedReport" class="spectrum-explain" style="white-space:pre-wrap"></div>
 <small>*Измерение выполняется на уменьшенной 128×128 копии PNG после цветовой обработки, с окном Хэнна. Отчёт приблизительный: полноразмерный спектр не рассчитывается.</small>
 <pre id="metadata"></pre>
+</div>
+
+<div class="analysis-card" id="cicDisplayPanel">
+<h2 class="analysis-title">Display Matrix Lab — модель отображения</h2>
+<div class="display-lab">
+<div class="display-canvas-grid">
+  <div class="mirror-item"><h3>Исходный объединённый паттерн</h3><canvas id="dmOriginal" width="320" height="320"></canvas></div>
+  <div class="mirror-item"><h3>Расчётный вывод на выбранной матрице</h3><canvas id="dmSimulated" width="320" height="320"></canvas></div>
+</div>
+<div class="display-metrics">
+<div><small>Отражение при угле</small><b id="dmResultReflect">—</b></div>
+<div><small>Оценка чёрного уровня</small><b id="dmResultBlack">—</b></div>
+<div><small>MTF @ 10 циклов</small><b id="dmResultMtf">—</b></div>
+<div><small>Оценка блика</small><b id="dmResultGlare">—</b></div>
+<div><small>Субпиксели</small><b id="dmResultSubpixel">—</b></div>
+<div><small>Статус корреляции</small><b id="dmResultMirror">Исходник</b></div>
+</div>
+<p class="mirror-hint">Расчёт MTF: гауссово сглаживание без аппаратной калибровки. Отражение: приближение Шлика + условное покрытие; это не измеренная BRDF и не гарантированная оптическая модель LCD/OLED.</p>
+<h3 style="font-size:13px;color:#bfece9;margin:12px 0 6px">Схематическое расположение субпикселей (не микрофотография)</h3>
+<canvas id="dmSubpixels" width="760" height="148" style="height:148px;aspect-ratio:auto"></canvas>
+<canvas id="dmSpectralPlot" width="760" height="190"></canvas>
+<pre id="dmReport" class="spectrum-explain" style="white-space:pre-wrap"></pre>
+</div>
 </div>
 
 <div class="analysis-card" id="cicMirrorPanel">
@@ -943,6 +1012,7 @@ function runFullDiagnostics({silent=false}={}){
 function metadataObject(p,measure,seed) {
   return {
     imageFusion: window.CICFusion ? window.CICFusion.metadata() : {enabled:false},
+    displaySimulation: window.CICDisplayModel ? window.CICDisplayModel.metadata() : {enabled:false},
     generator:'CIC Flower Spectral Studio v7.1 · 50–100 Ω',
     imageType:'layered parametric botanical filaments',
     settings:{...p},seed,
@@ -1399,9 +1469,13 @@ setStatus('Автоматический режим запущен. Для руч
 
   function getCurrentSource() {
     const size = number('mdSize');
-    return el('mdSource').value === 'chiral'
+    const originalSource = el('mdSource').value === 'chiral'
       ? buildChiralImage(number('mdSeed'), size)
       : captureFlower(size);
+    if (window.CICDisplayModel && el('dmApplyMirror').checked) {
+      return window.CICDisplayModel.transformMirrorSource(originalSource);
+    }
+    return originalSource;
   }
 
   function luminance(image) {
@@ -1923,6 +1997,323 @@ setStatus('Автоматический режим запущен. Для руч
   // Keep unified analysis as the default; source-only diagnostics remain optional.
   get('mdSource').value = 'fusion';
   refreshBoth();
+})();
+</script>
+<script>
+'use strict';
+/* CIC Display Matrix Lab v8.2
+ * Pure post-compositing projection of v8.1 original image.
+ * Presets are ILLUSTRATIVE, not calibrated measurements of a device.
+ * No changes to Flower or Chiral generator mathematics.
+ */
+(() => {
+  const byId = id => document.getElementById(id);
+  const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+  const params = ['dmGamma', 'dmContrast', 'dmGamut', 'dmReflect', 'dmCrosstalk', 'dmBlur', 'dmAngle', 'dmAmbient', 'dmPpi'];
+  const presets = {
+    ips: {gamma:2.2, contrast:1200, gamut:100, reflect:4.0, crosstalk:2.2, blur:0.55,
+      subpixel:'RGB stripe', description:'IPS LCD: белая подсветка и жидкие кристаллы с поляризаторами; широкие углы.'},
+    va: {gamma:2.2, contrast:3500, gamut:100, reflect:4.5, crosstalk:2.2, blur:0.72,
+      subpixel:'RGB stripe', description:'VA LCD: модель повышенной контрастности LCD; угол может заметнее менять оттенки.'},
+    tn: {gamma:2.25, contrast:800, gamut:90, reflect:5.0, crosstalk:3.1, blur:0.65,
+      subpixel:'RGB stripe', description:'TN LCD: выраженная угловая зависимость в некоторых панелях.'},
+    mini: {gamma:2.2, contrast:9000, gamut:105, reflect:3.0, crosstalk:1.9, blur:0.40,
+      subpixel:'RGB + zones', description:'Mini-LED: тип LCD с многозонной подсветкой, не новая структура пикселей; локальная засветка не моделируется.'},
+    amoled: {gamma:2.2, contrast:100000, gamut:105, reflect:3.0, crosstalk:2, blur:0.35,
+      subpixel:'RGB OLED*', description:'AMOLED: самоизлучающие органические субпиксели; реальная раскладка RGB/PenTile зависит от устройства.'},
+    woled: {gamma:2.2, contrast:100000, gamut:103, reflect:3.5, crosstalk:1.6, blur:0.42,
+      subpixel:'WRGB*', description:'WOLED: белые и цветные субпиксели; реальная компоновка зависит от панели.'},
+    qdoled: {gamma:2.2, contrast:100000, gamut:115, reflect:4.5, crosstalk:1.7, blur:0.37,
+      subpixel:'RGB Δ*', description:'QD-OLED: квантовые точки и треугольное расположение субпикселей встречаются в некоторых поколениях.'},
+    custom: {gamma:2.2, contrast:1000, gamut:100, reflect:4.0, crosstalk:0, blur:0.4,
+      subpixel:'Custom', description:'Пользовательская оценка. Для точности необходима измеренная матрица, калибровка и реальный профиль.'}
+  };
+
+  let sourceBuffer = null;
+  let simulatedBuffer = null;
+  let latestReport = null;
+  let pending = false;
+  let busy = false;
+
+  function values() {
+    const type = byId('dmType').value;
+    return {
+      type,
+      coating: byId('dmCoating').value,
+      gamma: Number(byId('dmGamma').value),
+      contrast: Number(byId('dmContrast').value),
+      gamut: Number(byId('dmGamut').value) / 100,
+      reflectionNormal: Number(byId('dmReflect').value) / 100,
+      crossTalk: Number(byId('dmCrosstalk').value) / 100,
+      gaussianSigma: Number(byId('dmBlur').value),
+      angleDegrees: Number(byId('dmAngle').value),
+      ambient: Number(byId('dmAmbient').value) / 100,
+      ppi: Number(byId('dmPpi').value),
+      subpixel: presets[type].subpixel,
+      assumeMirrorPreview: byId('dmApplyMirror').checked
+    };
+  }
+
+  function updateLabels() {
+    const suffix = {dmGamma:'',dmContrast:':1',dmGamut:'%',dmReflect:'%',dmCrosstalk:'%',dmBlur:' px',dmAngle:'°',dmAmbient:'%',dmPpi:' PPI'};
+    for (const id of params) byId(id+'Value').textContent = byId(id).value + suffix[id];
+    byId('dmTypeInfo').textContent = presets[byId('dmType').value].description;
+    byId('dmResultMirror').textContent = byId('dmApplyMirror').checked ? 'Симуляция' : 'Исходник';
+  }
+
+  function applyPreset() {
+    const preset = presets[byId('dmType').value];
+    for (const [key, inputId] of Object.entries({
+      gamma:'dmGamma', contrast:'dmContrast', gamut:'dmGamut', reflect:'dmReflect',
+      crosstalk:'dmCrosstalk', blur:'dmBlur'
+    })) byId(inputId).value = preset[key];
+    updateLabels();
+    scheduleRefresh();
+  }
+
+  // Reflectance is coating-dependent and strongly approximate. This simple
+  // Schlick function is NOT a BRDF nor an LCD/OLED polarimetric measurement.
+  function reflectanceForAngle(model) {
+    const cosine = Math.cos(model.angleDegrees * Math.PI / 180);
+    const angleReflectance = model.reflectionNormal +
+      (1-model.reflectionNormal) * Math.pow(1-cosine,5);
+    const coatingMultiplier = {gloss:1,matte:1,ar:.65}[model.coating];
+    return clamp(angleReflectance*coatingMultiplier,0,1);
+  }
+
+  function calculateMtf(spatialCycles, model) {
+    // Assumes sample field 256 logical pixels wide, σ in pixels.
+    const sigma = model.gaussianSigma;
+    const sigmaCycles = spatialCycles/256;
+    return Math.exp(-2*Math.PI*Math.PI*sigma*sigma*sigmaCycles*sigmaCycles);
+  }
+
+  function applyPanelTransform(input, model) {
+    const n = input.n;
+    const output = new Uint8ClampedArray(input.rgb.length);
+    const ambientReflect = reflectanceForAngle(model) * model.ambient;
+    const blackFloor = 1/Math.max(1,model.contrast);
+    const rad = model.angleDegrees*Math.PI/180;
+    const viewGamut = model.type === 'tn' ? 1-0.28*Math.sin(rad)**2 :
+      model.type === 'va' ? 1-0.14*Math.sin(rad)**2 : 1-0.04*Math.sin(rad)**2;
+    const contrastShape = Math.pow(2.2/model.gamma,1);
+    const original = input.rgb;
+
+    for (let i=0;i<n*n;i++) {
+      const base = 4*i;
+      const rr=original[base]/255, gg=original[base+1]/255, bb=original[base+2]/255;
+      const average=(rr+gg+bb)/3;
+      const colors=[rr,gg,bb];
+      for(let channel=0;channel<3;channel++) {
+        let color=average + (colors[channel]-average)*model.gamut*viewGamut;
+        color = color*(1-model.crossTalk) + average*model.crossTalk;
+        color=clamp(color,0,1);
+        const linear=Math.pow(color,2.2);
+        const display = Math.pow(clamp(blackFloor+(1-blackFloor)*linear,0,1),1/model.gamma);
+        const ambientComponent = 0.23*ambientReflect;
+        const out=clamp(display*(1-0.22*ambientReflect)+ambientComponent,0,1);
+        output[base+channel]=out*255;
+      }
+      output[base+3]=255;
+    }
+    // Spatial convolution is a low-pass approximation for panel/sample behavior;
+    // not a claim that all real panels have this blur or pixel arrangement.
+    if (model.gaussianSigma > 0.01) {
+      const rawCanvas = document.createElement('canvas');
+      rawCanvas.width=rawCanvas.height=n;
+      rawCanvas.getContext('2d').putImageData(new ImageData(output,n,n),0,0);
+      const filteredCanvas=document.createElement('canvas');
+      filteredCanvas.width=filteredCanvas.height=n;
+      const ctx=filteredCanvas.getContext('2d',{willReadFrequently:true});
+      ctx.filter=`blur(${model.gaussianSigma.toFixed(2)}px)`;
+      ctx.drawImage(rawCanvas,0,0);
+      ctx.filter='none';
+      return {n,rgb:ctx.getImageData(0,0,n,n).data};
+    }
+    return {n,rgb:output};
+  }
+
+  function captureOriginal() {
+    const p=byId('preview');
+    const n=320;
+    const source=document.createElement('canvas');
+    source.width=source.height=n;
+    const ctx=source.getContext('2d',{willReadFrequently:true});
+    const side=Math.min(p.width,p.height);
+    ctx.drawImage(p,(p.width-side)/2,(p.height-side)/2,side,side,0,0,n,n);
+    return {n,rgb:ctx.getImageData(0,0,n,n).data};
+  }
+
+  function putCanvas(canvas,image) {
+    canvas.width=canvas.height=image.n;
+    canvas.getContext('2d').putImageData(new ImageData(image.rgb,image.n,image.n),0,0);
+  }
+
+  function curvePlot(model) {
+    const canvas=byId('dmSpectralPlot'),ctx=canvas.getContext('2d');
+    const width=canvas.width,height=canvas.height;
+    ctx.fillStyle='#071727';ctx.fillRect(0,0,width,height);
+    ctx.strokeStyle='#254655';ctx.lineWidth=1;
+    for(let i=0;i<=4;i++) {
+      const y=20+i*(height-43)/4;
+      ctx.beginPath();ctx.moveTo(46,y);ctx.lineTo(width-15,y);ctx.stroke();
+    }
+    ctx.strokeStyle='#72e8d0';ctx.lineWidth=2.5;ctx.beginPath();
+    for(let x=0;x<width-68;x++) {
+      const f=x/(width-69)*128;
+      const response=calculateMtf(f,model);
+      const xx=46+x,yy=20+(1-response)*(height-43);
+      if(!x)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy);
+    }
+    ctx.stroke();ctx.fillStyle='#c5e8ee';ctx.font='13px Segoe UI, sans-serif';
+    ctx.fillText('Относительная пространственная MTF (условная модель)',18,14);
+    ctx.fillText('0',24,height-9);ctx.fillText('128 циклов/поле',width-138,height-9);
+    ctx.fillText('1',22,30);
+  }
+
+  function drawSubpixelDiagram(model) {
+    const canvas=byId('dmSubpixels');
+    const ctx=canvas.getContext('2d');
+    const w=canvas.width,h=canvas.height;
+    ctx.fillStyle='#050d15';ctx.fillRect(0,0,w,h);
+    const type=model.type;
+    const isTriangular=type==='qdoled';
+    const hasWhite=type==='woled';
+    const tiles=hasWhite?4:3;
+    const rows=2;
+    const pitch=w/9;
+    const start=22;
+    for(let row=0;row<rows;row++) {
+      for(let col=0;col<8;col++) {
+        const ox=start+col*pitch,oy=12+row*62;
+        const colors=hasWhite?['#f2f7ff','#fa625c','#63e985','#65aeff']:['#fa625c','#63e985','#65aeff'];
+        if(isTriangular) {
+          const r=9;
+          [[15,10,0],[37,10,1],[26,33,2]].forEach(([dx,dy,i])=>{
+            ctx.fillStyle=colors[i];ctx.beginPath();ctx.arc(ox+dx,oy+dy,r,0,Math.PI*2);ctx.fill();
+          });
+        } else {
+          const sw=hasWhite?13:17;
+          for(let i=0;i<tiles;i++) {
+            ctx.fillStyle=colors[i];
+            ctx.fillRect(ox+4+i*(sw+2),oy+8,sw,35);
+          }
+        }
+        ctx.strokeStyle='#244353';ctx.strokeRect(ox,oy,hasWhite?66:65,51);
+      }
+    }
+    ctx.fillStyle='#d6eeee';ctx.font='12px system-ui';
+    ctx.fillText('Масштаб увеличен. Реальная форма и порядок субпикселей зависят от конкретной модели панели.',16,h-5);
+  }
+
+  function makeReport(model) {
+    const refl=reflectanceForAngle(model),mtf10=calculateMtf(10,model);
+    const black=1/model.contrast;
+    const report={
+      type:model.type,
+      subpixelLayoutAssumption:model.subpixel,
+      gamma:model.gamma,
+      contrastRatioModel:model.contrast,
+      blackLevelRelative:whiteRelative(black),
+      colorGamutMultiplier:model.gamut,
+      crossTalk:model.crossTalk,
+      coating:model.coating,
+      angleDegrees:model.angleDegrees,
+      angularReflectanceEstimate:refl,
+      ambientGlareRelative:refl*model.ambient,
+      mtf10,
+      mtf64:calculateMtf(64,model),
+      nominalPixelPitchMillimeters:25.4/model.ppi,
+      warning:'Оценочная симуляция по типу панели, без измерения экрана, субпикселей, ICC и BRDF. Не физическая защита от отражений.'
+    };
+    return report;
+  }
+  function whiteRelative(v) {return Number(v.toPrecision(6));}
+
+  function update() {
+    if (busy) return;
+    busy=true;
+    try {
+      const model=values();
+      const source=captureOriginal();
+      const simulated=applyPanelTransform(source,model);
+      sourceBuffer=source;simulatedBuffer=simulated;
+      putCanvas(byId('dmOriginal'),source);
+      putCanvas(byId('dmSimulated'),simulated);
+      latestReport=makeReport(model);
+      byId('dmResultReflect').textContent=(latestReport.angularReflectanceEstimate*100).toFixed(2)+'%';
+      byId('dmResultBlack').textContent=(latestReport.blackLevelRelative*100).toFixed(3)+'%';
+      byId('dmResultMtf').textContent=(latestReport.mtf10*100).toFixed(1)+'%';
+      byId('dmResultGlare').textContent=(latestReport.ambientGlareRelative*100).toFixed(2)+'%';
+      byId('dmResultSubpixel').textContent=model.subpixel;
+      byId('dmReport').textContent=JSON.stringify(latestReport,null,2);
+      curvePlot(model);
+      drawSubpixelDiagram(model);
+      updateLabels();
+    } catch(error) {
+      byId('dmReport').textContent='Ошибка модели дисплея: '+error.message;
+    } finally {busy=false;}
+  }
+
+  function scheduleRefresh() {
+    if(pending)return;
+    pending=true;
+    requestAnimationFrame(()=>{
+      pending=false;
+      update();
+      if (byId('dmApplyMirror').checked && typeof window.cicMirrorRefresh==='function') {
+        window.cicMirrorRefresh();
+      }
+    });
+  }
+
+  function transformMirrorSource(source) {
+    // Mirror analysis can inspect a *derived* display image while original
+    // flower/chiral pixels remain unchanged.
+    return applyPanelTransform(source,values());
+  }
+
+  function exportImage() {
+    if (!simulatedBuffer) update();
+    const canvas=document.createElement('canvas');
+    putCanvas(canvas,simulatedBuffer);
+    const anchor=document.createElement('a');
+    anchor.href=canvas.toDataURL('image/png');
+    anchor.download='CIC_Fusion_Display_'+byId('dmType').value+'_simulated.png';
+    anchor.click();
+  }
+
+  function exportJson() {
+    if(!latestReport) update();
+    const file=new Blob([JSON.stringify(latestReport,null,2)],{type:'application/json'});
+    const url=URL.createObjectURL(file);
+    const anchor=document.createElement('a');anchor.href=url;
+    anchor.download='CIC_Display_Matrix_Model.json';anchor.click();
+    setTimeout(()=>URL.revokeObjectURL(url),700);
+  }
+
+  window.CICDisplayModel={transformMirrorSource,update,metadata:()=>latestReport};
+  byId('dmType').addEventListener('change',applyPreset);
+  byId('dmReset').addEventListener('click',applyPreset);
+  for(const id of params) byId(id).addEventListener('input',scheduleRefresh);
+  byId('dmCoating').addEventListener('change',scheduleRefresh);
+  byId('dmApplyMirror').addEventListener('change',()=>{
+    updateLabels();
+    if (typeof window.cicMirrorRefresh==='function') window.cicMirrorRefresh();
+    if (typeof window.cicMirrorRefresh==='function' && byId('mdSource').value==='chiral') byId('mdAnalyze').click();
+  });
+  byId('dmExport').addEventListener('click',exportImage);
+  byId('dmJson').addEventListener('click',exportJson);
+  updateLabels();
+  update();
+  // v7.1 refreshes live animation without changing source model;
+  // analyze display data at a lower cost instead of per-frame.
+  let lastRefresh=0;
+  setInterval(()=>{
+    if (document.hidden)return;
+    const now=performance.now();
+    if(now-lastRefresh>1300){lastRefresh=now;update();}
+  },1500);
 })();
 </script>
 </body>
