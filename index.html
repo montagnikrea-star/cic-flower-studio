@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark">
-<title>CIC Flower Spectral Studio v7.1 · 50–100 Ω · Adaptive Research Lab</title>
+<title>CIC Flower × Mirror v8.1 · Unified Image Model</title>
 <style>
 :root {--bg:#070e15;--panel:#0d1b25;--panel2:#102431;--border:#254456;--text:#e5f8fa;--muted:#9aafb9;--accent:#6ee5d0;--cyan:#8feafb;}
 * {box-sizing:border-box}
@@ -51,12 +51,31 @@ progress {width:100%;height:8px;accent-color:var(--accent);display:none}
 #metadata {margin:12px 0 0;max-height:195px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;font:11px/1.45 Consolas,ui-monospace,monospace;color:#a6c6c5;background:#071823;border:1px solid #274552;border-radius:10px;padding:10px}
 @media(max-width:950px){main{grid-template-columns:1fr}aside{max-height:none}.stage{height:72vh}.charts{grid-template-columns:1fr}}
 @media(max-width:500px){header{padding:14px 14px 10px}main{padding:10px;gap:11px}.preview-card,.analysis-card{padding:9px}.stage{height:65vh;min-height:350px}.metrics{grid-template-columns:1fr 1fr}}
+
+/* CIC Mirror Decorrelation panel — independent namespaced styles. */
+.mirror-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.mirror-item {min-width:0;background:#071820;border:1px solid #274958;border-radius:12px;padding:10px}
+.mirror-item h3 {font-size:12px;font-weight:650;color:#d6f8f3;margin:0 0 8px}
+.mirror-grid canvas {width:100%;height:auto;aspect-ratio:1;display:block;border-radius:7px;background:#030a10}
+.mirror-wide {width:100%;height:170px;display:block;background:#071720;border:1px solid #284d5b;border-radius:10px;margin-top:12px}
+.mirror-metrics {display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.mirror-metrics div {padding:10px;border:1px solid #2a4d5a;background:#071a24;border-radius:10px;min-width:0}
+.mirror-metrics b {display:block;color:#a3fbe8;font:700 16px Consolas,monospace;overflow:hidden;text-overflow:ellipsis}
+.mirror-metrics small {font-size:10px}
+.mirror-hint {color:#aec9cc;font-size:11px;line-height:1.5}
+@media(max-width:530px){.mirror-grid{grid-template-columns:1fr}.mirror-metrics{grid-template-columns:repeat(2,1fr)}}
+
+.fusion-controls{padding:13px;background:linear-gradient(135deg,#082a2b,#0b1b2c);border:1px solid #3d817b;border-radius:13px;margin:11px 0 15px;display:grid;gap:7px}
+.fusion-controls h3{margin:0;color:#b3ffe9;font-size:14px}
+.fusion-controls output{color:#7ef5dc}
+.fusion-controls .buttons{margin-top:5px}
+.fusion-controls .check{margin:4px 0}
 </style>
 </head>
 <body>
 <header>
-<h1>CIC Flower Spectral Studio <span style="color:#6ee5d0">v7</span></h1>
-<p>Натуральные светящиеся цветы · вертикальный iPhone 17 · тонкие прожилки · математическая спектральная модель · анимация · экспорт серий PNG в ZIP</p>
+<h1>CIC Flower × Mirror Studio <span style="color:#6ee5d0">v8.1</span></h1>
+<p>Единая композиция: натуральный лотос + хиральная спектральная подложка · FFT и согласование 50–100 Ω · проверка зеркальной корреляции общего изображения</p>
 </header>
 <main>
 <aside>
@@ -180,6 +199,50 @@ progress {width:100%;height:8px;accent-color:var(--accent);display:none}
 <div class="buttons"><button class="primary" id="saveBatch">Серия PNG → ZIP</button><button id="saveJSON">Параметры JSON</button></div>
 <progress id="progress" max="100" value="0"></progress><div id="status" role="status" aria-live="polite"></div>
 </fieldset>
+
+<fieldset id="cicMirrorControls">
+<legend>09 · Mirror Decorrelation — зеркальный анализ</legend>
+<div class="spectrum-explain">Источник: рассчитанный цветок v7.1 или самостоятельный хиральный паттерн v2. Выбор отражений не изменяет физическую отражательную способность экрана.</div>
+<label class="control" for="mdSource">Что анализировать</label>
+<select id="mdSource"><option value="fusion" selected>Единое изображение (цветок + хиральный слой)</option><option value="flower">Цветок с фоновым слоем</option><option value="chiral">Только хиральный исходник (диагностика)</option></select>
+
+<div class="fusion-controls" id="fusionControls">
+<h3>Единая модель изображения · Layer-safe fusion</h3>
+<p class="mirror-hint">Цветок рассчитывается собственным генератором без изменения формы лепестков, а хиральная структура добавляется отдельным полупрозрачным слоем <b>перед</b> лепестками. Зеркальный тест анализирует уже совместный кадр.</p>
+<label class="check"><input id="fusionEnabled" type="checkbox" checked> Включить объединённый паттерн в обоях</label>
+<label class="control" for="fusionBlend">Сила хирального слоя <output id="fusionBlendV">20%</output></label>
+<input id="fusionBlend" type="range" min="0" max="70" value="20" step="1">
+<label class="control" for="fusionScale">Размер хиральной структуры <output id="fusionScaleV">100%</output></label>
+<input id="fusionScale" type="range" min="45" max="160" value="100" step="1">
+<label class="control" for="fusionRotation">Поворот подложки <output id="fusionRotationV">0°</output></label>
+<input id="fusionRotation" type="range" min="-180" max="180" value="0" step="1">
+<label class="check"><input id="fusionAutoSeed" type="checkbox" checked> Синхронизировать seed с хиральным генератором</label>
+<div class="buttons"><button id="fusionExport" class="primary">Скачать единое изображение PNG</button><button id="fusionParams">Общая модель JSON</button></div>
+<small>Объединение выполнено по визуальным слоям, а не смешиванием формул частот разных размерностей. Сопротивление 50–100 Ω — отдельная электрическая модель, не свойство пикселей.</small>
+</div>
+<label class="control" for="mdSize">Разрешение зеркального анализа</label>
+<select id="mdSize"><option value="192">192 × 192 · быстро</option><option value="256" selected>256 × 256</option><option value="384">384 × 384</option><option value="512">512 × 512</option></select>
+<label class="control" for="mdSeed">Seed хирального генератора</label><input id="mdSeed" type="number" value="271828" min="1" max="2147483646">
+<label class="control" for="mdGrain">Зерно / детализация <output id="mdGrainValue">9</output></label><input id="mdGrain" type="range" min="2" max="18" value="9">
+<label class="control" for="mdSpiral">Хиральная закрутка <output id="mdSpiralValue">55</output></label><input id="mdSpiral" type="range" min="0" max="100" value="55">
+<label class="control" for="mdContrast">Контраст <output id="mdContrastValue">80</output></label><input id="mdContrast" type="range" min="10" max="100" value="80">
+<label class="control" for="mdPalette">Цветовая схема Mirror v2</label><select id="mdPalette"><option value="cyan">Бирюзовая</option><option value="color">Спектральная</option><option value="mono">Чёрно-белая</option></select>
+<label class="control" for="mdAngle">Угол падения на стекло <output id="mdAngleValue">25°</output></label><input id="mdAngle" type="range" min="0" max="75" value="25">
+<label class="control" for="mdGap">Зазор дисплей–стекло <output id="mdGapValue">0.5 мм</output></label><input id="mdGap" type="range" min="0.05" max="2" step="0.05" value="0.5">
+<label class="control" for="mdBottom">Отражение нижней границы <output id="mdBottomValue">8%</output></label><input id="mdBottom" type="range" min="0" max="40" value="8">
+<label class="control" for="mdBounces">Число отражений <output id="mdBouncesValue">6</output></label><input id="mdBounces" type="range" min="1" max="12" value="6">
+<label class="check"><input type="checkbox" id="mdExternal" checked> Внешнее зеркало</label>
+<label class="control" for="mdExtAngle">Наклон к внешнему зеркалу <output id="mdExtAngleValue">0°</output></label><input id="mdExtAngle" type="range" min="0" max="75" value="0">
+<label class="control" for="mdDistance">Расстояние до зеркала <output id="mdDistanceValue">30 см</output></label><input id="mdDistance" type="range" min="1" max="200" value="30">
+<label class="control" for="mdReflect">Отражение зеркала <output id="mdReflectValue">90%</output></label><input id="mdReflect" type="range" min="0" max="100" value="90">
+<label class="control" for="mdOptics">Оптический режим</label><select id="mdOptics"><option value="none">Без фильтра</option><option value="polar">Линейный поляризатор</option><option value="circular" selected>Линейный + пластина λ/4</option></select>
+<label class="control" for="mdQAngle">Ошибка угла λ/4 <output id="mdQAngleValue">0°</output></label><input id="mdQAngle" type="range" min="0" max="45" value="0">
+<label class="control" for="mdRetard">Задержка λ/4 <output id="mdRetardValue">90°</output></label><input id="mdRetard" type="range" min="0" max="180" value="90">
+<label class="control" for="mdLeak">Утечка поляризации <output id="mdLeakValue">0.1%</output></label><input id="mdLeak" type="range" min="0" max="10" step="0.1" value="0.1">
+<div class="buttons"><button id="mdAnalyze" class="primary">Анализировать зеркало</button><button id="mdOptimize">Подобрать seed × 24</button></div>
+<div class="buttons"><button id="mdDownload">Скачать Mirror PNG</button><button id="mdExport">Mirror JSON</button></div>
+<div id="mdStatus" class="hint" role="status">Зеркальный анализ будет выполнен после построения цветка.</div>
+</fieldset>
 </aside>
 <section class="display">
 <div class="preview-card">
@@ -201,6 +264,27 @@ progress {width:100%;height:8px;accent-color:var(--accent);display:none}
 <div id="detailedReport" class="spectrum-explain" style="white-space:pre-wrap"></div>
 <small>*Измерение выполняется на уменьшенной 128×128 копии PNG после цветовой обработки, с окном Хэнна. Отчёт приблизительный: полноразмерный спектр не рассчитывается.</small>
 <pre id="metadata"></pre>
+</div>
+
+<div class="analysis-card" id="cicMirrorPanel">
+<h2 class="analysis-title">CIC Mirror Decorrelation Studio v2 — интегрированный оптический модуль</h2>
+<div class="mirror-grid">
+<div class="mirror-item"><h3>Исходное изображение</h3><canvas id="mdOriginal" width="256" height="256"></canvas></div>
+<div class="mirror-item"><h3>Отражение относительно выбранной оси</h3><canvas id="mdMirror" width="256" height="256"></canvas></div>
+<div class="mirror-item"><h3>Наложение последовательных отражений</h3><canvas id="mdLayers" width="256" height="256"></canvas></div>
+<div class="mirror-item"><h3>Корреляция по 12 осям</h3><canvas id="mdCorrelation" width="512" height="512"></canvas></div>
+</div>
+<div class="mirror-metrics">
+<div><small>Средняя |корреляция|</small><b id="mdAvg">—</b></div>
+<div><small>Худшая |корреляция|</small><b id="mdWorst">—</b></div>
+<div><small>Френель: воздух–стекло</small><b id="mdFresnel">—</b></div>
+<div><small>Возврат без поляризации</small><b id="mdBare">—</b></div>
+<div><small>Через модельный фильтр</small><b id="mdFiltered">—</b></div>
+<div><small>Модель подавления</small><b id="mdDb">—</b></div>
+</div>
+<canvas id="mdReturn" class="mirror-wide" width="760" height="210"></canvas>
+<div class="spectrum-explain" id="mdInfo">Зеркальная корреляция не является измерением физического отражения, а поляризационная модель требует реального оптического элемента.</div>
+<small>Важное ограничение: ни цветок, ни хиральный рисунок не устраняют свет, отражённый зеркалом. Поляризационный расчёт — идеализированная модель Джонса для нормального падения, не измерение защитной плёнки. Импеданс 50–100 Ω — самостоятельная электрическая модель; он не изменяет оптическую отражательную способность.</small>
 </div>
 </section>
 </main>
@@ -432,6 +516,11 @@ function renderLotus(ctx,w,h,p,phase=0,seed=state.seed,options={}) {
   let energyTotal=0,energyBand=0;
   let lowH=Infinity,highH=0;
   createTextureBackground(ctx,w,h,p,phase);
+  // Combined image: place the original chiral field behind the intact lotus.
+  // No pixel re-ordering or deformation of either mathematical source occurs.
+  if (window.CICFusion && window.CICFusion.enabled()) {
+    window.CICFusion.drawBackdrop(ctx,w,h,p,phase,seed);
+  }
   // Reference preset: long continuous flow lines (as in uploaded image).
   if(p.mode==='reference') {
     drawReferenceFilaments(ctx,w,h,p,phase,scale);
@@ -853,6 +942,7 @@ function runFullDiagnostics({silent=false}={}){
 
 function metadataObject(p,measure,seed) {
   return {
+    imageFusion: window.CICFusion ? window.CICFusion.metadata() : {enabled:false},
     generator:'CIC Flower Spectral Studio v7.1 · 50–100 Ω',
     imageType:'layered parametric botanical filaments',
     settings:{...p},seed,
@@ -892,6 +982,7 @@ function drawPreview(updateAnalytics=false) {
   const p=readParameters();resizePreview(p);
   const measure=renderField(previewContext,previewCanvas.width,previewCanvas.height,p,state.phase,state.seed);
   if(updateAnalytics||!state.metrics){state.metrics=measure;updateCharts(p);updateMetrics(p,measure)}
+  if(updateAnalytics && typeof window.cicMirrorRefresh === "function") window.cicMirrorRefresh();
   state.dirty=false;
 }
 function animationFrame(timestamp) {
@@ -1197,6 +1288,642 @@ function bindUI(){
 }
 updateLabels();bindUI();setSpectrumProfile('balanced');applyAutomaticSettings();if(byId('autoMatchEnabled').checked)optimizeMatching({silent:true});drawPreview(true);runFullDiagnostics({silent:true});requestAnimationFrame(animationFrame);
 setStatus('Автоматический режим запущен. Для ручного выбора спектра выбери готовый профиль в разделе 04.');
+</script>
+<script>
+'use strict';
+/* CIC Mirror Decorrelation Studio v2 integrated with CIC Flower v7.1.
+   This is a numerical mirror-correlation and simplified polarization model.
+   It does not eliminate optical reflections or electrical interference. */
+(() => {
+  const el = (id) => document.getElementById(id);
+  const number = (id) => Number(el(id).value);
+  const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+  const mirrorState = { source: null, stats: null, pending: false, optimizing: false, results: null };
+  const fields = {
+    mdGrain: '', mdSpiral: '', mdContrast: '', mdAngle: '°', mdGap: ' мм',
+    mdBottom: '%', mdBounces: '', mdExtAngle: '°', mdDistance: ' см',
+    mdReflect: '%', mdQAngle: '°', mdRetard: '°', mdLeak: '%'
+  };
+
+  function updateLabels() {
+    for (const [id, unit] of Object.entries(fields)) {
+      el(id + 'Value').textContent = el(id).value + unit;
+    }
+  }
+
+  function seededRandom(seed) {
+    let state = seed | 0;
+    return () => {
+      state ^= state << 13;
+      state ^= state >>> 17;
+      state ^= state << 5;
+      return (state >>> 0) / 4294967296;
+    };
+  }
+
+  function buildChiralImage(seed, size) {
+    const random = seededRandom(seed || 1);
+    const gridSize = number('mdGrain');
+    const twist = number('mdSpiral') / 100;
+    const contrast = number('mdContrast') / 100;
+    const terms = [];
+    for (let i = 0; i < gridSize + 10; i++) {
+      terms.push([
+        (random() - 0.5) * (0.6 + i * 0.09),
+        (random() - 0.5) * (0.6 + i * 0.09),
+        random() * 2 * Math.PI,
+        1 / Math.sqrt(i + 1),
+        random() * 2 - 1
+      ]);
+    }
+    const values = new Float32Array(size * size);
+    let min = Infinity, max = -Infinity;
+    for (let y = 0; y < size; y++) {
+      const Y = (y + 0.5) / size * 2 - 1;
+      for (let x = 0; x < size; x++) {
+        const X = (x + 0.5) / size * 2 - 1;
+        const rad = Math.hypot(X, Y);
+        const theta = Math.atan2(Y, X);
+        const skewX = X + 0.34 * twist * Math.sin(3 * theta + 7 * rad);
+        const skewY = Y + 0.26 * twist * Math.cos(5 * theta - 6 * rad);
+        let value = 0;
+        for (const [fx, fy, phase, amplitude, chirality] of terms) {
+          value += amplitude * Math.cos(
+            (skewX * fx + skewY * fy) * Math.PI * 8 + phase +
+            twist * chirality * theta * 1.5
+          );
+        }
+        value += twist * 0.8 * Math.sin(9 * rad + 3 * theta + 5 * X * Y);
+        values[y * size + x] = value;
+        min = Math.min(min, value);
+        max = Math.max(max, value);
+      }
+    }
+    const rgb = new Uint8ClampedArray(size * size * 4);
+    const palette = el('mdPalette').value;
+    for (let i = 0; i < values.length; i++) {
+      const intensity = clamp(((values[i] - min) / (max - min || 1) - 0.5) * contrast * 2 + 0.5, 0, 1);
+      let red, green, blue;
+      if (palette === 'mono') red = green = blue = intensity * 255;
+      else if (palette === 'cyan') {
+        red = 10 + intensity * 130;
+        green = 30 + intensity * 215;
+        blue = 50 + intensity * 205;
+      } else {
+        const theta = intensity * Math.PI * 2;
+        red = 128 + 120 * Math.sin(theta + 0.2);
+        green = 128 + 120 * Math.sin(theta + 2.3);
+        blue = 128 + 120 * Math.sin(theta + 4.4);
+      }
+      const pos = i * 4;
+      rgb[pos] = red;
+      rgb[pos + 1] = green;
+      rgb[pos + 2] = blue;
+      rgb[pos + 3] = 255;
+    }
+    return { rgb, n: size };
+  }
+
+  function captureFlower(size) {
+    const canvas = document.createElement('canvas');
+    canvas.width = canvas.height = size;
+    const context = canvas.getContext('2d', { willReadFrequently: true });
+    const original = el('preview');
+    // Center crop; avoids stretching the vertical flower to square.
+    const crop = Math.min(original.width, original.height);
+    const sx = (original.width - crop) / 2;
+    const sy = (original.height - crop) / 2;
+    context.drawImage(original, sx, sy, crop, crop, 0, 0, size, size);
+    return { n: size, rgb: new Uint8ClampedArray(context.getImageData(0, 0, size, size).data) };
+  }
+
+  function getCurrentSource() {
+    const size = number('mdSize');
+    return el('mdSource').value === 'chiral'
+      ? buildChiralImage(number('mdSeed'), size)
+      : captureFlower(size);
+  }
+
+  function luminance(image) {
+    const result = new Float32Array(image.n * image.n);
+    for (let i = 0; i < result.length; i++) {
+      const pos = i * 4;
+      result[i] = (0.2126 * image.rgb[pos] + 0.7152 * image.rgb[pos + 1] + 0.0722 * image.rgb[pos + 2]) / 255;
+    }
+    return result;
+  }
+
+  function bilinear(values, x, y, size) {
+    if (x < 0 || y < 0 || x > size - 1 || y > size - 1) return NaN;
+    const ix = Math.floor(x), iy = Math.floor(y);
+    const nx = Math.min(size - 1, ix + 1), ny = Math.min(size - 1, iy + 1);
+    const dx = x - ix, dy = y - iy;
+    return (values[iy * size + ix] * (1 - dx) + values[iy * size + nx] * dx) * (1 - dy) +
+      (values[ny * size + ix] * (1 - dx) + values[ny * size + nx] * dx) * dy;
+  }
+
+  function mirrorCorrelation(values, size, axis) {
+    const cosine = Math.cos(2 * axis), sine = Math.sin(2 * axis);
+    const midpoint = (size - 1) / 2;
+    const step = Math.max(2, Math.floor(size / 48));
+    let meanA = 0, meanB = 0, sumA = 0, sumB = 0, cross = 0, count = 0;
+    for (let y = 2; y < size - 2; y += step) {
+      for (let x = 2; x < size - 2; x += step) {
+        const dx = x - midpoint, dy = y - midpoint;
+        const mirrorX = midpoint + cosine * dx + sine * dy;
+        const mirrorY = midpoint + sine * dx - cosine * dy;
+        const other = bilinear(values, mirrorX, mirrorY, size);
+        if (!Number.isFinite(other)) continue;
+        const current = values[y * size + x];
+        count++;
+        const deltaA = current - meanA, deltaB = other - meanB;
+        meanA += deltaA / count;
+        meanB += deltaB / count;
+        sumA += deltaA * (current - meanA);
+        sumB += deltaB * (other - meanB);
+        cross += deltaA * (other - meanB);
+      }
+    }
+    return sumA > 1e-10 && sumB > 1e-10 ? cross / Math.sqrt(sumA * sumB) : 0;
+  }
+
+  function analyze(image) {
+    const values = luminance(image);
+    const correlations = [];
+    for (let index = 0; index < 12; index++) {
+      correlations.push(mirrorCorrelation(values, image.n, index * Math.PI / 12));
+    }
+    return {
+      values,
+      correlations,
+      average: correlations.reduce((a, b) => a + Math.abs(b), 0) / 12,
+      worst: Math.max(...correlations.map(Math.abs))
+    };
+  }
+
+  function drawImage(id, image) {
+    const canvas = el(id);
+    canvas.width = canvas.height = image.n;
+    canvas.getContext('2d').putImageData(new ImageData(image.rgb, image.n, image.n), 0, 0);
+  }
+
+  function drawReflectedImage(image) {
+    const size = image.n;
+    const radians = number('mdAngle') * Math.PI / 180;
+    const cosine = Math.cos(2 * radians), sine = Math.sin(2 * radians);
+    const midpoint = (size - 1) / 2;
+    const result = new Uint8ClampedArray(image.rgb.length);
+    for (let y = 0; y < size; y++) {
+      for (let x = 0; x < size; x++) {
+        const dx = x - midpoint, dy = y - midpoint;
+        const mx = Math.round(midpoint + cosine * dx + sine * dy);
+        const my = Math.round(midpoint + sine * dx - cosine * dy);
+        const dst = (y * size + x) * 4;
+        if (mx >= 0 && mx < size && my >= 0 && my < size) {
+          const src = (my * size + mx) * 4;
+          result[dst] = image.rgb[src];
+          result[dst + 1] = image.rgb[src + 1];
+          result[dst + 2] = image.rgb[src + 2];
+        }
+        result[dst + 3] = 255;
+      }
+    }
+    drawImage('mdMirror', { n: size, rgb: result });
+  }
+
+  function fresnel(degrees) {
+    const i = degrees * Math.PI / 180;
+    const n1 = 1, n2 = 1.5;
+    const t = Math.asin(n1 / n2 * Math.sin(i));
+    const ci = Math.cos(i), ct = Math.cos(t);
+    const rs = (n1 * ci - n2 * ct) / (n1 * ci + n2 * ct);
+    const rp = (n2 * ci - n1 * ct) / (n2 * ci + n1 * ct);
+    return (rs * rs + rp * rp) / 2;
+  }
+
+  function drawLayers(image) {
+    const size = image.n;
+    const angle = number('mdAngle') * Math.PI / 180;
+    const gap = number('mdGap');
+    const lowerReflectance = number('mdBottom') / 100;
+    const bounces = number('mdBounces');
+    const upperReflectance = fresnel(number('mdAngle'));
+    const attenuation = lowerReflectance * (1 - upperReflectance) ** 2;
+    const decay = upperReflectance * lowerReflectance;
+    const pixelShift = 2 * gap * Math.tan(angle) * size / 60; // display-only shift scale
+    const result = new Uint8ClampedArray(image.rgb.length);
+    for (let y = 0; y < size; y++) {
+      for (let x = 0; x < size; x++) {
+        const destination = (y * size + x) * 4;
+        const channels = [image.rgb[destination], image.rgb[destination + 1], image.rgb[destination + 2]];
+        let totalWeight = 1, weight = attenuation;
+        for (let bounce = 1; bounce <= bounces; bounce++) {
+          const sourceX = x - bounce * pixelShift;
+          if (sourceX >= 0 && sourceX < size) {
+            const x0 = Math.floor(sourceX), x1 = Math.min(size - 1, x0 + 1);
+            const mix = sourceX - x0;
+            const srcA = (y * size + x0) * 4;
+            const srcB = (y * size + x1) * 4;
+            for (let channel = 0; channel < 3; channel++) {
+              channels[channel] += weight * (image.rgb[srcA + channel] * (1 - mix) + image.rgb[srcB + channel] * mix);
+            }
+            totalWeight += weight;
+          }
+          weight *= decay;
+        }
+        for (let channel = 0; channel < 3; channel++) {
+          result[destination + channel] = channels[channel] / totalWeight;
+        }
+        result[destination + 3] = 255;
+      }
+    }
+    el('mdFresnel').textContent = (upperReflectance * 100).toFixed(2) + '%';
+    drawImage('mdLayers', { n: size, rgb: result });
+  }
+
+  function drawCorrelations(stats) {
+    const canvas = el('mdCorrelation'), context = canvas.getContext('2d');
+    const width = canvas.width, height = canvas.height;
+    context.fillStyle = '#071827';
+    context.fillRect(0, 0, width, height);
+    const left = 65, right = 22, top = 26, bottom = 52;
+    const plotWidth = width - left - right, plotHeight = height - top - bottom;
+    context.font = '16px system-ui';
+    for (let i = 0; i <= 4; i++) {
+      const value = i / 4, y = top + (1 - value) * plotHeight;
+      context.strokeStyle = '#304b5a';
+      context.beginPath();
+      context.moveTo(left, y);
+      context.lineTo(width - right, y);
+      context.stroke();
+      context.fillStyle = '#bdd7d7';
+      context.fillText(value.toFixed(2), 8, y + 5);
+    }
+    context.strokeStyle = '#70ebd6';
+    context.lineWidth = 3;
+    context.beginPath();
+    stats.correlations.forEach((value, index) => {
+      const x = left + index * plotWidth / 11;
+      const y = top + (1 - Math.abs(value)) * plotHeight;
+      if (index === 0) context.moveTo(x, y);
+      else context.lineTo(x, y);
+    });
+    context.stroke();
+    stats.correlations.forEach((value, index) => {
+      const x = left + index * plotWidth / 11;
+      const y = top + (1 - Math.abs(value)) * plotHeight;
+      context.fillStyle = '#b9fff1';
+      context.beginPath();
+      context.arc(x, y, 4, 0, Math.PI * 2);
+      context.fill();
+      if (index % 2 === 0) {
+        context.fillStyle = '#b8c8d4';
+        context.fillText((index * 15) + '°', x - 14, height - 24);
+      }
+    });
+  }
+
+  function returnTransmission() {
+    const mode = el('mdOptics').value;
+    const leakage = number('mdLeak') / 100;
+    if (mode === 'none' || mode === 'polar') return 1;
+    const axis = (45 + number('mdQAngle')) * Math.PI / 180;
+    const phase = number('mdRetard') * Math.PI / 180;
+    const c = Math.cos(axis) ** 2, s = Math.sin(axis) ** 2;
+    const ideal = c * c + s * s + 2 * c * s * Math.cos(2 * phase);
+    return leakage + (1 - leakage) * clamp(ideal, 0, 1);
+  }
+
+  function drawExternal() {
+    const enabled = el('mdExternal').checked;
+    const bare = enabled ? number('mdReflect') / 100 : 0;
+    const ratio = returnTransmission();
+    const filtered = bare * ratio;
+    const reductionDb = bare > 0 ? -10 * Math.log10(Math.max(ratio, 1e-12)) : 0;
+    el('mdBare').textContent = (bare * 100).toFixed(2) + '%';
+    el('mdFiltered').textContent = (filtered * 100).toFixed(3) + '%';
+    el('mdDb').textContent = bare > 0 ? reductionDb.toFixed(1) + ' dB' : '—';
+    const canvas = el('mdReturn'), context = canvas.getContext('2d');
+    const width = canvas.width;
+    context.fillStyle = '#071727';
+    context.fillRect(0, 0, width, canvas.height);
+    context.font = '17px system-ui';
+    context.fillStyle = '#bcdde0';
+    context.fillText('Условная доля вернувшегося света', 20, 30);
+    [bare, filtered].forEach((value, index) => {
+      const y = 70 + index * 72;
+      context.fillStyle = '#cbdde5';
+      context.fillText(index ? 'С фильтром' : 'Без фильтра', 20, y + 2);
+      context.fillStyle = '#1c3a4b';
+      context.fillRect(190, y - 16, width - 280, 23);
+      context.fillStyle = index ? '#60dec8' : '#f0a276';
+      context.fillRect(190, y - 16, Math.max(0, width - 280) * value, 23);
+      context.fillStyle = '#e5fff8';
+      context.fillText((value * 100).toFixed(index ? 3 : 2) + '%', width - 90, y + 2);
+    });
+    const distance = number('mdDistance');
+    const flightTimeNs = 2 * (distance / 100) / 299792458 * 1e9;
+    const angle = number('mdExtAngle');
+    const note = angle === 0
+      ? 'Внешнее зеркало напротив экрана: прямой обратный оптический путь существует. '
+      : 'При наклоне части лучей могут не попасть обратно в апертуру; количественно это не рассчитано. ';
+    el('mdInfo').textContent = note +
+      'Расстояние ' + distance + ' см; время хода туда и обратно около ' + flightTimeNs.toFixed(2) + ' нс. ' +
+      'Оценка Джонса относится только к нормальному падению и идеальным поляризационным элементам. ' +
+      'Анализ декорреляции — математический, не снижение мощности отражения. Эффективность физической оптики зависит от реальных материалов.';
+  }
+
+  function renderMirrorImage() {
+    if (!mirrorState.source) return;
+    drawReflectedImage(mirrorState.source);
+    drawLayers(mirrorState.source);
+    drawExternal();
+  }
+
+  function refresh() {
+    if (mirrorState.optimizing || el('mdSource').value === 'chiral') return;
+    if (mirrorState.pending) return;
+    mirrorState.pending = true;
+    // Avoid doing a CPU-heavy mirror analysis inside the original 24fps render path.
+    requestAnimationFrame(() => {
+      mirrorState.pending = false;
+      recompute();
+    });
+  }
+
+  function recompute() {
+    try {
+      const image = getCurrentSource();
+      const stats = analyze(image);
+      mirrorState.source = image;
+      mirrorState.stats = stats;
+      drawImage('mdOriginal', image);
+      drawCorrelations(stats);
+      el('mdAvg').textContent = stats.average.toFixed(3);
+      el('mdWorst').textContent = stats.worst.toFixed(3);
+      renderMirrorImage();
+      el('mdStatus').textContent = 'Готово: ' +
+        (el('mdSource').value === 'chiral' ? 'хиральный источник v2' : 'объединённый кадр v8.1') +
+        ', 12 осей отражения, ' + image.n + ' × ' + image.n + '.';
+    } catch (error) {
+      el('mdStatus').textContent = 'Ошибка зеркального анализа: ' + error.message;
+    }
+  }
+
+  function optimizeSeed() {
+    if (el('mdSource').value !== 'chiral') {
+      el('mdStatus').textContent = 'Для подбора seed выберите «Хиральный паттерн Mirror v2». Для цветка используется его собственный генератор и FFT.';
+      return;
+    }
+    if (mirrorState.optimizing) return;
+    mirrorState.optimizing = true;
+    el('mdOptimize').disabled = true;
+    const size = number('mdSize');
+    const base = number('mdSeed') || 1;
+    let index = 0, best = null, bestScore = Infinity;
+    const batch = () => {
+      try {
+        for (let n = 0; n < 2 && index < 24; n++, index++) {
+          const seed = (base + index * 7919) | 0;
+          const image = buildChiralImage(seed, size);
+          const score = analyze(image);
+          const metric = score.average * 0.7 + score.worst * 0.3;
+          if (metric < bestScore) { bestScore = metric; best = { seed }; }
+        }
+        el('mdStatus').textContent = 'Поиск seed: ' + index + ' / 24';
+        if (index < 24) setTimeout(batch, 0);
+        else {
+          el('mdSeed').value = best.seed;
+          mirrorState.optimizing = false;
+          el('mdOptimize').disabled = false;
+          recompute();
+          el('mdStatus').textContent = 'Выбран seed ' + best.seed + '. Минимизация корреляции по 12 осям не гарантирует декорреляцию всех зеркальных преобразований.';
+        }
+      } catch (error) {
+        mirrorState.optimizing = false;
+        el('mdOptimize').disabled = false;
+        el('mdStatus').textContent = 'Ошибка поиска: ' + error.message;
+      }
+    };
+    setTimeout(batch, 0);
+  }
+
+  function downloadMirrorPng() {
+    if (!mirrorState.source) recompute();
+    const link = document.createElement('a');
+    link.download = 'CIC_Mirror_' + el('mdSource').value + '_' + number('mdSize') + '.png';
+    link.href = el('mdOriginal').toDataURL('image/png');
+    link.click();
+  }
+
+  function downloadMirrorJson() {
+    if (!mirrorState.stats) recompute();
+    const payload = {
+      source: el('mdSource').value,
+      mirror: Object.fromEntries(Object.keys(fields).map(k => [k, number(k)])),
+      palette: el('mdPalette').value,
+      opticalMode: el('mdOptics').value,
+      externalMirror: el('mdExternal').checked,
+      analysisSize: number('mdSize'),
+      correlation: mirrorState.stats.correlations,
+      meanAbsoluteCorrelation: mirrorState.stats.average,
+      worstAbsoluteCorrelation: mirrorState.stats.worst,
+      airGlassFresnel: fresnel(number('mdAngle')),
+      doublePassTransmission: returnTransmission(),
+      modelNote: 'Numerical correlation and idealized normal-incidence polarization; not physical elimination of mirror reflections.'
+    };
+    if (el('mdSource').value === 'flower' && typeof readParameters === 'function') {
+      payload.flowerParameters = readParameters();
+    }
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' }));
+    link.href = url;
+    link.download = 'CIC_Mirror_Decorrelation_Results.json';
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  function setupMirrorEvents() {
+    Object.keys(fields).forEach(id => {
+      el(id).addEventListener('input', () => {
+        updateLabels();
+        if (['mdAngle', 'mdGap', 'mdBottom', 'mdBounces'].includes(id)) renderMirrorImage();
+        else if (['mdGrain', 'mdSpiral', 'mdContrast'].includes(id) && el('mdSource').value === 'chiral') {
+          el('mdStatus').textContent = 'Изменены параметры хирального генератора. Нажмите «Анализировать зеркало».';
+        } else drawExternal();
+      });
+    });
+    ['mdExternal', 'mdExtAngle', 'mdOptics', 'mdPalette', 'mdReflect', 'mdQAngle', 'mdRetard', 'mdLeak', 'mdDistance'].forEach(id => {
+      el(id).addEventListener('change', () => {
+        if (id === 'mdPalette' && el('mdSource').value === 'chiral') recompute();
+        else drawExternal();
+      });
+    });
+    el('mdSize').addEventListener('change', recompute);
+    el('mdSource').addEventListener('change', recompute);
+    el('mdAnalyze').addEventListener('click', recompute);
+    el('mdOptimize').addEventListener('click', optimizeSeed);
+    el('mdDownload').addEventListener('click', downloadMirrorPng);
+    el('mdExport').addEventListener('click', downloadMirrorJson);
+  }
+
+  updateLabels();
+  setupMirrorEvents();
+  window.cicMirrorBuildChiral = buildChiralImage;
+  window.cicMirrorRefresh = refresh;
+  // Main v7.1 script has already run and created its preview.
+  recompute();
+})();
+
+</script>
+<script>
+'use strict';
+/* CIC Fusion Controller — module boundary intentionally separated from
+ * Flower v7.1 and Mirror v2. The original generators remain independent.
+ * A square chiral texture is alpha-composited behind the flower;
+ * no changes are made to their equations or geometry.
+ */
+(() => {
+  const get = id => document.getElementById(id);
+  let cacheKey = '';
+  let cacheCanvas = null;
+  let renderSchedule = 0;
+
+  function enabled() {
+    return Boolean(get('fusionEnabled').checked);
+  }
+
+  function settings() {
+    return {
+      enabled: enabled(),
+      strength: Number(get('fusionBlend').value) / 100,
+      scale: Number(get('fusionScale').value) / 100,
+      rotationDegrees: Number(get('fusionRotation').value),
+      autoSeed: get('fusionAutoSeed').checked,
+      chiralSeed: get('fusionAutoSeed').checked && typeof state !== 'undefined' ? state.seed : (Number(get('mdSeed').value) || 1),
+      chiralGrain: Number(get('mdGrain').value),
+      chiralSpiral: Number(get('mdSpiral').value),
+      chiralContrast: Number(get('mdContrast').value),
+      chiralPalette: get('mdPalette').value,
+      overlayOrder: 'background-before-flower',
+      method: 'alpha compositing with screen transfer'
+    };
+  }
+
+  function texture(flowerSeed) {
+    const s = settings();
+    const key = [s.chiralSeed,s.chiralGrain,s.chiralSpiral,s.chiralContrast,s.chiralPalette].join('|');
+    if (key === cacheKey && cacheCanvas) return cacheCanvas;
+    if (typeof window.cicMirrorBuildChiral !== 'function') return null;
+
+    const image = window.cicMirrorBuildChiral(s.chiralSeed, 256);
+    const canvas = document.createElement('canvas');
+    canvas.width = canvas.height = image.n;
+    canvas.getContext('2d').putImageData(new ImageData(image.rgb, image.n, image.n), 0, 0);
+    cacheKey = key;
+    cacheCanvas = canvas;
+    return canvas;
+  }
+
+  function drawBackdrop(context, width, height, parameters, phase, flowerSeed) {
+    const s = settings();
+    if (!s.enabled || s.strength <= 0) return;
+    const chiralTexture = texture(flowerSeed);
+    if (!chiralTexture) return;
+
+    // Use one isotropic square. This preserves the coordinates and chirality
+    // of the source, unlike non-uniform resizing or pixel deformation.
+    const side = Math.max(width, height) * s.scale;
+    context.save();
+    context.translate(width * .5, height * .5);
+    context.rotate(s.rotationDegrees * Math.PI / 180);
+    context.globalAlpha = Math.max(0, Math.min(.7, s.strength));
+    context.globalCompositeOperation = 'screen';
+    context.imageSmoothingEnabled = true;
+    context.drawImage(chiralTexture, -side / 2, -side / 2, side, side);
+    context.restore();
+  }
+
+  function metadata() {
+    return settings();
+  }
+
+  function refreshBoth() {
+    cacheKey = '';
+    cacheCanvas = null;
+    // v7.1 recomputes its clean original rendering + the background layer,
+    // then mirror analysis inspects the actual combined preview pixels.
+    if (typeof drawPreview === 'function') drawPreview(true);
+    else if (typeof window.cicMirrorRefresh === 'function') window.cicMirrorRefresh();
+  }
+
+  function scheduleRefresh() {
+    if (renderSchedule) cancelAnimationFrame(renderSchedule);
+    renderSchedule = requestAnimationFrame(() => {
+      renderSchedule = 0;
+      refreshBoth();
+    });
+  }
+
+  async function exportCombinedPng() {
+    if (typeof exportSingle !== 'function') return;
+    const p = readParameters();
+    if (p.orientation === 'portrait') {
+      await exportSingle(1206, 2622, 'CIC_Flower_Mirror_Fusion_iPhone17.png');
+    } else {
+      await exportSingle(3840, 2160, 'CIC_Flower_Mirror_Fusion_4K.png');
+    }
+  }
+
+  function exportCombinedJson() {
+    const p = readParameters();
+    const data = typeof metadataObject === 'function'
+      ? metadataObject(p, state.metrics || renderField(previewContext, previewCanvas.width, previewCanvas.height, p, state.phase, state.seed), state.seed)
+      : {imageFusion:settings()};
+    data.imageFusion = metadata();
+    data.mirrorDiagnostics = {
+      averageAbsCorrelation: get('mdAvg').textContent,
+      worstAbsCorrelation: get('mdWorst').textContent,
+      fresnelEstimate: get('mdFresnel').textContent,
+      polarizationReturnEstimate: get('mdFiltered').textContent
+    };
+    data.note = 'Composite flower and chiral image. Electrical impedance and optical reflection are separate models.';
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'CIC_Flower_Mirror_Unified_Model.json';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  window.CICFusion = { enabled, drawBackdrop, metadata, refresh: refreshBoth };
+
+  const controls = ['fusionEnabled','fusionBlend','fusionScale','fusionRotation','fusionAutoSeed',
+    'mdSeed','mdGrain','mdSpiral','mdContrast','mdPalette'];
+  for (const id of controls) {
+    get(id).addEventListener('input', scheduleRefresh);
+    get(id).addEventListener('change', scheduleRefresh);
+  }
+  const outputValues = {
+    fusionBlend: ['fusionBlendV','%'],
+    fusionScale: ['fusionScaleV','%'],
+    fusionRotation: ['fusionRotationV','°']
+  };
+  for (const [id, [output, unit]] of Object.entries(outputValues)) {
+    const el = get(id);
+    function show() { get(output).textContent = el.value + unit; }
+    el.addEventListener('input', show);
+    show();
+  }
+  get('fusionExport').addEventListener('click', exportCombinedPng);
+  get('fusionParams').addEventListener('click', exportCombinedJson);
+  // Keep unified analysis as the default; source-only diagnostics remain optional.
+  get('mdSource').value = 'fusion';
+  refreshBoth();
+})();
 </script>
 </body>
 </html>
