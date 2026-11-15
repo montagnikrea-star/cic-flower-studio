@@ -3,27 +3,30 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>CIC Flower Ultimate v9.2 — Mobile Export & Unique Bloom</title>
+<title>CIC Flower Ultimate v9.3 — Continuum Sync</title>
 <style>
-:root{color-scheme:dark;--bg:#08111a;--panel:#112233;--panel2:#0b1723;--line:#29465d;--text:#edf6ff;--muted:#98aec3;--acc:#58e0cb}
+:root{color-scheme:dark;--bg:#08111a;--panel:#102131;--panel2:#0b1622;--line:#29465d;--text:#edf6ff;--muted:#98aec3;--acc:#58e0cb}
 *{box-sizing:border-box}body{margin:0;font:14px/1.42 Segoe UI,system-ui,sans-serif;background:radial-gradient(circle at 82% 10%,#15334b,transparent 30%),radial-gradient(circle at 12% 88%,#0d2437,transparent 26%),var(--bg);color:var(--text)}
 .wrap{max-width:1680px;margin:0 auto;padding:16px;display:grid;grid-template-columns:410px 1fr;gap:16px}.panel,.view{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:18px;box-shadow:0 18px 46px rgba(0,0,0,.28)}.panel{padding:16px;display:flex;flex-direction:column;gap:12px}.view{padding:16px;display:grid;gap:12px}
 h1{margin:0 0 4px;font-size:26px}.sub{font-size:12px;color:var(--muted)}.group{border-top:1px solid rgba(255,255,255,.08);padding-top:12px}h2{margin:0 0 8px;font-size:14px;color:#e0fff9}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
 label{display:flex;justify-content:space-between;gap:8px;margin:8px 0 4px;font-size:12px;color:#d9e6f3}output{color:#85f0df;font-variant-numeric:tabular-nums}input[type=range],select{width:100%}input[type=range]{accent-color:var(--acc)}select{background:#0b1622;color:var(--text);border:1px solid #36536a;border-radius:10px;padding:8px}button{background:#1b3a4e;border:1px solid #4f7085;color:#f7fcff;border-radius:10px;padding:10px 12px;font-weight:700;cursor:pointer}button.primary{background:var(--acc);border-color:var(--acc);color:#042129}button:hover{filter:brightness(1.07)}.btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
-.preview{position:relative;display:grid;place-items:center;min-height:520px;background:#02070d;border:1px solid #274353;border-radius:14px;overflow:hidden}canvas{display:block}#mainCanvas{width:100%;height:auto;max-height:70vh;object-fit:contain}#chartCanvas{width:100%;height:190px;background:#081522;border:1px solid #29495a;border-radius:12px}.status{padding:10px 12px;border:1px solid #29495a;border-radius:12px;background:#081522;color:#d5edf4;font-size:12px;min-height:44px}.tag{position:absolute;left:10px;bottom:10px;background:rgba(8,18,28,.86);border:1px solid #214254;border-radius:8px;padding:6px 10px;font-size:11px;color:#e0fffa}.switch{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:12px;color:#dce7f0}.switch input{accent-color:var(--acc)}@media(max-width:1150px){.wrap{grid-template-columns:1fr}}
+.preview{position:relative;display:grid;place-items:center;min-height:520px;background:#02070d;border:1px solid #274353;border-radius:14px;overflow:hidden}canvas{display:block}#mainCanvas{width:100%;height:auto;max-height:70vh;object-fit:contain}#chartCanvas{width:100%;height:180px;background:#081522;border:1px solid #29495a;border-radius:12px}.status{padding:10px 12px;border:1px solid #29495a;border-radius:12px;background:#081522;color:#d5edf4;font-size:12px;min-height:44px}.tag{position:absolute;left:10px;bottom:10px;background:rgba(8,18,28,.86);border:1px solid #214254;border-radius:8px;padding:6px 10px;font-size:11px;color:#e0fffa}.switch{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:12px;color:#dce7f0}.switch input{accent-color:var(--acc)} .pill{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:#0b1a28;border:1px solid #29495a;color:#d6ebf3;font-size:11px} .row{display:flex;gap:8px;flex-wrap:wrap}
+@media(max-width:1150px){.wrap{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="wrap">
 <section class="panel">
-  <div><h1>CIC Flower Ultimate v9.2</h1><div class="sub">Botanical 3D · Mobile Edition</div></div>
+  <div><h1>CIC Flower Ultimate v9.3</h1><div class="sub">Continuum Sync Edition</div></div>
+
   <div class="group">
     <h2>Быстрый режим</h2>
     <div class="grid2">
       <div><label for="preset">Пресет</label><select id="preset"><option value="lotus">Lotus</option><option value="neon">Neon Flower</option><option value="iris">Iris Bloom</option><option value="orchid">Orchid Glow</option><option value="mirror">Mirror Fusion</option><option value="custom">Custom</option></select></div>
       <div><label for="profile">Спектр</label><select id="profile"><option value="comfort">Comfort</option><option value="delta">Delta</option><option value="theta">Theta</option><option value="alpha" selected>Alpha</option><option value="beta">Beta</option><option value="gamma">Gamma</option><option value="archive">CIC Archive</option><option value="custom">Custom</option></select></div>
     </div>
-    <div class="btns"><button class="primary" id="autoBtn">AUTO · новый цветок</button><button id="renderBtn">Новый цветок</button></div>
+    <div class="btns"><button class="primary" id="autoBtn">AUTO</button><button id="newFlowerBtn">Новый цветок</button></div>
+    <div class="row" style="margin-top:8px"><span class="pill" id="uidPill">UID —</span><span class="pill" id="syncPill">Sync ON</span><span class="pill" id="phasePill">Phase 0.000</span></div>
   </div>
 
   <div class="group">
@@ -33,18 +36,9 @@ label{display:flex;justify-content:space-between;gap:8px;margin:8px 0 4px;font-s
     <label for="petalLength">Длина <output id="petalLengthOut"></output></label><input id="petalLength" type="range" min="0.35" max="1.5" step="0.01" value="0.95">
     <label for="petalWidth">Ширина <output id="petalWidthOut"></output></label><input id="petalWidth" type="range" min="0.25" max="1.3" step="0.01" value="0.72">
     <label for="petalRoundness">Округлость <output id="petalRoundnessOut"></output></label><input id="petalRoundness" type="range" min="0.2" max="1.6" step="0.01" value="0.88">
-    <div class="grid2">
-      <div><label for="dimensionDepth">Глубина <output id="dimensionDepthOut"></output></label><input id="dimensionDepth" type="range" min="0" max="1" step="0.01" value="0.72"></div>
-      <div><label for="lift">Подъём <output id="liftOut"></output></label><input id="lift" type="range" min="0" max="1" step="0.01" value="0.34"></div>
-    </div>
-    <div class="grid2">
-      <div><label for="harmonicA">Гармоника A <output id="harmonicAOut"></output></label><input id="harmonicA" type="range" min="0" max="8" step="0.01" value="1.9"></div>
-      <div><label for="harmonicB">Гармоника B <output id="harmonicBOut"></output></label><input id="harmonicB" type="range" min="0" max="8" step="0.01" value="2.7"></div>
-    </div>
-    <div class="grid2">
-      <div><label for="veinDensity">Прожилки <output id="veinDensityOut"></output></label><input id="veinDensity" type="range" min="2" max="20" step="1" value="9"></div>
-      <div><label for="spiralPhase">Фаза <output id="spiralPhaseOut"></output></label><input id="spiralPhase" type="range" min="0" max="6.283" step="0.001" value="1.18"></div>
-    </div>
+    <div class="grid2"><div><label for="dimensionDepth">Глубина <output id="dimensionDepthOut"></output></label><input id="dimensionDepth" type="range" min="0" max="1" step="0.01" value="0.72"></div><div><label for="lift">Подъём <output id="liftOut"></output></label><input id="lift" type="range" min="0" max="1" step="0.01" value="0.34"></div></div>
+    <div class="grid2"><div><label for="harmonicA">Гармоника A <output id="harmonicAOut"></output></label><input id="harmonicA" type="range" min="0" max="8" step="0.01" value="1.9"></div><div><label for="harmonicB">Гармоника B <output id="harmonicBOut"></output></label><input id="harmonicB" type="range" min="0" max="8" step="0.01" value="2.7"></div></div>
+    <div class="grid2"><div><label for="veinDensity">Прожилки <output id="veinDensityOut"></output></label><input id="veinDensity" type="range" min="2" max="20" step="1" value="9"></div><div><label for="spiralPhase">Фаза <output id="spiralPhaseOut"></output></label><input id="spiralPhase" type="range" min="0" max="6.283" step="0.001" value="1.18"></div></div>
   </div>
 
   <div class="group">
@@ -52,27 +46,30 @@ label{display:flex;justify-content:space-between;gap:8px;margin:8px 0 4px;font-s
     <label for="flowerHue">Цветок <output id="flowerHueOut"></output></label><input id="flowerHue" type="range" min="0" max="360" step="1" value="168">
     <label for="accentHue">Акцент <output id="accentHueOut"></output></label><input id="accentHue" type="range" min="0" max="360" step="1" value="194">
     <label for="bgHue">Фон <output id="bgHueOut"></output></label><input id="bgHue" type="range" min="0" max="360" step="1" value="210">
-    <div class="grid2">
-      <div><label for="glow">Свечение <output id="glowOut"></output></label><input id="glow" type="range" min="0.1" max="4" step="0.01" value="2.05"></div>
-      <div><label for="transparency">Прозрачность <output id="transparencyOut"></output></label><input id="transparency" type="range" min="0.01" max="0.28" step="0.01" value="0.08"></div>
-    </div>
+    <div class="grid2"><div><label for="glow">Свечение <output id="glowOut"></output></label><input id="glow" type="range" min="0.1" max="4" step="0.01" value="2.05"></div><div><label for="transparency">Прозрачность <output id="transparencyOut"></output></label><input id="transparency" type="range" min="0.01" max="0.28" step="0.01" value="0.08"></div></div>
   </div>
 
   <div class="group">
     <h2>Fusion</h2>
-    <label for="mirrorBlend">Mirror Layer <output id="mirrorBlendOut"></output></label><input id="mirrorBlend" type="range" min="0" max="1" step="0.01" value="0.07">
+    <label for="mirrorBlend">Mirror Layer <output id="mirrorBlendOut"></output></label><input id="mirrorBlend" type="range" min="0" max="1" step="0.01" value="0.18">
     <label for="mirrorScale">Mirror Scale <output id="mirrorScaleOut"></output></label><input id="mirrorScale" type="range" min="0.5" max="3" step="0.01" value="1.18">
     <label for="mirrorTwist">Mirror Twist <output id="mirrorTwistOut"></output></label><input id="mirrorTwist" type="range" min="0" max="8" step="0.01" value="1.8">
     <div class="switch"><input id="enableMirror" type="checkbox" checked><label for="enableMirror" style="margin:0">Включить слой</label></div>
   </div>
 
   <div class="group">
+    <h2>Live Sync</h2>
+    <label for="continuumRate">Ритм <output id="continuumRateOut"></output></label><input id="continuumRate" type="range" min="0.05" max="1.2" step="0.01" value="0.26">
+    <label for="syncTightness">Связность <output id="syncTightnessOut"></output></label><input id="syncTightness" type="range" min="0" max="1" step="0.01" value="0.72">
+    <div class="grid2"><div><label for="motionDepth">Движение <output id="motionDepthOut"></output></label><input id="motionDepth" type="range" min="0" max="1" step="0.01" value="0.34"></div><div><label for="seedVariance">Уникальность <output id="seedVarianceOut"></output></label><input id="seedVariance" type="range" min="0" max="1" step="0.01" value="0.58"></div></div>
+    <div class="switch"><input id="syncEnabled" type="checkbox" checked><label for="syncEnabled" style="margin:0">Автосинхронизация</label></div>
+    <div class="switch"><input id="animateEnabled" type="checkbox" checked><label for="animateEnabled" style="margin:0">Анимация</label></div>
+  </div>
+
+  <div class="group">
     <h2>Display</h2>
     <label for="matrixType">Матрица</label><select id="matrixType"><option value="ips">IPS LCD</option><option value="va">VA LCD</option><option value="tn">TN LCD</option><option value="mini">Mini-LED LCD</option><option value="amoled">AMOLED</option><option value="woled">WOLED</option><option value="qdoled">QD-OLED</option></select>
-    <div class="grid2">
-      <div><label for="displayStrength">Сила <output id="displayStrengthOut"></output></label><input id="displayStrength" type="range" min="0" max="1" step="0.01" value="0.65"></div>
-      <div><label for="viewAngle">Угол <output id="viewAngleOut"></output></label><input id="viewAngle" type="range" min="0" max="80" step="1" value="10"></div>
-    </div>
+    <div class="grid2"><div><label for="displayStrength">Сила <output id="displayStrengthOut"></output></label><input id="displayStrength" type="range" min="0" max="1" step="0.01" value="0.65"></div><div><label for="viewAngle">Угол <output id="viewAngleOut"></output></label><input id="viewAngle" type="range" min="0" max="80" step="1" value="10"></div></div>
     <div class="switch"><input id="applyDisplay" type="checkbox" checked><label for="applyDisplay" style="margin:0">Применить к изображению</label></div>
   </div>
 
@@ -93,223 +90,68 @@ label{display:flex;justify-content:space-between;gap:8px;margin:8px 0 4px;font-s
   <div class="group">
     <h2>Экспорт</h2>
     <div class="btns"><button id="png4kBtn">Скачать 4K</button><button id="pngPhoneBtn">Скачать iPhone</button></div>
-    <div class="btns"><button id="openPngBtn">Открыть PNG</button><button id="sharePngBtn">Поделиться PNG</button></div>
+    <div class="btns"><button id="openBtn">Открыть PNG</button><button id="shareBtn">Поделиться PNG</button></div>
     <div class="btns"><button id="jsonBtn">JSON</button><button id="htmlBtn">HTML</button></div>
   </div>
 </section>
 
 <section class="view">
   <div class="preview"><canvas id="mainCanvas" width="1206" height="2622"></canvas><div class="tag" id="tag">preview</div></div>
-  <canvas id="chartCanvas" width="1200" height="190"></canvas>
+  <canvas id="chartCanvas" width="1200" height="180"></canvas>
   <div class="status" id="status">Готово.</div>
 </section>
 </div>
 <script>
-const IDS=['rings','petals','petalLength','petalWidth','petalRoundness','dimensionDepth','lift','harmonicA','harmonicB','veinDensity','spiralPhase','flowerHue','accentHue','bgHue','glow','transparency','mirrorBlend','mirrorScale','mirrorTwist','displayStrength','viewAngle','fMin','fMax','scanRate','beneficialGain','harmfulSuppression','filterOrder','comfortSoftening','capPf','esr','esl'];
+const IDS=['rings','petals','petalLength','petalWidth','petalRoundness','dimensionDepth','lift','harmonicA','harmonicB','veinDensity','spiralPhase','flowerHue','accentHue','bgHue','glow','transparency','mirrorBlend','mirrorScale','mirrorTwist','continuumRate','syncTightness','motionDepth','seedVariance','displayStrength','viewAngle','fMin','fMax','scanRate','beneficialGain','harmfulSuppression','filterOrder','comfortSoftening','capPf','esr','esl'];
 const PROFILES={comfort:[6,12],delta:[0.5,4],theta:[4,8],alpha:[8,13],beta:[13,30],gamma:[30,80],archive:[0.08,4.5]};
-const MATRIX={ips:{gamma:1.0,sat:1.0,contrast:1.0,reflect:0.05,subpixel:'rgb'},va:{gamma:1.05,sat:1.0,contrast:1.08,reflect:0.05,subpixel:'rgb'},tn:{gamma:1.1,sat:0.94,contrast:0.96,reflect:0.06,subpixel:'rgb'},mini:{gamma:1.0,sat:1.02,contrast:1.12,reflect:0.04,subpixel:'rgb'},amoled:{gamma:0.97,sat:1.08,contrast:1.18,reflect:0.03,subpixel:'rgb'},woled:{gamma:0.98,sat:0.98,contrast:1.12,reflect:0.03,subpixel:'wrgb'},qdoled:{gamma:0.96,sat:1.12,contrast:1.18,reflect:0.03,subpixel:'tri'}};
-const PRESETS={lotus:{rings:4,petals:8,petalLength:0.98,petalWidth:0.76,petalRoundness:0.90,dimensionDepth:0.72,lift:0.34,harmonicA:1.9,harmonicB:2.7,veinDensity:9,spiralPhase:1.18,flowerHue:168,accentHue:194,bgHue:210,glow:2.05,transparency:0.08,mirrorBlend:0.07,mirrorScale:1.18,mirrorTwist:1.8},neon:{rings:4,petals:7,petalLength:1.02,petalWidth:0.70,petalRoundness:0.82,dimensionDepth:0.66,lift:0.28,harmonicA:2.2,harmonicB:3.2,veinDensity:10,spiralPhase:1.42,flowerHue:176,accentHue:200,bgHue:214,glow:2.25,transparency:0.07,mirrorBlend:0.20,mirrorScale:1.25,mirrorTwist:2.2},iris:{rings:3,petals:6,petalLength:1.10,petalWidth:0.62,petalRoundness:0.68,dimensionDepth:0.70,lift:0.36,harmonicA:1.6,harmonicB:2.1,veinDensity:8,spiralPhase:0.94,flowerHue:160,accentHue:186,bgHue:212,glow:1.95,transparency:0.08,mirrorBlend:0.10,mirrorScale:1.05,mirrorTwist:1.4},orchid:{rings:3,petals:5,petalLength:0.92,petalWidth:0.84,petalRoundness:1.02,dimensionDepth:0.74,lift:0.30,harmonicA:1.5,harmonicB:2.4,veinDensity:9,spiralPhase:1.02,flowerHue:178,accentHue:206,bgHue:218,glow:2.15,transparency:0.09,mirrorBlend:0.14,mirrorScale:1.12,mirrorTwist:1.6},mirror:{rings:4,petals:8,petalLength:0.96,petalWidth:0.72,petalRoundness:0.88,dimensionDepth:0.74,lift:0.32,harmonicA:2.0,harmonicB:2.9,veinDensity:10,spiralPhase:1.28,flowerHue:170,accentHue:194,bgHue:210,glow:2.00,transparency:0.08,mirrorBlend:0.34,mirrorScale:1.40,mirrorTwist:2.8}};
-const $=id=>document.getElementById(id); let mainCanvas=$('mainCanvas'),ctx=mainCanvas.getContext('2d',{alpha:false,desynchronized:true}); const chartCanvas=$('chartCanvas'),chartCtx=chartCanvas.getContext('2d',{alpha:false}); let lastReport={};
-let flowerSeed = newSeed();
-let renderNumber = 0;
-let exportedImageUrl = null;
-function newSeed(){
-  const a=new Uint32Array(1);
-  if(window.crypto && crypto.getRandomValues)crypto.getRandomValues(a);
-  else a[0]=Math.floor(Math.random()*0xffffffff);
-  return (a[0]||1)>>>0;
-}
-function seededRandom(seed){
-  let state=seed>>>0;
-  return function(){state=(state+0x6D2B79F5)|0;let t=state;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296;};
-}
-function freshFlower(){flowerSeed=newSeed();renderNumber++;render();}
-
+const MATRIX={ips:{gamma:1.0,sat:1.0,contrast:1.0,reflect:0.05},va:{gamma:1.05,sat:1.0,contrast:1.08,reflect:0.05},tn:{gamma:1.1,sat:0.94,contrast:0.96,reflect:0.06},mini:{gamma:1.0,sat:1.02,contrast:1.12,reflect:0.04},amoled:{gamma:0.97,sat:1.08,contrast:1.18,reflect:0.03},woled:{gamma:0.98,sat:0.98,contrast:1.12,reflect:0.03},qdoled:{gamma:0.96,sat:1.12,contrast:1.18,reflect:0.03}};
+const PRESETS={lotus:{rings:4,petals:8,petalLength:0.98,petalWidth:0.76,petalRoundness:0.90,dimensionDepth:0.72,lift:0.34,harmonicA:1.9,harmonicB:2.7,veinDensity:9,spiralPhase:1.18,flowerHue:168,accentHue:194,bgHue:210,glow:2.05,transparency:0.08,mirrorBlend:0.18,mirrorScale:1.18,mirrorTwist:1.8},neon:{rings:4,petals:7,petalLength:1.02,petalWidth:0.70,petalRoundness:0.82,dimensionDepth:0.66,lift:0.28,harmonicA:2.2,harmonicB:3.2,veinDensity:10,spiralPhase:1.42,flowerHue:176,accentHue:200,bgHue:214,glow:2.25,transparency:0.07,mirrorBlend:0.20,mirrorScale:1.25,mirrorTwist:2.2},iris:{rings:3,petals:6,petalLength:1.10,petalWidth:0.62,petalRoundness:0.68,dimensionDepth:0.70,lift:0.36,harmonicA:1.6,harmonicB:2.1,veinDensity:8,spiralPhase:0.94,flowerHue:160,accentHue:186,bgHue:212,glow:1.95,transparency:0.08,mirrorBlend:0.10,mirrorScale:1.05,mirrorTwist:1.4},orchid:{rings:3,petals:5,petalLength:0.92,petalWidth:0.84,petalRoundness:1.02,dimensionDepth:0.74,lift:0.30,harmonicA:1.5,harmonicB:2.4,veinDensity:9,spiralPhase:1.02,flowerHue:178,accentHue:206,bgHue:218,glow:2.15,transparency:0.09,mirrorBlend:0.14,mirrorScale:1.12,mirrorTwist:1.6},mirror:{rings:4,petals:8,petalLength:0.96,petalWidth:0.72,petalRoundness:0.88,dimensionDepth:0.74,lift:0.32,harmonicA:2.0,harmonicB:2.9,veinDensity:10,spiralPhase:1.28,flowerHue:170,accentHue:194,bgHue:210,glow:2.00,transparency:0.08,mirrorBlend:0.34,mirrorScale:1.40,mirrorTwist:2.8}};
+const $=id=>document.getElementById(id); const mainCanvas=$('mainCanvas'),ctx=mainCanvas.getContext('2d',{alpha:false,desynchronized:true}); const chartCanvas=$('chartCanvas'),chartCtx=chartCanvas.getContext('2d',{alpha:false});
+let lastReport={}, lastShareBlob=null;
+const continuum={running:true,lastPerf:0,tau:0,phase:0,dtAvg:16.67,jitter:0,refreshHz:60,coherence:1,uid:'',seed:0,anchor:0,signature:null};
 function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function lerp(a,b,t){return a+(b-a)*t;}
+function xmur3(str){for(var i=0,h=1779033703^str.length;i<str.length;i++)h=Math.imul(h^str.charCodeAt(i),3432918353),h=h<<13|h>>>19;return function(){h=Math.imul(h^h>>>16,2246822507);h=Math.imul(h^h>>>13,3266489909);return (h^=h>>>16)>>>0;}}
+function mulberry32(a){return function(){var t=a+=0x6D2B79F5;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return ((t^t>>>14)>>>0)/4294967296;}}
 function hsv(h,s,v){let c=v*s,x=c*(1-Math.abs((h/60)%2-1)),m=v-c,r=0,g=0,b=0;if(h<60)[r,g,b]=[c,x,0];else if(h<120)[r,g,b]=[x,c,0];else if(h<180)[r,g,b]=[0,c,x];else if(h<240)[r,g,b]=[0,x,c];else if(h<300)[r,g,b]=[x,0,c];else[r,g,b]=[c,0,x];return[Math.round((r+m)*255),Math.round((g+m)*255),Math.round((b+m)*255)];}
 function updateOutputs(){IDS.forEach(id=>{const out=$(id+'Out'); if(out){const v=Number($(id).value); out.textContent=(Math.abs(v)>=10||Number.isInteger(v))?v.toFixed(Number.isInteger(v)?0:2):v.toFixed(2);}});}
 function applyPreset(name){if(!PRESETS[name])return; Object.entries(PRESETS[name]).forEach(([k,v])=>{if($(k))$(k).value=v;}); updateOutputs();}
-function applyProfile(){const p=$('profile').value; if(p==='custom') return; const q=PROFILES[p]; if(q){$('fMin').value=q[0];$('fMax').value=q[1]; updateOutputs();}}
-function params(){const p={preset:$('preset').value,profile:$('profile').value,matrixType:$('matrixType').value,enableMirror:$('enableMirror').checked,applyDisplay:$('applyDisplay').checked}; IDS.forEach(id=>p[id]=Number($(id).value)); if(p.fMax<=p.fMin)p.fMax=p.fMin+0.01; return p;}
+function applyProfile(){const p=$('profile').value; if(p==='custom')return; const q=PROFILES[p]; if(q){$('fMin').value=q[0];$('fMax').value=q[1]; updateOutputs();}}
+function params(){const p={preset:$('preset').value,profile:$('profile').value,matrixType:$('matrixType').value,enableMirror:$('enableMirror').checked,applyDisplay:$('applyDisplay').checked,syncEnabled:$('syncEnabled').checked,animateEnabled:$('animateEnabled').checked}; IDS.forEach(id=>p[id]=Number($(id).value)); if(p.fMax<=p.fMin)p.fMax=p.fMin+0.01; return p;}
+function generateUID(){if(window.crypto&&crypto.getRandomValues){const a=new Uint32Array(2); crypto.getRandomValues(a); return 'F-'+a[0].toString(36)+'-'+a[1].toString(36);} return 'F-'+Math.random().toString(36).slice(2,10);} 
+function buildSignature(seed,variance){const hash=xmur3(seed+':cic:v9.3'); const rand=mulberry32(hash()); const arr=n=>Array.from({length:n},()=>rand()); return {ringJitter:arr(8), petalJitter:arr(64), hueShift:(rand()-.5)*18*variance, phaseOffset:rand()*Math.PI*2, bloomBias:(rand()-.5)*0.2*variance, skew:(rand()-.5)*0.18*variance, mirrorOffset:(rand()-.5)*0.7*variance, uid:generateUID()};}
+function reseedFlower(){const seedBase=`${screen.width}x${screen.height}|${devicePixelRatio}|${performance.now().toFixed(3)}|${Math.random()}`; const variance=Number($('seedVariance').value||0.58); continuum.seed=seedBase; continuum.signature=buildSignature(seedBase,variance); continuum.uid=continuum.signature.uid; $('uidPill').textContent='UID '+continuum.uid; lastShareBlob=null; renderNow();}
+function initContinuum(){continuum.lastPerf=performance.now(); continuum.tau=0; continuum.phase=0; continuum.dtAvg=16.67; continuum.jitter=0; continuum.refreshHz=60; continuum.coherence=1; continuum.anchor=((screen.width*0.13+screen.height*0.07+devicePixelRatio*11)%17)/17*Math.PI*2; reseedFlower();}
+function stepContinuum(now){const p=params(); if(!continuum.lastPerf) continuum.lastPerf=now; let dt=clamp(now-continuum.lastPerf,4,40); continuum.lastPerf=now; continuum.dtAvg=lerp(continuum.dtAvg,dt,0.06); continuum.jitter=lerp(continuum.jitter,Math.abs(dt-continuum.dtAvg),0.08); continuum.refreshHz=1000/continuum.dtAvg; const refreshTerm=Math.sin(continuum.refreshHz*0.031+continuum.anchor)*0.045; const coherenceTarget=clamp(1-continuum.jitter/18,0.35,1); continuum.coherence=lerp(continuum.coherence,coherenceTarget,0.08); if(p.syncEnabled){const rate=p.continuumRate*(0.85+0.25*continuum.coherence+refreshTerm); continuum.tau += dt*0.001*rate; continuum.phase = continuum.tau*Math.PI*2; } else { continuum.tau += dt*0.001*p.continuumRate; continuum.phase=continuum.tau*Math.PI*2; }
+ $('phasePill').textContent='Phase '+(continuum.phase%(Math.PI*2)).toFixed(3); $('syncPill').textContent=p.syncEnabled?('Sync '+Math.round(continuum.coherence*100)+'%'):'Sync OFF';}
 function temporalBand(p){const k1=Math.max(0.1,p.fMin/Math.max(0.01,p.scanRate)); const k2=Math.max(k1+0.1,p.fMax/Math.max(0.01,p.scanRate)); return [k1,k2];}
 function bandWeight(k,k1,k2,n,g,s,soft){const low=1/Math.sqrt(1+Math.pow(k1/Math.max(k,1e-4),2*n)); const high=1/Math.sqrt(1+Math.pow(Math.max(k,1e-4)/k2,2*n)); const band=low*high; const softPenalty=1/(1+soft*Math.pow(k/Math.max(k2,1),2)); return ((1-s)+s*band*(1+g))*softPenalty;}
 function impedanceAt(f,p){const C=p.capPf*1e-12,L=p.esl*1e-9,R=p.esr,w=2*Math.PI*f; return Math.sqrt(R*R+Math.pow(w*L-1/(w*C),2));}
 function impedanceReport(p){const f1=Math.max(1e5,p.fMin*1e6*0.2),f2=Math.max(f1*1.01,p.fMax*1e6*4),N=128; let min=1e99,max=0,ok=0; const samples=[]; for(let i=0;i<N;i++){const t=i/(N-1),f=f1*Math.pow(f2/f1,t),z=impedanceAt(f,p); if(z<min)min=z;if(z>max)max=z;if(z>=50&&z<=100)ok++; if(i%16===0)samples.push({f,z});} return {minOhm:+min.toFixed(2),maxOhm:+max.toFixed(2),percent:+(100*ok/N).toFixed(1),samples};}
-function drawBackground(w,h,p){const [r,g,b]=hsv(p.bgHue,0.52,0.16); const grad=ctx.createRadialGradient(w*0.5,h*0.46,0,w*0.5,h*0.46,Math.max(w,h)*0.82); grad.addColorStop(0,`rgb(${Math.min(255,r+14)},${Math.min(255,g+18)},${Math.min(255,b+22)})`); grad.addColorStop(0.55,`rgb(${r},${g},${b})`); grad.addColorStop(1,'rgb(2,6,10)'); ctx.fillStyle=grad; ctx.fillRect(0,0,w,h);}
-function drawMirrorLayer(w,h,p){if(!p.enableMirror||p.mirrorBlend<=0)return; ctx.save(); ctx.globalCompositeOperation='screen'; ctx.strokeStyle=`rgba(110,245,255,${0.04+p.mirrorBlend*0.10})`; ctx.lineWidth=1.05; const scale=Math.min(w,h)*0.22*p.mirrorScale; for(let s=0;s<20;s++){const t=s/19; ctx.beginPath(); for(let i=0;i<=220;i++){const a=i/220*Math.PI*2; const r=scale*(0.84+0.12*Math.sin(a*2+p.mirrorTwist*t)+0.08*Math.cos(a*3-p.mirrorTwist*(1+t))); const x=w*0.5+Math.cos(a+t*p.mirrorTwist)*r*(1+t*0.26); const y=h*0.54+Math.sin(a-t*p.mirrorTwist)*r*(0.72+t*0.46); if(i===0)ctx.moveTo(x,y); else ctx.lineTo(x,y);} ctx.stroke(); } ctx.restore();}
-function petalShape(cx,cy,angle,length,halfWidth,roundness,lift,depth){
-  // Each petal is an actual closed botanical contour, expressed in a local radial coordinate system.
-  const ux=Math.cos(angle),uy=Math.sin(angle),vx=-uy,vy=ux;
-  const startR=length*0.06;
-  const bx=cx+ux*startR,by=cy+uy*startR;
-  const tx=cx+ux*(length+startR),ty=cy+uy*(length+startR)-lift-depth*0.10;
-  const broad=halfWidth*(0.85+0.25*roundness);
-  const fx=cx+ux*(startR+length*0.28),fy=cy+uy*(startR+length*0.28);
-  const mx=cx+ux*(startR+length*0.68),my=cy+uy*(startR+length*0.68);
-  return {bx,by,tx,ty,
-    l1x:fx+vx*broad,l1y:fy+vy*broad,
-    l2x:mx+vx*broad*0.9,l2y:my+vy*broad*0.9,
-    r1x:mx-vx*broad*0.9,r1y:my-vy*broad*0.9,
-    r2x:fx-vx*broad,r2y:fy-vy*broad,
-    ux,uy,vx,vy,length,halfWidth:broad};
-}
-function petalPath(shape){
-  ctx.beginPath();
-  ctx.moveTo(shape.bx,shape.by);
-  ctx.bezierCurveTo(shape.l1x,shape.l1y,shape.l2x,shape.l2y,shape.tx,shape.ty);
-  ctx.bezierCurveTo(shape.r1x,shape.r1y,shape.r2x,shape.r2y,shape.bx,shape.by);
-  ctx.closePath();
-}
-function strokePetal(shape,main,accent,alpha,blur,lineW,veins,cx,cy,angle,len){
-  ctx.save();ctx.globalCompositeOperation='lighter';
-  // translucent tissue: makes petals readable even where line filaments overlap
-  ctx.fillStyle=`rgba(${main[0]},${main[1]},${main[2]},${clamp(alpha*.26,.008,.06)})`;
-  petalPath(shape);ctx.fill();
-  ctx.strokeStyle=`rgba(${main[0]},${main[1]},${main[2]},${clamp(alpha*2.9,.16,.62)})`;
-  ctx.lineWidth=Math.max(1.1,lineW*1.45);ctx.lineJoin='round';
-  ctx.shadowColor=`rgba(${accent[0]},${accent[1]},${accent[2]},.85)`;
-  ctx.shadowBlur=Math.min(48,blur*1.25);
-  petalPath(shape);ctx.stroke();
-  // fine bright filament over the perimeter
-  ctx.shadowBlur=Math.min(18,blur*.5);
-  ctx.strokeStyle=`rgba(${accent[0]},${accent[1]},${accent[2]},${clamp(alpha*2.4,.12,.42)})`;
-  ctx.lineWidth=.65;petalPath(shape);ctx.stroke();
-  // central vein follows the long axis
-  ctx.strokeStyle=`rgba(230,255,251,${clamp(alpha*1.6,.12,.36)})`;
-  ctx.lineWidth=.85;ctx.shadowBlur=8;
-  ctx.beginPath();ctx.moveTo(shape.bx,shape.by);
-  ctx.quadraticCurveTo((shape.bx+shape.tx)*.5,(shape.by+shape.ty)*.5,shape.tx,shape.ty);
-  ctx.stroke();
-  // secondary veins start on the center vein and end INSIDE the petal, at bounded fractions
-  ctx.strokeStyle=`rgba(${accent[0]},${accent[1]},${accent[2]},${clamp(alpha*.9,.06,.17)})`;
-  ctx.lineWidth=.5;ctx.shadowBlur=4;
-  for(let i=1;i<=veins;i++){
-    const t=.16+.7*i/(veins+1),rad=t*shape.length;
-    const middleX=shape.bx+shape.ux*rad,middleY=shape.by+shape.uy*rad;
-    const widthAt=shape.halfWidth*Math.sin(Math.PI*t)*.6;
-    for(const sign of [-1,1]){
-      const ex=middleX+shape.ux*shape.length*.08+shape.vx*widthAt*sign;
-      const ey=middleY+shape.uy*shape.length*.08+shape.vy*widthAt*sign;
-      ctx.beginPath();ctx.moveTo(middleX,middleY);
-      ctx.quadraticCurveTo(middleX+shape.ux*shape.length*.045+shape.vx*widthAt*.35*sign,middleY+shape.uy*shape.length*.045+shape.vy*widthAt*.35*sign,ex,ey);
-      ctx.stroke();
-    }
+function drawBackground(rctx,w,h,p){const bgHue=(p.bgHue+(continuum.signature?continuum.signature.hueShift*0.1:0)+360)%360; const [r,g,b]=hsv(bgHue,0.52,0.16); const grad=rctx.createRadialGradient(w*0.5,h*0.46,0,w*0.5,h*0.46,Math.max(w,h)*0.82); grad.addColorStop(0,`rgb(${Math.min(255,r+14)},${Math.min(255,g+18)},${Math.min(255,b+22)})`); grad.addColorStop(0.55,`rgb(${r},${g},${b})`); grad.addColorStop(1,'rgb(2,6,10)'); rctx.fillStyle=grad; rctx.fillRect(0,0,w,h);} 
+function drawMirrorLayer(rctx,w,h,p,phase){if(!p.enableMirror||p.mirrorBlend<=0)return; const sig=continuum.signature||{mirrorOffset:0}; rctx.save(); rctx.globalCompositeOperation='screen'; rctx.strokeStyle=`rgba(110,245,255,${0.04+p.mirrorBlend*0.10})`; rctx.lineWidth=1.0; const scale=Math.min(w,h)*0.22*p.mirrorScale; for(let s=0;s<18;s++){const t=s/17; rctx.beginPath(); for(let i=0;i<=210;i++){const a=i/210*Math.PI*2; const r=scale*(0.84+0.12*Math.sin(a*2+p.mirrorTwist*t+phase*0.18+sig.mirrorOffset)+0.08*Math.cos(a*3-p.mirrorTwist*(1+t)-phase*0.13)); const x=w*0.5+Math.cos(a+t*p.mirrorTwist+phase*0.05)*r*(1+t*0.24); const y=h*0.54+Math.sin(a-t*p.mirrorTwist-phase*0.04)*r*(0.72+t*0.44); if(i===0)rctx.moveTo(x,y); else rctx.lineTo(x,y);} rctx.stroke(); } rctx.restore();}
+function petalShape(cx,cy,angle,len,width,roundness,lift,depth,breathe,skew){const tipLen=len*(1+breathe*0.08); const tx=cx+Math.cos(angle+skew*0.18)*tipLen*0.12, ty=cy+Math.sin(angle+skew*0.10)*tipLen-lift-depth; const lx=cx+Math.cos(angle+Math.PI/2)*width, ly=cy+Math.sin(angle+Math.PI/2)*width*0.62; const rx=cx+Math.cos(angle-Math.PI/2)*width, ry=cy+Math.sin(angle-Math.PI/2)*width*0.62; return {tx,ty,lx,ly,rx,ry,c1x:lx+Math.cos(angle-roundness)*tipLen*0.34,c1y:ly+Math.sin(angle-roundness)*tipLen*0.22,c2x:tx+Math.cos(angle+Math.PI/2)*width*0.42,c2y:ty+Math.sin(angle+Math.PI/2)*width*0.16,c3x:tx+Math.cos(angle-Math.PI/2)*width*0.42,c3y:ty+Math.sin(angle-Math.PI/2)*width*0.16,c4x:rx+Math.cos(angle+roundness)*tipLen*0.34,c4y:ry+Math.sin(angle+roundness)*tipLen*0.22};}
+function fillAndStrokePetal(rctx,shape,main,accent,alpha,blur,lineW,veins,cx,cy,angle,len){rctx.save(); rctx.globalCompositeOperation='lighter'; const fill=rctx.createLinearGradient(cx,cy,shape.tx,shape.ty); fill.addColorStop(0,`rgba(${main[0]},${main[1]},${main[2]},${alpha*0.12})`); fill.addColorStop(0.55,`rgba(${main[0]},${main[1]},${main[2]},${alpha*0.22})`); fill.addColorStop(1,'rgba(255,255,255,0.02)'); rctx.beginPath(); rctx.moveTo(shape.lx,shape.ly); rctx.bezierCurveTo(shape.c1x,shape.c1y,shape.c2x,shape.c2y,shape.tx,shape.ty); rctx.bezierCurveTo(shape.c3x,shape.c3y,shape.c4x,shape.c4y,shape.rx,shape.ry); rctx.closePath(); rctx.fillStyle=fill; rctx.fill(); rctx.strokeStyle=`rgba(${main[0]},${main[1]},${main[2]},${alpha})`; rctx.lineWidth=lineW; rctx.lineJoin='round'; rctx.lineCap='round'; rctx.shadowColor=`rgba(${main[0]},${main[1]},${main[2]},${Math.min(1,alpha*1.55)})`; rctx.shadowBlur=blur; rctx.stroke(); rctx.strokeStyle=`rgba(255,255,255,${Math.min(0.28,alpha*1.6)})`; rctx.lineWidth=Math.max(0.34,lineW*0.18); rctx.shadowBlur=blur*0.5; rctx.beginPath(); rctx.moveTo(cx,cy); rctx.quadraticCurveTo((cx+shape.tx)/2+Math.cos(angle+Math.PI/2)*lineW*1.2,(cy+shape.ty)/2+Math.sin(angle+Math.PI/2)*lineW*1.2,shape.tx,shape.ty); rctx.stroke(); rctx.strokeStyle=`rgba(${accent[0]},${accent[1]},${accent[2]},${Math.min(0.11,alpha*0.65)})`; rctx.lineWidth=0.42; rctx.shadowBlur=blur*0.2; for(let i=1;i<=veins;i++){const t=i/(veins+1), sx=cx*(1-t)+shape.lx*t, sy=cy*(1-t)+shape.ly*t, ex=shape.tx*(0.88+0.12*t), ey=shape.ty*(0.88+0.12*t); rctx.beginPath(); rctx.moveTo(sx,sy); rctx.quadraticCurveTo((sx+ex)/2+Math.cos(angle)*len*0.014*(i%2?1:-1),(sy+ey)/2+Math.sin(angle)*len*0.014*(i%2?1:-1),ex,ey); rctx.stroke(); } rctx.restore();}
+function renderFlowerToContext(rctx,w,h,p,phase){const cx=w*0.5, cy=h*0.59, scale=Math.min(w,h), [k1,k2]=temporalBand(p); let total=0, inBand=0; const sig=continuum.signature||buildSignature('fallback',p.seedVariance); drawBackground(rctx,w,h,p); drawMirrorLayer(rctx,w,h,p,phase); const motion=p.animateEnabled?p.motionDepth:0; const ringCount=Math.max(2,Math.round(p.rings)); for(let r=ringCount-1;r>=0;r--){const t=ringCount===1?0:r/(ringCount-1); const estK=0.9+t*28; const weight=bandWeight(estK,k1,k2,p.filterOrder,p.beneficialGain,p.harmfulSuppression,p.comfortSoftening); const petals=Math.max(3,Math.round(p.petals+t*2-(r===0?1:0))); const ringScale=1-t*0.15; const breathe=Math.sin(phase*(0.25+t*0.06)+sig.phaseOffset+t*0.8)*(0.45+0.55*motion); const ringPulse=1+breathe*0.05; const len=scale*(0.20+0.10*t)*p.petalLength*ringScale*ringPulse*(1+sig.bloomBias*0.35); const width=scale*(0.045+0.03*t)*p.petalWidth*ringScale*(1+Math.cos(phase*0.21+t)*0.02*motion); const lift=t*scale*0.08*p.lift*(1+Math.sin(phase*0.18+t)*0.05*motion); const depth=(1-t)*scale*0.17*p.dimensionDepth*(1+Math.cos(phase*0.16+t)*0.06*motion); const alpha=clamp(p.transparency+weight*0.055*(1-t*0.25),0.03,0.24); const blur=(18+p.glow*9)*(1.16-t*0.14)*(1+motion*0.05); const lineW=clamp(0.7+weight*1.55*(1-t*0.18),0.45,3.6); const main=hsv((p.flowerHue+t*22+sig.hueShift+Math.sin(p.spiralPhase+t*3+phase*0.09)*8+360)%360,0.73-t*0.06,0.72+t*0.22); const accent=hsv((p.accentHue+t*18+sig.hueShift*0.4+360)%360,0.52,1); const ringRot=p.spiralPhase+t*0.9+Math.sin(t*4.2)*0.16+phase*(0.035+t*0.01);
+      for(let i=0;i<petals;i++){
+        const pj=sig.petalJitter[(r*11+i)%sig.petalJitter.length]-0.5; const rj=sig.ringJitter[r%sig.ringJitter.length]-0.5; const a=-Math.PI/2+i*(Math.PI*2/petals)+ringRot+pj*0.08*p.seedVariance; const morph=1+0.06*Math.sin(a*p.harmonicA+t*5+phase*0.11)+0.05*Math.cos(a*p.harmonicB-t*3.7-phase*0.08)+rj*0.08*p.seedVariance; const shape=petalShape(cx,cy,a,len*morph,width*(1+0.04*Math.sin(a*2+phase*0.07)),p.petalRoundness,lift,depth,breathe,sig.skew); fillAndStrokePetal(rctx,shape,main,accent,alpha,blur,lineW,Math.max(2,Math.round(p.veinDensity*(1-t*0.35))),cx,cy,a,len);
+      }
+      total+=weight*weight; if(estK>=k1&&estK<=k2) inBand+=weight*weight;
   }
-  ctx.restore();
-}
-function drawBotanicalFlower(p){const random=seededRandom(flowerSeed);const w=mainCanvas.width,h=mainCanvas.height,cx=w*0.5,cy=h*0.59,scale=Math.min(w,h),[k1,k2]=temporalBand(p); let total=0,inBand=0; drawBackground(w,h,p); drawMirrorLayer(w,h,p);
-  const ringCount=Math.max(2,Math.round(p.rings));
-  for(let r=ringCount-1;r>=0;r--){const t=ringCount===1?0:r/(ringCount-1); const estK=0.9+t*28; const weight=bandWeight(estK,k1,k2,p.filterOrder,p.beneficialGain,p.harmfulSuppression,p.comfortSoftening); const petals=Math.max(3,Math.round(p.petals+t*2-(r===0?1:0))); const ringScale=1-t*0.15; const len=scale*(0.25+0.15*t)*p.petalLength*ringScale; const width=scale*(0.082+0.047*t)*p.petalWidth*ringScale; const lift=t*scale*0.02*p.lift; const depth=(1-t)*scale*0.04*p.dimensionDepth; const alpha=clamp(p.transparency+weight*0.055*(1-t*0.25),0.025,0.24); const blur=(18+p.glow*9)*(1.16-t*0.14); const lineW=clamp(0.7+weight*1.55*(1-t*0.18),0.45,3.6); const main=hsv((p.flowerHue+t*22+Math.sin(p.spiralPhase+t*3)*8+360)%360,0.73-t*0.06,0.72+t*0.22); const accent=hsv((p.accentHue+t*18+360)%360,0.52,1); const ringRot=p.spiralPhase+t*0.9+Math.sin(t*4.2)*0.16+(random()-.5)*0.11;
-    for(let i=0;i<petals;i++){
-      const a=-Math.PI/2+i*(Math.PI*2/petals)+ringRot+(random()-.5)*0.052;
-      const morph=1+0.06*Math.sin(a*p.harmonicA+t*5)+0.05*Math.cos(a*p.harmonicB-t*3.7)+(random()-.5)*0.12;
-      const widthVariation=1+0.04*Math.sin(a*2)+(random()-.5)*0.14;
-      const shape=petalShape(cx,cy,a,len*morph,width*widthVariation,p.petalRoundness*(0.95+random()*0.1),lift,depth);
-      strokePetal(shape,main,accent,alpha,blur,lineW,Math.max(2,Math.round(p.veinDensity*(1-t*0.35))),cx,cy,a,len);
-    }
-    total+=weight*weight; if(estK>=k1&&estK<=k2) inBand+=weight*weight;
-  }
-  // central crown
-  const crownPetals=Math.max(5,Math.round(p.petals-1));
-  for(let i=0;i<crownPetals;i++){
-    const a=-Math.PI/2+i*(Math.PI*2/crownPetals)+p.spiralPhase*0.55; const len=scale*0.155*p.petalLength,width=scale*0.055*p.petalWidth,shape=petalShape(cx,cy,a,len,width,p.petalRoundness*0.86,scale*0.015,scale*0.02*p.dimensionDepth); const main=hsv((p.flowerHue+26)%360,0.64,0.94),accent=hsv((p.accentHue+18)%360,0.44,1); strokePetal(shape,main,accent,0.12,14+p.glow*8,1.6,4,cx,cy,a,len);
-  }
-  const center=hsv(p.flowerHue,0.50,1); const core=ctx.createRadialGradient(cx,cy,0,cx,cy,scale*0.12); core.addColorStop(0,'rgba(255,255,255,.97)'); core.addColorStop(0.14,`rgba(${center[0]},${center[1]},${center[2]},.48)`); core.addColorStop(0.36,`rgba(${center[0]},${center[1]},${center[2]},.12)`); core.addColorStop(1,'rgba(0,0,0,0)'); ctx.save(); ctx.globalCompositeOperation='lighter'; ctx.fillStyle=core; ctx.beginPath(); ctx.arc(cx,cy,scale*0.12,0,Math.PI*2); ctx.fill(); ctx.restore(); const vign=ctx.createRadialGradient(cx,cy,scale*0.08,cx,cy,Math.max(w,h)*0.82); vign.addColorStop(0,'rgba(255,255,255,0)'); vign.addColorStop(1,'rgba(0,0,0,.55)'); ctx.fillStyle=vign; ctx.fillRect(0,0,w,h); return{k1,k2,bandPercent:+(100*inBand/Math.max(total,1e-9)).toFixed(2)};}
-function simulateDisplay(p){if(!p.applyDisplay)return; const cfg=MATRIX[p.matrixType]||MATRIX.ips,strength=p.displayStrength,angle=p.viewAngle*Math.PI/180,img=ctx.getImageData(0,0,mainCanvas.width,mainCanvas.height),d=img.data; const cosLoss=Math.pow(Math.cos(angle),1.2),contrast=1+(cfg.contrast-1)*strength,sat=1+(cfg.sat-1)*strength,gamma=1+(cfg.gamma-1)*strength,reflect=cfg.reflect*strength*(1+Math.pow(1-Math.cos(angle),2)); for(let i=0;i<d.length;i+=4){let r=d[i]/255,g=d[i+1]/255,b=d[i+2]/255; r=Math.pow(r,1/gamma); g=Math.pow(g,1/gamma); b=Math.pow(b,1/gamma); const l=(r+g+b)/3; r=l+(r-l)*sat; g=l+(g-l)*sat; b=l+(b-l)*sat; r=(r-.5)*contrast+.5; g=(g-.5)*contrast+.5; b=(b-.5)*contrast+.5; r=r*cosLoss+reflect; g=g*cosLoss+reflect; b=b*cosLoss+reflect; d[i]=clamp(r,0,1)*255; d[i+1]=clamp(g,0,1)*255; d[i+2]=clamp(b,0,1)*255;} ctx.putImageData(img,0,0);}
+  const crownPetals=Math.max(5,Math.round(p.petals-1)); for(let i=0;i<crownPetals;i++){const a=-Math.PI/2+i*(Math.PI*2/crownPetals)+p.spiralPhase*0.55+phase*0.045; const len=scale*0.11*p.petalLength*(1+Math.sin(phase*0.22+i)*0.025*motion), width=scale*0.032*p.petalWidth, shape=petalShape(cx,cy,a,len,width,p.petalRoundness*0.86,scale*0.015,scale*0.02*p.dimensionDepth,Math.sin(phase*0.2+i),sig.skew); const main=hsv((p.flowerHue+26+sig.hueShift*0.5)%360,0.64,0.94), accent=hsv((p.accentHue+18)%360,0.44,1); fillAndStrokePetal(rctx,shape,main,accent,0.12,14+p.glow*8,1.6,4,cx,cy,a,len);} const center=hsv((p.flowerHue+sig.hueShift*0.35+360)%360,0.50,1); const core=rctx.createRadialGradient(cx,cy,0,cx,cy,scale*0.12); core.addColorStop(0,'rgba(255,255,255,.97)'); core.addColorStop(0.14,`rgba(${center[0]},${center[1]},${center[2]},.48)`); core.addColorStop(0.36,`rgba(${center[0]},${center[1]},${center[2]},.12)`); core.addColorStop(1,'rgba(0,0,0,0)'); rctx.save(); rctx.globalCompositeOperation='lighter'; rctx.fillStyle=core; rctx.beginPath(); rctx.arc(cx,cy,scale*0.12*(1+Math.sin(phase*0.18)*0.03*motion),0,Math.PI*2); rctx.fill(); rctx.restore(); const vign=rctx.createRadialGradient(cx,cy,scale*0.08,cx,cy,Math.max(w,h)*0.82); vign.addColorStop(0,'rgba(255,255,255,0)'); vign.addColorStop(1,'rgba(0,0,0,.55)'); rctx.fillStyle=vign; rctx.fillRect(0,0,w,h); return {k1,k2,bandPercent:+(100*inBand/Math.max(total,1e-9)).toFixed(2)};}
+function simulateDisplay(rctx,w,h,p){if(!p.applyDisplay)return; const cfg=MATRIX[p.matrixType]||MATRIX.ips, strength=p.displayStrength, angle=p.viewAngle*Math.PI/180, img=rctx.getImageData(0,0,w,h), d=img.data; const cosLoss=Math.pow(Math.cos(angle),1.2), contrast=1+(cfg.contrast-1)*strength, sat=1+(cfg.sat-1)*strength, gamma=1+(cfg.gamma-1)*strength, reflect=cfg.reflect*strength*(1+Math.pow(1-Math.cos(angle),2)); for(let i=0;i<d.length;i+=4){let r=d[i]/255,g=d[i+1]/255,b=d[i+2]/255; r=Math.pow(r,1/gamma); g=Math.pow(g,1/gamma); b=Math.pow(b,1/gamma); const l=(r+g+b)/3; r=l+(r-l)*sat; g=l+(g-l)*sat; b=l+(b-l)*sat; r=(r-.5)*contrast+.5; g=(g-.5)*contrast+.5; b=(b-.5)*contrast+.5; r=r*cosLoss+reflect; g=g*cosLoss+reflect; b=b*cosLoss+reflect; d[i]=clamp(r,0,1)*255; d[i+1]=clamp(g,0,1)*255; d[i+2]=clamp(b,0,1)*255;} rctx.putImageData(img,0,0);}
 function drawChart(p,band,imp){const w=chartCanvas.width,h=chartCanvas.height; chartCtx.fillStyle='#091727'; chartCtx.fillRect(0,0,w,h); chartCtx.strokeStyle='rgba(255,255,255,.08)'; for(let i=0;i<7;i++){const y=12+(h-24)*i/6; chartCtx.beginPath(); chartCtx.moveTo(50,y); chartCtx.lineTo(w-10,y); chartCtx.stroke();} for(let i=0;i<9;i++){const x=50+(w-60)*i/8; chartCtx.beginPath(); chartCtx.moveTo(x,10); chartCtx.lineTo(x,h-12); chartCtx.stroke();} const maxK=40,xs=50+(w-60)*(band.k1/maxK),xe=50+(w-60)*(Math.min(maxK,band.k2)/maxK); chartCtx.fillStyle='rgba(88,224,203,.13)'; chartCtx.fillRect(xs,10,Math.max(2,xe-xs),h-22); chartCtx.strokeStyle='#82eadf'; chartCtx.lineWidth=2.2; chartCtx.beginPath(); for(let i=0;i<=w-60;i++){const k=maxK*i/(w-60),yv=bandWeight(k,band.k1,band.k2,p.filterOrder,p.beneficialGain,p.harmfulSuppression,p.comfortSoftening)/(1+p.beneficialGain),x=50+i,y=10+(h-22)*(1-clamp(yv,0,1)); if(i===0) chartCtx.moveTo(x,y); else chartCtx.lineTo(x,y);} chartCtx.stroke(); chartCtx.strokeStyle='#ffc777'; chartCtx.lineWidth=2; chartCtx.beginPath(); imp.samples.forEach((s,idx)=>{const x=50+(w-60)*idx/(imp.samples.length-1),y=10+(h-22)*(1-clamp((s.z-20)/100,0,1)); if(idx===0) chartCtx.moveTo(x,y); else chartCtx.lineTo(x,y);}); chartCtx.stroke();}
-function render(){updateOutputs(); const p=params(); const band=drawBotanicalFlower(p); simulateDisplay(p); const imp=impedanceReport(p); drawChart(p,band,imp); lastReport={...p,seed:flowerSeed,renderNumber,band,impedance:imp}; $('tag').textContent=`${p.preset} · ${p.matrixType.toUpperCase()} · ${band.bandPercent.toFixed(1)}%`; $('status').textContent=`Готово · ${p.preset} · ${p.profile} · ${p.matrixType.toUpperCase()} · в полосе ${band.bandPercent.toFixed(1)}% · 50–100Ω: ${imp.percent}%`;}
-function autoAll(){flowerSeed=newSeed();renderNumber++;applyPreset($('preset').value); applyProfile(); $('scanRate').value=0.5; $('beneficialGain').value=1.10; $('harmfulSuppression').value=0.74; $('filterOrder').value=5; $('comfortSoftening').value=0.42; $('displayStrength').value=0.65; $('viewAngle').value=10; $('capPf').value=220; $('esr').value=90; $('esl').value=0.01; updateOutputs(); render();}
-function autoImp(){const p=params(),caps=[1,2.2,4.7,10,22,47,100,220,470,1000,2200,4700]; let best=null; for(const C of caps){for(let R=50;R<=100;R++){const trial={...p,capPf:C,esr:R,esl:0.01},rep=impedanceReport(trial),score=Math.abs(rep.minOhm-50)+Math.abs(rep.maxOhm-100)+(100-rep.percent)*10; if(!best||score<best.score)best={C,R,rep,score}; if(rep.percent===100){$('capPf').value=C;$('esr').value=R;$('esl').value=0.01;updateOutputs();render();$('status').textContent=`Auto 50–100Ω: C=${C} pF, R=${R} Ω`;return;}}} $('capPf').value=best.C;$('esr').value=best.R;$('esl').value=0.01; updateOutputs(); render(); $('status').textContent=`Best: C=${best.C} pF, R=${best.R} Ω`;}
-function renderForExport(width,height){
-  const exportCanvas=document.createElement('canvas');
-  exportCanvas.width=width;exportCanvas.height=height;
-  const exportContext=exportCanvas.getContext('2d',{alpha:false,willReadFrequently:false});
-  if(!exportContext)throw new Error('Недоступен графический контекст для PNG');
-  const previousCanvas=mainCanvas,previousContext=ctx;
-  try{
-    mainCanvas=exportCanvas;ctx=exportContext;
-    const p=params();
-    drawBotanicalFlower(p);
-    simulateDisplay(p);
-  }finally{
-    mainCanvas=previousCanvas;ctx=previousContext;
-  }
-  return exportCanvas;
-}
-function pngBlob(canvas){
-  return new Promise((resolve,reject)=>{
-    if(canvas.toBlob){canvas.toBlob(blob=>blob?resolve(blob):reject(new Error('Браузер не смог создать PNG')),'image/png');}
-    else try{
-      const data=canvas.toDataURL('image/png');
-      const raw=atob(data.split(',')[1]);
-      const arr=new Uint8Array(raw.length);
-      for(let i=0;i<raw.length;i++)arr[i]=raw.charCodeAt(i);
-      resolve(new Blob([arr],{type:'image/png'}));
-    }catch(e){reject(e);}
-  });
-}
-function temporaryURL(blob){
-  const url=URL.createObjectURL(blob);
-  setTimeout(()=>URL.revokeObjectURL(url),120000);
-  return url;
-}
-function downloadBlob(blob,name){
-  const url=temporaryURL(blob);
-  const a=document.createElement('a');
-  a.href=url;a.download=name;a.rel='noopener';
-  document.body.appendChild(a);a.click();a.remove();
-}
-async function exportPNG(width,height,name){
-  $('status').textContent='Подготавливается PNG '+width+'×'+height+'…';
-  try{
-    const canvas=renderForExport(width,height);
-    const blob=await pngBlob(canvas);
-    downloadBlob(blob,name);
-    $('status').textContent='PNG '+width+'×'+height+' создан. Если загрузка не появилась, нажми «Открыть PNG», затем сохрани изображение в браузере.';
-  }catch(e){$('status').textContent='Не удалось сохранить PNG: '+e.message;}
-}
-async function openPNG(){
-  // Open synchronously in response to the tap; avoid popup-blocker issues after awaiting Blob creation.
-  const tab=window.open('','_blank');
-  if(tab){tab.document.title='CIC Flower PNG';tab.document.body.textContent='Создание изображения…';}
-  $('status').textContent='Подготавливается изображение…';
-  try{
-    const canvas=renderForExport(1206,2622);
-    const blob=await pngBlob(canvas);
-    const url=temporaryURL(blob);
-    if(tab){tab.location.href=url;$('status').textContent='PNG открыт в новой вкладке. На телефоне удерживай изображение и выбери «Сохранить». ';}
-    else{downloadBlob(blob,'CIC_Flower_'+flowerSeed+'_iPhone17.png');$('status').textContent='Всплывающее окно запрещено. Файл передан на скачивание.';}
-  }catch(e){if(tab)tab.close();$('status').textContent='Не удалось открыть: '+e.message;}
-}
-let preparedShareBlob=null,preparedShareSeed=0;
-async function sharePNG(){
-  if(!(navigator.share && typeof File==='function')){
-    $('status').textContent='На этом устройстве нет системного меню отправки файлов. Используй «Скачать iPhone» или «Открыть PNG».';
-    return;
-  }
-  try{
-    if(!preparedShareBlob || preparedShareSeed!==flowerSeed){
-      $('status').textContent='Подготовка файла для отправки… Нажми «Поделиться PNG» ещё раз.';
-      const image=renderForExport(1206,2622);
-      preparedShareBlob=await pngBlob(image);preparedShareSeed=flowerSeed;
-      return;
-    }
-    const file=new File([preparedShareBlob],'CIC_Flower_'+flowerSeed+'.png',{type:'image/png'});
-    if(navigator.canShare && !navigator.canShare({files:[file]}))throw new Error('Отправка PNG не поддерживается');
-    await navigator.share({files:[file],title:'CIC Flower'});
-    $('status').textContent='Открыто системное меню отправки.';
-  }catch(e){if(e.name!=='AbortError')$('status').textContent='Не удалось поделиться: '+e.message;}
-}
-function exportJSON(){
-  const blob=new Blob([JSON.stringify(lastReport,null,2)],{type:'application/json'});
-  downloadBlob(blob,'CIC_Flower_'+flowerSeed+'.json');
-}
-function exportHTML(){
-  const blob=new Blob(['<!DOCTYPE html>\n'+document.documentElement.outerHTML],{type:'text/html;charset=utf-8'});
-  downloadBlob(blob,'CIC_Flower_Ultimate_v9_2.html');
-}
-$('preset').addEventListener('change',()=>{if($('preset').value!=='custom'){applyPreset($('preset').value); freshFlower();}}); $('profile').addEventListener('change',()=>{applyProfile(); render();}); $('matrixType').addEventListener('change',render); $('enableMirror').addEventListener('change',render); $('applyDisplay').addEventListener('change',render); IDS.forEach(id=>$(id).addEventListener('input',updateOutputs)); $('autoBtn').addEventListener('click',autoAll); $('renderBtn').addEventListener('click',freshFlower); $('autoImpBtn').addEventListener('click',autoImp); $('checkImpBtn').addEventListener('click',()=>{const rep=impedanceReport(params()); $('status').textContent=`Check: ${rep.minOhm}-${rep.maxOhm} Ω · 50–100Ω: ${rep.percent}%`; render();}); $('png4kBtn').addEventListener('click',()=>exportPNG(3840,2160,'CIC_Flower_'+flowerSeed+'_4K.png')); $('pngPhoneBtn').addEventListener('click',()=>exportPNG(1206,2622,'CIC_Flower_'+flowerSeed+'_iPhone17.png')); $('openPngBtn').addEventListener('click',openPNG); $('sharePngBtn').addEventListener('click',sharePNG); $('jsonBtn').addEventListener('click',exportJSON); $('htmlBtn').addEventListener('click',exportHTML);
-updateOutputs(); autoAll();
+function renderNow(){updateOutputs(); const p=params(); const band=renderFlowerToContext(ctx,mainCanvas.width,mainCanvas.height,p,continuum.phase); simulateDisplay(ctx,mainCanvas.width,mainCanvas.height,p); const imp=impedanceReport(p); drawChart(p,band,imp); lastReport={...p,continuum:{uid:continuum.uid,phase:continuum.phase,tau:continuum.tau,coherence:continuum.coherence,seed:continuum.seed},band,impedance:imp}; $('tag').textContent=`${p.preset} · ${p.matrixType.toUpperCase()} · ${band.bandPercent.toFixed(1)}%`; $('status').textContent=`Готово · ${p.preset} · ${p.profile} · ${p.matrixType.toUpperCase()} · в полосе ${band.bandPercent.toFixed(1)}% · 50–100Ω: ${imp.percent}%`;}
+function animationLoop(now){stepContinuum(now); if(params().animateEnabled) renderNow(); requestAnimationFrame(animationLoop);}
+function autoAll(){applyPreset($('preset').value); applyProfile(); $('scanRate').value=0.5; $('beneficialGain').value=1.10; $('harmfulSuppression').value=0.74; $('filterOrder').value=5; $('comfortSoftening').value=0.42; $('displayStrength').value=0.65; $('viewAngle').value=10; $('capPf').value=220; $('esr').value=90; $('esl').value=0.01; $('continuumRate').value=0.26; $('syncTightness').value=0.72; $('motionDepth').value=0.34; $('seedVariance').value=0.58; updateOutputs(); reseedFlower(); renderNow();}
+function autoImp(){const p=params(),caps=[1,2.2,4.7,10,22,47,100,220,470,1000,2200,4700]; let best=null; for(const C of caps){for(let R=50;R<=100;R++){const trial={...p,capPf:C,esr:R,esl:0.01},rep=impedanceReport(trial),score=Math.abs(rep.minOhm-50)+Math.abs(rep.maxOhm-100)+(100-rep.percent)*10; if(!best||score<best.score)best={C,R,rep,score}; if(rep.percent===100){$('capPf').value=C;$('esr').value=R;$('esl').value=0.01;updateOutputs();renderNow();$('status').textContent=`Auto 50–100Ω: C=${C} pF, R=${R} Ω`;return;}}} $('capPf').value=best.C;$('esr').value=best.R;$('esl').value=0.01; updateOutputs(); renderNow(); $('status').textContent=`Best: C=${best.C} pF, R=${best.R} Ω`;}
+async function renderBlob(width,height){const p=params(); const c=document.createElement('canvas'); c.width=width; c.height=height; const cctx=c.getContext('2d',{alpha:false}); const phase=continuum.phase; renderFlowerToContext(cctx,width,height,p,phase); simulateDisplay(cctx,width,height,p); return await new Promise(res=>c.toBlob(res,'image/png'));}
+function saveBlob(blob,name){if(!blob){$('status').textContent='PNG не создан.'; return;} const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),2500);}
+async function exportPNG(width,height,name,mode='save'){const blob=await renderBlob(width,height); lastShareBlob=blob; if(mode==='save'){saveBlob(blob,name); $('status').textContent='PNG сохранён.';} else if(mode==='open'){const url=URL.createObjectURL(blob); window.open(url,'_blank'); setTimeout(()=>URL.revokeObjectURL(url),6000);} else if(mode==='share'){const file=new File([blob],name,{type:'image/png'}); if(navigator.canShare && navigator.canShare({files:[file]})){await navigator.share({files:[file],title:name,text:'CIC Flower'}); $('status').textContent='PNG отправлен.';} else {saveBlob(blob,name); $('status').textContent='Share не поддерживается, файл сохранён.';}}}
+function exportJSON(){const blob=new Blob([JSON.stringify(lastReport,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='CIC_Flower_Ultimate_v9_3.json'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),500);}
+function exportHTML(){const blob=new Blob([document.documentElement.outerHTML],{type:'text/html'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='CIC_Flower_Ultimate_v9_3_snapshot.html'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),500);}
+$('preset').addEventListener('change',()=>{if($('preset').value!=='custom'){applyPreset($('preset').value); renderNow();}}); $('profile').addEventListener('change',()=>{applyProfile(); renderNow();}); ['matrixType','enableMirror','applyDisplay','syncEnabled','animateEnabled'].forEach(id=>$(id).addEventListener('change',renderNow)); IDS.forEach(id=>$(id).addEventListener('input',updateOutputs)); $('autoBtn').addEventListener('click',autoAll); $('newFlowerBtn').addEventListener('click',reseedFlower); $('autoImpBtn').addEventListener('click',autoImp); $('checkImpBtn').addEventListener('click',()=>{const rep=impedanceReport(params()); $('status').textContent=`Check: ${rep.minOhm}-${rep.maxOhm} Ω · 50–100Ω: ${rep.percent}%`; renderNow();}); $('png4kBtn').addEventListener('click',()=>exportPNG(3840,2160,'CIC_Flower_Ultimate_v9_3_4K.png','save')); $('pngPhoneBtn').addEventListener('click',()=>exportPNG(1206,2622,'CIC_Flower_Ultimate_v9_3_iPhone17.png','save')); $('openBtn').addEventListener('click',()=>exportPNG(1206,2622,'CIC_Flower_Ultimate_v9_3_iPhone17.png','open')); $('shareBtn').addEventListener('click',()=>exportPNG(1206,2622,'CIC_Flower_Ultimate_v9_3_iPhone17.png','share')); $('jsonBtn').addEventListener('click',exportJSON); $('htmlBtn').addEventListener('click',exportHTML);
+updateOutputs(); initContinuum(); autoAll(); requestAnimationFrame(animationLoop);
 </script>
 </body>
 </html>
