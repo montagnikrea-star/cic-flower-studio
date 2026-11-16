@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>CIC Flower Ultimate v11.1 — Multicore Photonic Unified Pattern</title>
+<title>CIC Flower Ultimate v11.2 — Task-Driven Photonic Clock Processor</title>
 <style>
 :root{color-scheme:dark;--bg:#071019;--panel:#102235;--line:#234860;--text:#eef8ff;--muted:#91a9be;--acc:#63eed9;--acc2:#7ab8ff}
 *{box-sizing:border-box}body{margin:0;font:14px/1.45 Segoe UI,system-ui,sans-serif;color:var(--text);background:radial-gradient(circle at 85% 12%,#15384f,transparent 28%),radial-gradient(circle at 18% 87%,#102338,transparent 30%),linear-gradient(180deg,#08111a,#060d14 32%,#08111a)}
@@ -26,7 +26,7 @@ button{border:1px solid #486a81;background:#17344a;color:#f8fdff;border-radius:1
 <section class="panel">
   <div>
     <h1>CIC Flower Ultimate v11.1</h1>
-    <div class="sub">Multicore Photonic Unified Pattern · многоядерный фотонный вычислитель по бюджету разрешения паттерна</div>
+    <div class="sub">Task-Driven Photonic Clock Processor · многоядерный фотонный вычислитель с постановкой задач, автокоррекцией ошибок и фотонным тактовым генератором</div>
   </div>
 
   <div class="group">
@@ -51,6 +51,25 @@ button{border:1px solid #486a81;background:#17344a;color:#f8fdff;border-radius:1
     <div id="arithBox" style="display:none"><div class="grid3"><div><label>A</label><input id="arithA" type="number" step="1" value="12"></div><div><label>Операция</label><select id="arithOp"><option>+</option><option>-</option><option>×</option><option>÷</option></select></div><div><label>B</label><input id="arithB" type="number" step="1" value="7"></div></div></div>
     <div id="systemBox" style="display:none"><div class="grid3"><div><label>a11</label><input id="a11" type="number" step="0.1" value="3"></div><div><label>a12</label><input id="a12" type="number" step="0.1" value="1"></div><div><label>b1</label><input id="b1" type="number" step="0.1" value="7"></div><div><label>a21</label><input id="a21" type="number" step="0.1" value="1"></div><div><label>a22</label><input id="a22" type="number" step="0.1" value="2"></div><div><label>b2</label><input id="b2" type="number" step="0.1" value="5"></div></div></div>
     <div id="passiveBox" style="display:none"><div class="grid4"><div><label>f1</label><input id="f1" type="number" step="0.1" value="8"></div><div><label>A1</label><input id="fa1" type="number" step="0.01" value="1"></div><div><label>f2</label><input id="f2" type="number" step="0.1" value="10.5"></div><div><label>A2</label><input id="fa2" type="number" step="0.01" value="0.8"></div><div><label>f3</label><input id="f3" type="number" step="0.1" value="14"></div><div><label>A3</label><input id="fa3" type="number" step="0.01" value="0.45"></div><div><label>f4</label><input id="f4" type="number" step="0.1" value="24"></div><div><label>A4</label><input id="fa4" type="number" step="0.01" value="0.20"></div></div></div>
+
+  </div>
+
+  <div class="group">
+    <h2>Задача и фотонный тактовый генератор</h2>
+    <div class="checks"><div class="chk"><input id="taskActive" type="checkbox" checked><label for="taskActive" style="margin:0">Задача активна</label></div><div class="chk"><input id="autoCorrect" type="checkbox" checked><label for="autoCorrect" style="margin:0">Автокоррекция ошибок</label></div><div class="chk"><input id="clockEnable" type="checkbox" checked><label for="clockEnable" style="margin:0">Фотонный тактовый генератор</label></div><div class="chk"><input id="clockLock" type="checkbox" checked><label for="clockLock" style="margin:0">Фазовая подстройка</label></div></div>
+    <div class="grid2">
+      <div><label for="taskType">Цель</label><select id="taskType"><option value="targetFreq">Удерживать целевую частоту</option><option value="targetChannel">Усиливать целевой канал</option><option value="balance">Минимизировать ошибку баланса</option></select></div>
+      <div><label for="taskChannel">Целевой канал</label><select id="taskChannel"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option></select></div>
+    </div>
+    <label for="targetFreq">Целевая частота <output id="targetFreqOut"></output></label><input id="targetFreq" type="range" min="0.5" max="40" step="0.1" value="10.0">
+    <label for="targetTolerance">Допуск ошибки <output id="targetToleranceOut"></output></label><input id="targetTolerance" type="range" min="0.01" max="5" step="0.01" value="0.35">
+    <label for="correctionGain">Сила автокоррекции <output id="correctionGainOut"></output></label><input id="correctionGain" type="range" min="0" max="1" step="0.01" value="0.24">
+    <label for="correctionIterations">Итерации коррекции <output id="correctionIterationsOut"></output></label><input id="correctionIterations" type="range" min="1" max="64" step="1" value="16">
+    <div class="grid2">
+      <div><label for="clockBase">Базовая тактовая частота <output id="clockBaseOut"></output></label><input id="clockBase" type="range" min="0.1" max="30" step="0.1" value="6.0"></div>
+      <div><label for="clockFeedback">Обратная связь генератора <output id="clockFeedbackOut"></output></label><input id="clockFeedback" type="range" min="0" max="2" step="0.01" value="0.55"></div>
+    </div>
+    <label for="clockPhase">Начальная фаза генератора <output id="clockPhaseOut"></output></label><input id="clockPhase" type="range" min="0" max="360" step="1" value="0">
   </div>
 
   <div class="group">
@@ -105,12 +124,12 @@ button{border:1px solid #486a81;background:#17344a;color:#f8fdff;border-radius:1
 </section>
 
 <section class="view">
-  <div class="preview"><canvas id="mainCanvas" width="1206" height="2622"></canvas><div class="tag" id="tag">CIC Flower v11.1</div></div>
+  <div class="preview"><canvas id="mainCanvas" width="1206" height="2622"></canvas><div class="tag" id="tag">CIC Flower v11.2</div></div>
   <canvas id="miniCanvas" width="1200" height="150"></canvas>
   <canvas id="chartCanvas" width="1200" height="220"></canvas>
   <canvas id="coreCanvas" width="1200" height="170"></canvas>
   <div class="badges">
-    <div class="badge" id="bMode">Mode —</div><div class="badge" id="bAnswer">Answer —</div><div class="badge" id="bEnergy">Energy —</div><div class="badge" id="bStable">Stability —</div><div class="badge" id="bMirror">Mirror —</div><div class="badge" id="bCores">Cores —</div><div class="badge" id="bBudget">Budget —</div>
+    <div class="badge" id="bMode">Mode —</div><div class="badge" id="bAnswer">Answer —</div><div class="badge" id="bEnergy">Energy —</div><div class="badge" id="bStable">Stability —</div><div class="badge" id="bMirror">Mirror —</div><div class="badge" id="bCores">Cores —</div><div class="badge" id="bBudget">Budget —</div><div class="badge" id="bClock">Clock —</div><div class="badge" id="bTask">Task —</div>
   </div>
   <div class="table" id="tableOut"></div>
   <div class="status" id="status">Готово.</div>
@@ -118,13 +137,13 @@ button{border:1px solid #486a81;background:#17344a;color:#f8fdff;border-radius:1
 </div>
 <script>
 const $=id=>document.getElementById(id);
-const RANGE_IDS=['petals','rings','baseFreq','spacing','qFactor','coupling','retention','glow','mirrorMix','chirality','refraction','interference','diffraction','continuum','coreDensity','coreSpread','coreCross'];
-const OUT_FIXED={petals:0,rings:0};
+const RANGE_IDS=['petals','rings','baseFreq','spacing','qFactor','coupling','retention','glow','mirrorMix','chirality','refraction','interference','diffraction','continuum','coreDensity','coreSpread','coreCross','targetFreq','targetTolerance','correctionGain','correctionIterations','clockBase','clockFeedback','clockPhase'];
+const OUT_FIXED={petals:0,rings:0,correctionIterations:0,clockPhase:0};
 const mainCanvas=$('mainCanvas'),ctx=mainCanvas.getContext('2d',{alpha:false,desynchronized:true});
 const miniCanvas=$('miniCanvas'),mctx=miniCanvas.getContext('2d',{alpha:false});
 const chartCanvas=$('chartCanvas'),cctx=chartCanvas.getContext('2d',{alpha:false});
 const coreCanvas=$('coreCanvas'),kctx=coreCanvas.getContext('2d',{alpha:false});
-const state={uid:'',seed:1,rand:null,petals:[],cores:[],energies:[],transfer:[],result:null,running:false,step:0,maxSteps:180,renderTime:0,frozen:false,mode:'photonic',coreInfo:null};
+const state={uid:'',seed:1,rand:null,petals:[],cores:[],energies:[],transfer:[],result:null,running:false,step:0,maxSteps:180,renderTime:0,frozen:false,mode:'photonic',coreInfo:null,clock:{phase:0,rate:0,tick:0,lastPerf:performance.now()},taskInfo:null};
 function xmur3(str){for(var i=0,h=1779033703^str.length;i<str.length;i++)h=Math.imul(h^str.charCodeAt(i),3432918353),h=h<<13|h>>>19;return function(){h=Math.imul(h^h>>>16,2246822507);h=Math.imul(h^h>>>13,3266489909);return (h^=h>>>16)>>>0;}}
 function mulberry32(a){return function(){var t=a+=0x6D2B79F5;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return ((t^t>>>14)>>>0)/4294967296;}}
 function clamp(v,a,b){return Math.max(a,Math.min(b,v));}function complex(re,im){return {re,im};}function cAdd(a,b){return {re:a.re+b.re,im:a.im+b.im};}function cMul(a,b){return {re:a.re*b.re-a.im*b.im,im:a.re*b.im+a.im*b.re};}function cScale(a,s){return {re:a.re*s,im:a.im*s};}function cAbs2(a){return a.re*a.re+a.im*a.im;}function expi(deg){const r=deg*Math.PI/180;return {re:Math.cos(r),im:Math.sin(r)};}
@@ -132,7 +151,7 @@ function hsv(h,s,v){let c=v*s,x=c*(1-Math.abs((h/60)%2-1)),m=v-c,r=0,g=0,b=0;if(
 function lorentz(f,f0,q){const bw=Math.max(0.01,f0/Math.max(0.1,q));const x=(f-f0)/bw;return 1/(1+x*x);}function uid(){return 'F-'+Math.random().toString(36).slice(2,10);} 
 function matrixProfileValues(name){const map={oled:[1.0,1.08,1.18],amoled:[1.05,1.10,1.24],ips:[0.95,0.98,1.02],mini:[1.04,1.02,1.12],va:[1.00,0.96,1.08],retina:[1.02,1.05,1.15],generic:[1,1,1]};const [sat,gamma,sharp]=map[name]||map.generic;return {sat,gamma,sharp};}
 function wavelengthBase(kind){if(kind==='emerald') return 142; if(kind==='violet') return 276; if(kind==='gold') return 45; if(kind==='mix') return 190; return 176;}
-function values(){return {solveMode:$('solveMode').value,preset:$('preset').value,px:[+$('px1').value,+$('px2').value,+$('px3').value,+$('px4').value],pp:[+$('pp1').value,+$('pp2').value,+$('pp3').value,+$('pp4').value],arithA:+$('arithA').value,arithB:+$('arithB').value,arithOp:$('arithOp').value,A:[[+$('a11').value,+$('a12').value],[+$('a21').value,+$('a22').value]],b:[+$('b1').value,+$('b2').value],f:[+$('f1').value,+$('f2').value,+$('f3').value,+$('f4').value],fa:[+$('fa1').value,+$('fa2').value,+$('fa3').value,+$('fa4').value],coreMode:$('coreMode').value,coreAgg:$('coreAgg').value,coreCount:+$('coreCount').value,resolutionBasis:$('resolutionBasis').value,coreDensity:+$('coreDensity').value,coreSpread:+$('coreSpread').value,coreCross:+$('coreCross').value,petals:+$('petals').value,rings:+$('rings').value,baseFreq:+$('baseFreq').value,spacing:+$('spacing').value,qFactor:+$('qFactor').value,coupling:+$('coupling').value,retention:+$('retention').value,glow:+$('glow').value,mirrorMix:+$('mirrorMix').value,chirality:+$('chirality').value,refraction:+$('refraction').value,interference:+$('interference').value,diffraction:+$('diffraction').value,continuum:+$('continuum').value,matrixProfile:$('matrixProfile').value,wavelengthBias:$('wavelengthBias').value,fullRest:$('fullRest').checked,autoRun:$('autoRun').checked,animate:$('animate').checked,showVeins:$('showVeins').checked};}
+function values(){return {solveMode:$('solveMode').value,preset:$('preset').value,px:[+$('px1').value,+$('px2').value,+$('px3').value,+$('px4').value],pp:[+$('pp1').value,+$('pp2').value,+$('pp3').value,+$('pp4').value],arithA:+$('arithA').value,arithB:+$('arithB').value,arithOp:$('arithOp').value,A:[[+$('a11').value,+$('a12').value],[+$('a21').value,+$('a22').value]],b:[+$('b1').value,+$('b2').value],f:[+$('f1').value,+$('f2').value,+$('f3').value,+$('f4').value],fa:[+$('fa1').value,+$('fa2').value,+$('fa3').value,+$('fa4').value],taskActive:$('taskActive').checked,autoCorrect:$('autoCorrect').checked,clockEnable:$('clockEnable').checked,clockLock:$('clockLock').checked,taskType:$('taskType').value,taskChannel:+$('taskChannel').value,targetFreq:+$('targetFreq').value,targetTolerance:+$('targetTolerance').value,correctionGain:+$('correctionGain').value,correctionIterations:+$('correctionIterations').value,clockBase:+$('clockBase').value,clockFeedback:+$('clockFeedback').value,clockPhase:+$('clockPhase').value,coreMode:$('coreMode').value,coreAgg:$('coreAgg').value,coreCount:+$('coreCount').value,resolutionBasis:$('resolutionBasis').value,coreDensity:+$('coreDensity').value,coreSpread:+$('coreSpread').value,coreCross:+$('coreCross').value,petals:+$('petals').value,rings:+$('rings').value,baseFreq:+$('baseFreq').value,spacing:+$('spacing').value,qFactor:+$('qFactor').value,coupling:+$('coupling').value,retention:+$('retention').value,glow:+$('glow').value,mirrorMix:+$('mirrorMix').value,chirality:+$('chirality').value,refraction:+$('refraction').value,interference:+$('interference').value,diffraction:+$('diffraction').value,continuum:+$('continuum').value,matrixProfile:$('matrixProfile').value,wavelengthBias:$('wavelengthBias').value,fullRest:$('fullRest').checked,autoRun:$('autoRun').checked,animate:$('animate').checked,showVeins:$('showVeins').checked};}
 function updateOutputs(){RANGE_IDS.forEach(id=>{$(id+'Out').textContent=(+$(id).value).toFixed(OUT_FIXED[id]??((+$(id).value)>=10?1:3));});}
 function applyPreset(name){if(name==='alpha'){ $('baseFreq').value=8; $('spacing').value=2.4; $('qFactor').value=8; $('f1').value=8; $('fa1').value=1; $('f2').value=10.5; $('fa2').value=.8; $('f3').value=14; $('fa3').value=.45; $('f4').value=24; $('fa4').value=.2; } else if(name==='theta'){ $('baseFreq').value=4; $('spacing').value=2; $('qFactor').value=7; $('f1').value=4.2; $('fa1').value=1; $('f2').value=6.0; $('fa2').value=.7; $('f3').value=9.5; $('fa3').value=.25; $('f4').value=14; $('fa4').value=.12; } else if(name==='beta'){ $('baseFreq').value=12; $('spacing').value=3.2; $('qFactor').value=9; $('f1').value=14; $('fa1').value=1; $('f2').value=18; $('fa2').value=.8; $('f3').value=24; $('fa3').value=.6; $('f4').value=32; $('fa4').value=.25; } else if(name==='broad'){ $('baseFreq').value=5; $('spacing').value=3.6; $('qFactor').value=6.8; $('f1').value=3.5; $('fa1').value=.9; $('f2').value=8.5; $('fa2').value=.7; $('f3').value=15; $('fa3').value=.8; $('f4').value=28; $('fa4').value=.55; } else if(name==='unknown'){ $('baseFreq').value=6; $('spacing').value=2.9; $('qFactor').value=7.9; $('f1').value=5.3; $('fa1').value=.45; $('f2').value=11.7; $('fa2').value=.92; $('f3').value=17.9; $('fa3').value=.52; $('f4').value=22.8; $('fa4').value=.65; } updateOutputs();}
 function refreshModeBoxes(){const m=$('solveMode').value;$('photonicBox').style.display=(m==='photonic')?'':'none';$('arithBox').style.display=(m==='arith')?'':'none';$('systemBox').style.display=(m==='system')?'':'none';$('passiveBox').style.display=(m==='passive')?'':'none';}
@@ -164,35 +183,93 @@ function buildCores(){
       const phase=theta*180/Math.PI*(1+p.chirality*0.12)+(j+1)*33+i*0.37;
       return cScale(expi(phase), amp);
     });
-    cores.push({id:i,target:slot,theta,ring,radial,load,transfer});
+    cores.push({id:i,target:slot,theta,ring,radial,load,transfer,baseTransfer:transfer.map(t=>({re:t.re,im:t.im}))});
   }
   state.cores=cores; state.coreInfo={budget,used:count,util:count/Math.max(1,budget),structural,res};
 }
-function computePhotonic(){
-  const p=values(); buildCores();
-  const xin=p.px.map((x,i)=>cScale(expi(p.pp[i]),x));
+
+function evaluateCoreEnergies(p, xin){
   const N=state.petals.length; let accum=Array(N).fill(0), maxA=Array(N).fill(0), votes=Array(N).fill(0), counts=Array(N).fill(0);
-  state.cores.forEach((core,ci)=>{
-    let out=complex(0,0); for(let j=0;j<4;j++) out=cAdd(out,cMul(core.transfer[j], xin[j]));
+  state.cores.forEach((core)=>{
+    let out=complex(0,0);
+    for(let j=0;j<4;j++){
+      const clkPhase=(p.clockEnable?state.clock.phase:0) + (p.clockLock ? (core.id*0.07 + j*0.11)*p.clockFeedback*180/Math.PI : 0);
+      const mod=cMul(core.transfer[j], expi(clkPhase));
+      out=cAdd(out,cMul(mod, xin[j]));
+    }
     const e=cAbs2(out)*core.load; const t=core.target; counts[t]++; accum[t]+=e; maxA[t]=Math.max(maxA[t],e);
     const left=(t-1+N)%N, right=(t+1)%N, spill=e*(0.10+p.coreCross*0.18); accum[left]+=spill*0.5; accum[right]+=spill*0.5;
     if(e>=Math.max(maxA[t],e)) votes[t]++;
   });
-  state.energies = accum.map((v,i)=>{
-    if(p.coreAgg==='avg') return v/Math.max(1,counts[i]);
-    if(p.coreAgg==='max') return maxA[i];
-    if(p.coreAgg==='vote') return votes[i] + v*0.02;
-    return v;
+  const energies=accum.map((v,i)=>{ if(p.coreAgg==='avg') return v/Math.max(1,counts[i]); if(p.coreAgg==='max') return maxA[i]; if(p.coreAgg==='vote') return votes[i] + v*0.02; return v; });
+  const sumE=energies.reduce((a,b)=>a+b,0), maxE=Math.max(...energies), idx=energies.indexOf(maxE), second=[...energies].sort((a,b)=>b-a)[1]||0;
+  const weighted=sumE>0?energies.reduce((s,e,i)=>s+e*state.petals[i].f0,0)/sumE:0;
+  return {energies,sumE,maxE,idx,second,weighted};
+}
+function taskErrorMetrics(p, snap){
+  const targetIdx=clamp(p.taskChannel-1,0,Math.max(0,state.petals.length-1));
+  const targetPetal=state.petals.reduce((best,pet,i)=> Math.abs(pet.f0-p.targetFreq) < Math.abs(state.petals[best].f0-p.targetFreq) ? i : best, 0);
+  let err=0, target=targetPetal;
+  if(p.taskType==='targetChannel'){ target=targetIdx; err = 1 - ((snap.energies[target]||0)/(snap.maxE||1)); }
+  else if(p.taskType==='balance'){ const mean=snap.sumE/Math.max(1,snap.energies.length); err = Math.sqrt(snap.energies.reduce((s,e)=>s+(e-mean)*(e-mean),0)/Math.max(1,snap.energies.length))/Math.max(1e-6,mean); }
+  else { target=targetPetal; err = Math.abs(snap.weighted - p.targetFreq); }
+  return {err,targetIdx:target,targetFreq:state.petals[target].f0};
+}
+function applyErrorCorrection(p, metrics){
+  const normErr = p.taskType==='targetFreq' ? Math.min(1, metrics.err/Math.max(0.01,p.targetTolerance)) : Math.min(1, metrics.err);
+  state.cores.forEach(core=>{
+    const targetDist = Math.abs(core.target - metrics.targetIdx);
+    const focus = Math.exp(-targetDist*0.9);
+    for(let j=0;j<4;j++){
+      const b=core.baseTransfer[j];
+      const phaseShift = p.clockEnable ? (state.clock.phase*0.02 + p.clockFeedback*normErr*(j+1)*9*(focus+0.15)) : 0;
+      const amp0 = Math.sqrt(b.re*b.re + b.im*b.im);
+      const phi0 = Math.atan2(b.im,b.re)*180/Math.PI;
+      const gain = 1 + p.correctionGain*(focus*1.3 - (1-focus)*0.15)*normErr;
+      const damp = (p.taskType==='balance') ? (1 - p.correctionGain*0.22*normErr*(0.5-Math.abs(0.5-focus))) : 1;
+      const finalAmp = Math.max(0.0001, amp0*gain*damp);
+      core.transfer[j]=cScale(expi(phi0 + phaseShift), finalAmp);
+    }
   });
-  const sumE=state.energies.reduce((a,b)=>a+b,0), maxE=Math.max(...state.energies), idx=state.energies.indexOf(maxE), second=[...state.energies].sort((a,b)=>b-a)[1]||0;
-  const weighted=sumE>0?state.energies.reduce((s,e,i)=>s+e*state.petals[i].f0,0)/sumE:0;
-  state.result={answer:`Выход ${idx+1} · f≈${state.petals[idx].f0.toFixed(2)}`,sumE,stability:maxE?((maxE-second)/maxE):0,mirror:mirrorScore(),weighted,mode:'photonic'};
+}
+function updateClock(p, metrics){
+  state.clock.rate = p.clockEnable ? Math.max(0.01, p.clockBase + (p.autoCorrect ? p.clockFeedback*Math.min(5, metrics.err) : 0)) : 0;
+  if(!p.clockEnable){ state.clock.phase = p.clockPhase; return; }
+  const now=performance.now(), dt=Math.min(0.15, Math.max(0,(now-state.clock.lastPerf)/1000));
+  state.clock.lastPerf = now;
+  state.clock.phase = (state.clock.phase + dt*state.clock.rate*360) % 360;
+  state.clock.tick += 1;
+}
+
+function computePhotonic(){
+  const p=values(); buildCores();
+  state.clock.phase = p.clockPhase;
+  state.clock.lastPerf = performance.now();
+  const xin=p.px.map((x,i)=>cScale(expi(p.pp[i]),x));
+  let snap = evaluateCoreEnergies(p, xin);
+  let metrics = taskErrorMetrics(p, snap);
+  if(p.taskActive && p.autoCorrect){
+    for(let iter=0; iter<p.correctionIterations; iter++){
+      updateClock(p, metrics);
+      applyErrorCorrection(p, metrics);
+      snap = evaluateCoreEnergies(p, xin);
+      metrics = taskErrorMetrics(p, snap);
+      if(metrics.err <= p.targetTolerance) break;
+    }
+  } else if(p.clockEnable){
+    updateClock(p, metrics);
+    snap = evaluateCoreEnergies(p, xin);
+    metrics = taskErrorMetrics(p, snap);
+  }
+  state.energies = snap.energies;
+  state.taskInfo = {error:metrics.err,targetIdx:metrics.targetIdx,targetFreq:metrics.targetFreq,locked:metrics.err<=p.targetTolerance};
+  state.result={answer:`Выход ${snap.idx+1} · f≈${state.petals[snap.idx].f0.toFixed(2)} · ε=${metrics.err.toFixed(3)}`,sumE:snap.sumE,stability:snap.maxE?((snap.maxE-snap.second)/snap.maxE):0,mirror:mirrorScore(),weighted:snap.weighted,mode:'photonic'};
 }
 function computePassiveStep(){const p=values();const inject=state.petals.map((pet,k)=>{let s=0; for(let i=0;i<4;i++){const base=(p.fa[i]*p.fa[i])*lorentz(p.f[i],pet.f0,pet.q); const refr=1+p.refraction*0.65*Math.cos(p.f[i]*0.17-pet.theta*2+pet.skew); s += Math.max(0, base*refr);} return s;}); const N=state.petals.length, next=Array(N).fill(0); for(let k=0;k<N;k++){const left=state.energies[(k-1+N)%N], right=state.energies[(k+1)%N]; const coupled=p.coupling*0.5*(left+right-2*state.energies[k]); const raw=state.energies[k]*p.retention + inject[k] + coupled; next[k]=Math.tanh(Math.max(0,raw))*1.5;} state.energies=next; state.step++; const sumE=next.reduce((a,b)=>a+b,0), maxE=Math.max(...next), idx=next.indexOf(maxE), second=[...next].sort((a,b)=>b-a)[1]||0; state.result={answer:`Канал ${idx+1} · f≈${state.petals[idx].f0.toFixed(2)}`,sumE,stability:maxE?((maxE-second)/maxE):0,mirror:mirrorScore(),weighted:0,mode:'passive'};}
 function computeArithmetic(){const p=values(); const A=p.arithA,B=p.arithB,op=p.arithOp; let text='',val=null,extra=''; if(op==='+') val=A+B; else if(op==='-') val=A-B; else if(op==='×') val=A*B; else if(op==='÷'){ if(B===0){ text=(A===0)?'0/0 · неопределённость':`${A}/0 · особая точка`; val=null; extra='singularity'; } else { val=Math.trunc(A/B); extra=`остаток ${A%B}`; } } state.energies=state.petals.map((pet,i)=>{const base=Math.abs((val ?? (A||1)))/(i+2); const wave=Math.abs(Math.sin((i+1)*(A+1)*0.13)+Math.cos((i+1)*(B+1)*0.17)); return Math.max(0.03,(base*0.08+wave*0.45)/(1+i*0.03));}); const sumE=state.energies.reduce((a,b)=>a+b,0); text=text || `${A} ${op} ${B} = ${val}${extra?(' · '+extra):''}`; state.result={answer:text,sumE,stability:0.72,mirror:mirrorScore(),weighted:0,mode:'arith'}; state.cores=[]; state.coreInfo={budget:1,used:1,util:1,structural:1,res:resolutionSize(values())};}
 function computeSystem(){const p=values(); const [[a,b],[c,d]]=p.A; const [e,f]=p.b; const det=a*d-b*c; let answer=''; if(Math.abs(det)<1e-9){ const dep1=Math.abs(a*f-c*e)<1e-8, dep2=Math.abs(b*f-d*e)<1e-8; answer=dep1&&dep2?'Бесконечно много решений':'Нет решений'; state.energies=state.petals.map((pet,i)=>0.18+0.12*Math.abs(Math.sin((i+1)*0.73))); state.result={answer,sumE:state.energies.reduce((s,v)=>s+v,0),stability:0.2,mirror:mirrorScore(),weighted:0,mode:'system'}; } else { const x=(e*d-b*f)/det, y=(a*f-e*c)/det; state.energies=state.petals.map((pet,i)=>{const target=(i%2===0?Math.abs(x):Math.abs(y)); const wave=0.3*Math.abs(Math.sin((i+1)*(x+1)*0.35)+Math.cos((i+1)*(y+1)*0.31)); return 0.06+target*0.08+wave;}); const residual1=Math.abs(a*x+b*y-e), residual2=Math.abs(c*x+d*y-f); state.result={answer:`x=${x.toFixed(4)}, y=${y.toFixed(4)}`,sumE:state.energies.reduce((s,v)=>s+v,0),stability:1/(1+residual1+residual2),mirror:mirrorScore(),weighted:0,mode:'system'}; } state.cores=[]; state.coreInfo={budget:1,used:1,util:1,structural:1,res:resolutionSize(values())};}
 function mirrorScore(){const N=state.energies.length; if(!N) return 0; let same=0,total=0; for(let i=0;i<N;i++){ const j=(N-i)%N; const a=state.energies[i]||0,b=state.energies[j]||0; same += 1 - Math.abs(a-b)/(Math.max(1e-6,a,b)); total++; } return same/Math.max(1,total);}
-function runSolve(){const p=values(); buildPetals(); state.mode=p.solveMode; state.running=true; state.step=0; state.frozen=false; if(p.solveMode==='photonic'){ computePhotonic(); state.running=false; } else if(p.solveMode==='arith'){ computeArithmetic(); state.running=false; } else if(p.solveMode==='system'){ computeSystem(); state.running=false; } else { state.running=true; state.cores=[]; state.coreInfo={budget:1,used:0,util:0,structural:1,res:resolutionSize(values())}; } if(p.fullRest && p.solveMode!=='passive') state.frozen=true; renderAll();}
+function runSolve(){const p=values(); buildPetals(); state.mode=p.solveMode; state.running=true; state.step=0; state.frozen=false; state.taskInfo=null; if(p.solveMode==='photonic'){ if(!p.taskActive){ buildCores(); state.energies=Array(state.petals.length).fill(0); state.result={answer:'Ожидание задачи',sumE:0,stability:1,mirror:mirrorScore(),weighted:0,mode:'photonic'}; state.clock.phase=p.clockPhase; state.clock.rate=p.clockEnable?p.clockBase:0; state.running=false; } else { computePhotonic(); state.running=false; } } else if(p.solveMode==='arith'){ computeArithmetic(); state.running=false; } else if(p.solveMode==='system'){ computeSystem(); state.running=false; } else { state.running=true; state.cores=[]; state.coreInfo={budget:1,used:0,util:0,structural:1,res:resolutionSize(values())}; } if(p.fullRest && p.solveMode!=='passive') state.frozen=true; renderAll();}
 function stopRun(){state.running=false; state.frozen=true; renderAll();}
 function renderFlower(rctx,w,h,phase){
   const p=values(), prof=matrixProfileValues(p.matrixProfile), baseHue=wavelengthBase(p.wavelengthBias); rctx.clearRect(0,0,w,h);
@@ -209,15 +286,15 @@ function renderFlower(rctx,w,h,phase){
 }
 function drawMini(){ const w=miniCanvas.width,h=miniCanvas.height; mctx.fillStyle='#091420'; mctx.fillRect(0,0,w,h); const N=Math.max(1,state.petals.length), barW=(w-40)/N; const total=state.energies.reduce((a,b)=>a+b,0)||1; state.petals.forEach((pet,i)=>{ const x=20+i*barW, frac=(state.energies[i]||0)/total, hh=(h-30)*Math.min(1,frac*3); const col=hsv((wavelengthBase(values().wavelengthBias)+i*7)%360,0.78,1); mctx.fillStyle=`rgba(${col[0]},${col[1]},${col[2]},0.82)`; mctx.fillRect(x,h-14-hh,Math.max(4,barW-3),hh); }); mctx.fillStyle='#dff8ff'; mctx.font='12px Segoe UI'; mctx.fillText('Выходные интенсивности / каналы',10,14); }
 function drawChart(){ const w=chartCanvas.width,h=chartCanvas.height; cctx.fillStyle='#091521'; cctx.fillRect(0,0,w,h); cctx.strokeStyle='rgba(255,255,255,.08)'; for(let i=0;i<6;i++){ const y=20+(h-40)*i/5; cctx.beginPath(); cctx.moveTo(46,y); cctx.lineTo(w-10,y); cctx.stroke(); } const N=state.petals.length||1, maxE=Math.max(1e-6,...state.energies,1); state.petals.forEach((pet,i)=>{ const x=55+(w-75)*i/Math.max(1,N-1), y=h-20-(h-50)*(state.energies[i]/maxE), col=hsv((wavelengthBase(values().wavelengthBias)+i*7)%360,0.75,1); cctx.fillStyle=`rgba(${col[0]},${col[1]},${col[2]},0.88)`; cctx.fillRect(x-11,y,22,h-20-y); cctx.fillStyle='#dff6ff'; cctx.font='10px Segoe UI'; cctx.fillText(String(i+1),x-4,h-8); }); }
-function drawCoreMap(){ const w=coreCanvas.width,h=coreCanvas.height; kctx.fillStyle='#091521'; kctx.fillRect(0,0,w,h); const info=state.coreInfo||{budget:1,used:0,util:0,structural:1,res:{w:0,h:0}}; kctx.fillStyle='#dff6ff'; kctx.font='12px Segoe UI'; kctx.fillText(`Photonic cores: ${info.used} / budget ${info.budget} / structural ${info.structural} · base ${info.res.w}×${info.res.h}`, 10, 15); const slots=Math.min(state.cores.length, 240); const cols=24, rows=Math.ceil(slots/cols)||1, cellW=(w-20)/cols, cellH=(h-32)/Math.max(1,rows); for(let i=0;i<slots;i++){ const core=state.cores[i], c=i%cols, r=Math.floor(i/cols), x=10+c*cellW, y=24+r*cellH; const t=state.energies[core.target]||0; const col=hsv((wavelengthBase(values().wavelengthBias)+core.target*7)%360,0.78,Math.min(1,0.55+t*0.15)); kctx.fillStyle=`rgba(${col[0]},${col[1]},${col[2]},0.82)`; kctx.fillRect(x+1,y+1,Math.max(3,cellW-3),Math.max(3,cellH-3)); } }
+function drawCoreMap(){ const w=coreCanvas.width,h=coreCanvas.height; kctx.fillStyle='#091521'; kctx.fillRect(0,0,w,h); const info=state.coreInfo||{budget:1,used:0,util:0,structural:1,res:{w:0,h:0}}; kctx.fillStyle='#dff6ff'; kctx.font='12px Segoe UI'; kctx.fillText(`Photonic cores: ${info.used} / budget ${info.budget} / structural ${info.structural} · base ${info.res.w}×${info.res.h} · clock ${state.clock.rate.toFixed(2)} Hz`, 10, 15); const slots=Math.min(state.cores.length, 240); const cols=24, rows=Math.ceil(slots/cols)||1, cellW=(w-20)/cols, cellH=(h-32)/Math.max(1,rows); for(let i=0;i<slots;i++){ const core=state.cores[i], c=i%cols, r=Math.floor(i/cols), x=10+c*cellW, y=24+r*cellH; const t=state.energies[core.target]||0; const col=hsv((wavelengthBase(values().wavelengthBias)+core.target*7)%360,0.78,Math.min(1,0.55+t*0.15)); kctx.fillStyle=`rgba(${col[0]},${col[1]},${col[2]},0.82)`; kctx.fillRect(x+1,y+1,Math.max(3,cellW-3),Math.max(3,cellH-3)); } }
 function updateTable(){ const total=state.energies.reduce((a,b)=>a+b,0)||1; const rows=[['Канал','f0','Энергия','Вклад','Q']]; state.petals.forEach((pet,i)=>rows.push([String(i+1),pet.f0.toFixed(2),(state.energies[i]||0).toFixed(3),(100*(state.energies[i]||0)/total).toFixed(1)+'%',pet.q.toFixed(2)])); $('tableOut').innerHTML=rows.flatMap(r=>r.map(v=>`<div>${v}</div>`)).join(''); }
-function renderAll(){ const p=values(); const t=(p.animate && !state.frozen)?performance.now()/1000:state.renderTime; if(!state.frozen) state.renderTime=t; const phase=t*(0.18+p.continuum*0.35); renderFlower(ctx,mainCanvas.width,mainCanvas.height,phase); drawMini(); drawChart(); drawCoreMap(); updateTable(); const res=state.result||{answer:'—',sumE:0,stability:0,mirror:0}; const info=state.coreInfo||{budget:1,used:0,util:0}; $('bMode').textContent='Mode '+p.solveMode; $('bAnswer').textContent='Answer '+res.answer; $('bEnergy').textContent='Energy '+(res.sumE||0).toFixed(3); $('bStable').textContent='Stability '+((res.stability||0)*100).toFixed(1)+'%'; $('bMirror').textContent='Mirror '+((res.mirror||0)*100).toFixed(1)+'%'; $('bCores').textContent='Cores '+info.used; $('bBudget').textContent='Budget '+info.budget; $('tag').textContent=`${state.uid||'flower'} · ${p.solveMode} · cores ${info.used}`; $('status').textContent = p.fullRest && state.frozen ? 'Режим полного покоя: расчёт завершён, дальнейшая активная работа остановлена.' : `Единый паттерн активен. Режим: ${p.solveMode}. Ядер: ${info.used}/${info.budget}. Ответ: ${res.answer}`; }
-function loop(){ if(state.running && state.mode==='passive'){ computePassiveStep(); if(state.step>=state.maxSteps){ state.running=false; if(values().fullRest) state.frozen=true; } } if(values().animate && !state.frozen || state.running) renderAll(); requestAnimationFrame(loop); }
+function renderAll(){ const p=values(); const t=(p.animate && !state.frozen)?performance.now()/1000:state.renderTime; if(!state.frozen) state.renderTime=t; const phase=t*(0.18+p.continuum*0.35); renderFlower(ctx,mainCanvas.width,mainCanvas.height,phase); drawMini(); drawChart(); drawCoreMap(); updateTable(); const res=state.result||{answer:'—',sumE:0,stability:0,mirror:0}; const info=state.coreInfo||{budget:1,used:0,util:0}; const task=state.taskInfo||{error:0,targetIdx:0,targetFreq:0,locked:false}; $('bMode').textContent='Mode '+p.solveMode; $('bAnswer').textContent='Answer '+res.answer; $('bEnergy').textContent='Energy '+(res.sumE||0).toFixed(3); $('bStable').textContent='Stability '+((res.stability||0)*100).toFixed(1)+'%'; $('bMirror').textContent='Mirror '+((res.mirror||0)*100).toFixed(1)+'%'; $('bCores').textContent='Cores '+info.used; $('bBudget').textContent='Budget '+info.budget; $('bClock').textContent='Clock '+state.clock.rate.toFixed(2)+' Hz'; $('bTask').textContent='Task '+(p.taskActive ? (`ε=${task.error.toFixed(3)}${task.locked?' · LOCK':''}`) : 'idle'); $('tag').textContent=`${state.uid||'flower'} · ${p.solveMode} · cores ${info.used}`; $('status').textContent = p.fullRest && state.frozen ? 'Режим полного покоя: расчёт завершён, дальнейшая активная работа остановлена.' : (p.solveMode==='photonic' ? `Фотонный тактовый генератор ${p.clockEnable?'активен':'выключен'}. Задача: ${p.taskActive ? p.taskType : 'ожидание'}. Ядер: ${info.used}/${info.budget}. Ошибка: ${task.error.toFixed(4)}. ${task.locked?'Состояние захвачено и удержано.':'Идёт подстройка.'}` : `Единый паттерн активен. Режим: ${p.solveMode}. Ядер: ${info.used}/${info.budget}. Ответ: ${res.answer}`); }
+function loop(){ const p=values(); if(p.solveMode==='photonic' && p.taskActive && p.clockEnable && !state.frozen){ const now=performance.now(); const dt=Math.min(0.15, Math.max(0,(now-state.clock.lastPerf)/1000)); state.clock.lastPerf=now; state.clock.phase=(state.clock.phase + dt*state.clock.rate*360)%360; } if(state.running && state.mode==='passive'){ computePassiveStep(); if(state.step>=state.maxSteps){ state.running=false; if(values().fullRest) state.frozen=true; } } if((p.solveMode==='photonic' && p.taskActive && p.autoCorrect && p.animate && !state.frozen) && (!state._nextRecalc || performance.now()>=state._nextRecalc)){ computePhotonic(); state._nextRecalc=performance.now()+220; } if(values().animate && !state.frozen || state.running) renderAll(); requestAnimationFrame(loop); }
 async function renderBlob(w,h){ const c=document.createElement('canvas'); c.width=w; c.height=h; const rc=c.getContext('2d',{alpha:false}); renderFlower(rc,w,h,state.renderTime); return await new Promise(resolve=>c.toBlob(resolve,'image/png')); }
 function saveBlob(blob,name){ const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(url),2500); }
 function exportJSON(){ const blob=new Blob([JSON.stringify({uid:state.uid,seed:state.seed,params:values(),result:state.result,petals:state.petals,energies:state.energies,coreInfo:state.coreInfo,cores:state.cores.slice(0,512)},null,2)],{type:'application/json'}); saveBlob(blob,'CIC_Flower_v11_1_state.json'); }
 function exportHTML(){ const blob=new Blob([document.documentElement.outerHTML],{type:'text/html'}); saveBlob(blob,'CIC_Flower_Ultimate_v11_1_snapshot.html'); }
-$('solveMode').addEventListener('change',()=>{refreshModeBoxes(); if(values().autoRun) runSolve(); else renderAll();}); $('preset').addEventListener('change',()=>{ if($('preset').value!=='custom') applyPreset($('preset').value); if(values().autoRun) runSolve(); else renderAll(); }); RANGE_IDS.forEach(id=>$(id).addEventListener('input',()=>{updateOutputs(); if(values().autoRun) runSolve(); else renderAll();})); ['px1','px2','px3','px4','pp1','pp2','pp3','pp4','arithA','arithB','arithOp','a11','a12','a21','a22','b1','b2','f1','f2','f3','f4','fa1','fa2','fa3','fa4','matrixProfile','wavelengthBias','fullRest','autoRun','animate','showVeins','coreMode','coreAgg','coreCount','resolutionBasis'].forEach(id=>$(id).addEventListener('input',()=>{ if(values().autoRun) runSolve(); else renderAll(); }));
+$('solveMode').addEventListener('change',()=>{refreshModeBoxes(); if(values().autoRun) runSolve(); else renderAll();}); $('preset').addEventListener('change',()=>{ if($('preset').value!=='custom') applyPreset($('preset').value); if(values().autoRun) runSolve(); else renderAll(); }); RANGE_IDS.forEach(id=>$(id).addEventListener('input',()=>{updateOutputs(); if(values().autoRun) runSolve(); else renderAll();})); ['px1','px2','px3','px4','pp1','pp2','pp3','pp4','arithA','arithB','arithOp','a11','a12','a21','a22','b1','b2','f1','f2','f3','f4','fa1','fa2','fa3','fa4','taskActive','autoCorrect','clockEnable','clockLock','taskType','taskChannel','matrixProfile','wavelengthBias','fullRest','autoRun','animate','showVeins','coreMode','coreAgg','coreCount','resolutionBasis'].forEach(id=>$(id).addEventListener('input',()=>{ if(values().autoRun) runSolve(); else renderAll(); }));
 $('autoBtn').addEventListener('click',()=>{ $('coreMode').value='auto'; if($('preset').value!=='custom') applyPreset($('preset').value); runSolve(); }); $('newSeedBtn').addEventListener('click',()=>{ newSeed(); runSolve();}); $('runBtn').addEventListener('click',runSolve); $('restBtn').addEventListener('click',stopRun); $('pngPhoneBtn').addEventListener('click',async()=>saveBlob(await renderBlob(1206,2622),'CIC_Flower_v11_1_iPhone17.png')); $('png4kBtn').addEventListener('click',async()=>saveBlob(await renderBlob(3840,2160),'CIC_Flower_v11_1_4K.png')); $('jsonBtn').addEventListener('click',exportJSON); $('htmlBtn').addEventListener('click',exportHTML);
 updateOutputs(); refreshModeBoxes(); applyPreset('alpha'); newSeed(); buildPetals(); computePhotonic(); renderAll(); if(values().autoRun) runSolve(); requestAnimationFrame(loop);
 </script>
