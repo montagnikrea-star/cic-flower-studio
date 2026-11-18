@@ -1,302 +1,488 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>CIC Flower Ultimate v11.2 — Task-Driven Photonic Clock Processor</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CIC Pattern — 55,56 Гц / 240 с</title>
 <style>
-:root{color-scheme:dark;--bg:#071019;--panel:#102235;--line:#234860;--text:#eef8ff;--muted:#91a9be;--acc:#63eed9;--acc2:#7ab8ff}
-*{box-sizing:border-box}body{margin:0;font:14px/1.45 Segoe UI,system-ui,sans-serif;color:var(--text);background:radial-gradient(circle at 85% 12%,#15384f,transparent 28%),radial-gradient(circle at 18% 87%,#102338,transparent 30%),linear-gradient(180deg,#08111a,#060d14 32%,#08111a)}
-.wrap{max-width:1720px;margin:0 auto;padding:14px;display:grid;grid-template-columns:450px 1fr;gap:14px}.panel,.view{background:linear-gradient(180deg,rgba(17,33,51,.97),rgba(9,18,29,.97));border:1px solid var(--line);border-radius:18px;box-shadow:0 18px 44px rgba(0,0,0,.28)}.panel{padding:16px;display:flex;flex-direction:column;gap:12px}.view{padding:14px;display:grid;gap:12px}
-h1{margin:0;font-size:25px}.sub{font-size:12px;color:var(--muted);margin-top:4px}.group{border-top:1px solid rgba(255,255,255,.08);padding-top:12px}h2{margin:0 0 8px;font-size:14px;color:#ddfff8}
-label{display:flex;justify-content:space-between;gap:8px;margin:7px 0 4px;font-size:12px;color:#d6e8f6}output{color:#85f1df;font-variant-numeric:tabular-nums}
-input[type=range]{width:100%;accent-color:var(--acc)}input[type=number],select,textarea{width:100%;background:#0b1724;color:var(--text);border:1px solid #35546d;border-radius:10px;padding:8px}textarea{min-height:62px;resize:vertical}
-button{border:1px solid #486a81;background:#17344a;color:#f8fdff;border-radius:10px;padding:10px 12px;font-weight:700;cursor:pointer}button.primary{background:var(--acc);color:#062128;border-color:var(--acc)}button:hover{filter:brightness(1.06)}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
-.checks{display:grid;grid-template-columns:1fr 1fr;gap:8px}.chk{display:flex;align-items:center;gap:8px;font-size:12px;color:#dce8f1}.chk input{accent-color:var(--acc)}
-.preview{position:relative;display:grid;place-items:center;min-height:560px;background:#03070d;border:1px solid #284a5b;border-radius:14px;overflow:hidden}#mainCanvas{width:100%;height:auto;max-height:72vh;object-fit:contain;display:block}
-#miniCanvas,#chartCanvas,#coreCanvas{width:100%;height:auto;background:#091624;border:1px solid #274859;border-radius:12px;display:block}#miniCanvas{max-height:160px}#coreCanvas{max-height:180px}
-.status{padding:10px 12px;border:1px solid #28495c;border-radius:12px;background:#091521;color:#d8edf4;font-size:12px;min-height:46px}.badges{display:flex;flex-wrap:wrap;gap:8px}.badge{padding:6px 10px;border:1px solid #28495c;background:#0b1825;border-radius:999px;font-size:11px;color:#d9edf6}
-.table{display:grid;grid-template-columns:1.15fr .85fr .85fr .85fr .85fr;gap:6px;font-size:12px}.table div{padding:6px 8px;border:1px solid rgba(255,255,255,.06);border-radius:8px;background:#0b1825;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tag{position:absolute;left:10px;bottom:10px;background:rgba(8,18,28,.88);border:1px solid #234456;border-radius:8px;padding:6px 10px;font-size:11px;color:#dffef9}.small{font-size:11px;color:var(--muted)}
-@media(max-width:1180px){.wrap{grid-template-columns:1fr}}
+:root{
+  color-scheme:dark;
+  --bg:#07101c;
+  --panel:#0d1a2a;
+  --panel2:#0a1422;
+  --line:#1ee7ff;
+  --line2:#ff3fd4;
+  --line3:#ffe54f;
+  --soft:#8dc6d8;
+  --grid:rgba(56,147,188,.27);
+  --text:#e9f6ff;
+  --muted:#aac2d3;
+  --ok:#88ff45;
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at top,#0b1830,#06101a 55%,#040a11 100%);color:var(--text)}
+.wrapper{max-width:1400px;margin:0 auto;padding:18px}
+.header{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:12px;margin-bottom:16px}
+.h1{font-size:clamp(1.5rem,3.2vw,3rem);font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#d9fbff;text-shadow:0 0 20px rgba(30,231,255,.35)}
+.sub{color:var(--muted);line-height:1.45;max-width:850px}
+.layout{display:grid;grid-template-columns:320px minmax(0,1fr) 320px;gap:16px}
+@media (max-width:1140px){.layout{grid-template-columns:1fr}.side{order:2}.center{order:1}}
+.card{background:linear-gradient(180deg,rgba(12,28,46,.96),rgba(8,18,30,.96));border:1px solid rgba(72,183,219,.55);border-radius:18px;box-shadow:0 0 0 1px rgba(255,255,255,.03) inset,0 0 30px rgba(0,0,0,.25);overflow:hidden}
+.card h2{margin:0;padding:13px 16px;font-size:1.2rem;color:#cfffff;border-bottom:1px solid rgba(72,183,219,.35);background:linear-gradient(180deg,rgba(18,49,73,.92),rgba(9,27,43,.92))}
+.card .content{padding:14px 16px}
+.grid{background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px;background-position:center center}
+.stat{padding:7px 0;border-bottom:1px solid rgba(94,149,176,.22);display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.stat:last-child{border-bottom:none}
+.label{color:var(--muted)}
+.val{font-weight:700;font-variant-numeric:tabular-nums}
+.magenta{color:var(--line2)}
+.cyan{color:var(--line)}
+.yellow{color:var(--line3)}
+.green{color:var(--ok)}
+.small{font-size:.9rem;color:var(--muted);line-height:1.5}
+.mainCanvas{width:100%;height:auto;aspect-ratio:1;display:block;background:#040b13;border-radius:16px}
+.waveCanvas,.gaugeCanvas{width:100%;height:auto;display:block;background:#04101a;border-radius:12px;border:1px solid rgba(72,183,219,.28)}
+.waveCanvas{aspect-ratio:16/9}
+.gaugeCanvas{aspect-ratio:1/1;max-width:240px;margin:0 auto}
+.controls{display:grid;gap:12px}
+.control label{display:flex;justify-content:space-between;gap:8px;margin-bottom:6px;color:var(--muted)}
+input[type=range],select,button{width:100%;background:#15293f;color:#eef8ff;border:1px solid #45698a;border-radius:10px;padding:10px 12px;font:inherit}
+input[type=range]{padding:0;height:28px}
+button{cursor:pointer;font-weight:650}
+button:hover{background:#1d3550}
+.buttons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:540px){.buttons{grid-template-columns:1fr}}
+.note{margin-top:12px;padding:12px;border-left:3px solid var(--line);background:rgba(16,36,54,.45);border-radius:10px;color:var(--muted);line-height:1.5}
+.center .card{padding:16px}
+.centerTop{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin:0 0 12px}
+.centerTop .title{font-size:1.05rem;color:#d6ffff;font-weight:700;letter-spacing:.04em}
+.badges{display:flex;flex-wrap:wrap;gap:8px}
+.badge{padding:7px 10px;border-radius:999px;border:1px solid rgba(72,183,219,.35);background:rgba(10,25,39,.7);font-size:.92rem;color:#d8f4ff}
+.footerMini{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+@media (max-width:760px){.footerMini{grid-template-columns:1fr}}
+.tableLike{display:grid;gap:8px}
+.tableRow{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid rgba(94,149,176,.22)}
+.tableRow:last-child{border-bottom:none}
+a.fileLink{color:#a8f3ff}
 </style>
 </head>
 <body>
-<div class="wrap">
-<section class="panel">
-  <div>
-    <h1>CIC Flower Ultimate v11.1</h1>
-    <div class="sub">Task-Driven Photonic Clock Processor · многоядерный фотонный вычислитель с постановкой задач, автокоррекцией ошибок и фотонным тактовым генератором</div>
-  </div>
-
-  <div class="group">
-    <h2>Главный режим</h2>
-    <div class="grid2">
-      <div><label for="solveMode">Движок</label><select id="solveMode"><option value="photonic">Фотонный процессор</option><option value="arith">Частотные камеры · арифметика</option><option value="system">Энергетический баланс · 2×2</option><option value="passive">Пассивный резонанс</option></select></div>
-      <div><label for="preset">Спектральный профиль</label><select id="preset"><option value="alpha">Alpha Focus</option><option value="theta">Theta Drift</option><option value="beta">Beta Drive</option><option value="broad">Broadband Mixed</option><option value="unknown">Unknown Spectrum</option><option value="custom">Custom</option></select></div>
+<div class="wrapper">
+  <div class="header">
+    <div>
+      <div class="h1">CIC Pattern</div>
+      <div class="sub">Гибридный паттерн синхронизации, доработанный под параметры сигнала с осциллографа: <b>ΔX = 18,00 мс</b>, <b>f = 55,56 Гц</b>, <b>T = 18,00 мс</b>, а также медленный мастер-цикл <b>240 с</b> (≈ <b>4,17 мГц</b>). Это визуально-математическая модель, а не физическое управление прибором.</div>
     </div>
-    <div class="btns"><button class="primary" id="autoBtn">AUTO</button><button id="newSeedBtn">Новый цветок</button></div>
   </div>
 
-  <div class="group">
-    <h2>Входные данные</h2>
-    <div id="photonicBox">
-      <div class="grid4">
-        <div><label>x1</label><input id="px1" type="number" step="0.01" value="1.00"></div><div><label>φ1</label><input id="pp1" type="number" step="1" value="0"></div>
-        <div><label>x2</label><input id="px2" type="number" step="0.01" value="0.75"></div><div><label>φ2</label><input id="pp2" type="number" step="1" value="45"></div>
-        <div><label>x3</label><input id="px3" type="number" step="0.01" value="0.45"></div><div><label>φ3</label><input id="pp3" type="number" step="1" value="95"></div>
-        <div><label>x4</label><input id="px4" type="number" step="0.01" value="0.25"></div><div><label>φ4</label><input id="pp4" type="number" step="1" value="180"></div>
-      </div>
-    </div>
-    <div id="arithBox" style="display:none"><div class="grid3"><div><label>A</label><input id="arithA" type="number" step="1" value="12"></div><div><label>Операция</label><select id="arithOp"><option>+</option><option>-</option><option>×</option><option>÷</option></select></div><div><label>B</label><input id="arithB" type="number" step="1" value="7"></div></div></div>
-    <div id="systemBox" style="display:none"><div class="grid3"><div><label>a11</label><input id="a11" type="number" step="0.1" value="3"></div><div><label>a12</label><input id="a12" type="number" step="0.1" value="1"></div><div><label>b1</label><input id="b1" type="number" step="0.1" value="7"></div><div><label>a21</label><input id="a21" type="number" step="0.1" value="1"></div><div><label>a22</label><input id="a22" type="number" step="0.1" value="2"></div><div><label>b2</label><input id="b2" type="number" step="0.1" value="5"></div></div></div>
-    <div id="passiveBox" style="display:none"><div class="grid4"><div><label>f1</label><input id="f1" type="number" step="0.1" value="8"></div><div><label>A1</label><input id="fa1" type="number" step="0.01" value="1"></div><div><label>f2</label><input id="f2" type="number" step="0.1" value="10.5"></div><div><label>A2</label><input id="fa2" type="number" step="0.01" value="0.8"></div><div><label>f3</label><input id="f3" type="number" step="0.1" value="14"></div><div><label>A3</label><input id="fa3" type="number" step="0.01" value="0.45"></div><div><label>f4</label><input id="f4" type="number" step="0.1" value="24"></div><div><label>A4</label><input id="fa4" type="number" step="0.01" value="0.20"></div></div></div>
+  <div class="layout">
+    <aside class="side">
+      <section class="card">
+        <h2>Параметры сигнала</h2>
+        <div class="content">
+          <div class="stat"><span class="label">ΔX</span><span class="val cyan">18,00 мс</span></div>
+          <div class="stat"><span class="label">1/ΔX</span><span class="val cyan">55,56 Гц</span></div>
+          <div class="stat"><span class="label">T</span><span class="val cyan">18,00 мс</span></div>
+          <div class="stat"><span class="label">x1</span><span class="val">−3,200 мс</span></div>
+          <div class="stat"><span class="label">x2</span><span class="val">−21,20 мс</span></div>
+          <div class="stat"><span class="label">CH1</span><span class="val magenta">2,00 мВ/дел</span></div>
+          <div class="stat"><span class="label">CH2</span><span class="val yellow">5 В/дел</span></div>
+          <div class="stat"><span class="label">Sample rate</span><span class="val">25 MS/s</span></div>
+          <div class="stat"><span class="label">Depth</span><span class="val">10M</span></div>
+          <div class="stat"><span class="label">Time base</span><span class="val">M: 20 мс</span></div>
+        </div>
+      </section>
 
-  </div>
+      <section class="card" style="margin-top:16px;">
+        <h2>Опорные волны</h2>
+        <div class="content">
+          <canvas id="waveCanvas" class="waveCanvas" width="720" height="420" aria-label="Опорные волны"></canvas>
+          <div class="small" style="margin-top:10px;">Верхняя волна — аналоговый канал <span class="magenta">CH1</span>. Нижняя — прямоугольный/ступенчатый опорный канал <span class="yellow">CH2</span>. Оба отображаются как вспомогательная визуальная схема.</div>
+        </div>
+      </section>
+    </aside>
 
-  <div class="group">
-    <h2>Задача и фотонный тактовый генератор</h2>
-    <div class="checks"><div class="chk"><input id="taskActive" type="checkbox" checked><label for="taskActive" style="margin:0">Задача активна</label></div><div class="chk"><input id="autoCorrect" type="checkbox" checked><label for="autoCorrect" style="margin:0">Автокоррекция ошибок</label></div><div class="chk"><input id="clockEnable" type="checkbox" checked><label for="clockEnable" style="margin:0">Фотонный тактовый генератор</label></div><div class="chk"><input id="clockLock" type="checkbox" checked><label for="clockLock" style="margin:0">Фазовая подстройка</label></div></div>
-    <div class="grid2">
-      <div><label for="taskType">Цель</label><select id="taskType"><option value="targetFreq">Удерживать целевую частоту</option><option value="targetChannel">Усиливать целевой канал</option><option value="balance">Минимизировать ошибку баланса</option></select></div>
-      <div><label for="taskChannel">Целевой канал</label><select id="taskChannel"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option></select></div>
-    </div>
-    <label for="targetFreq">Целевая частота <output id="targetFreqOut"></output></label><input id="targetFreq" type="range" min="0.5" max="40" step="0.1" value="10.0">
-    <label for="targetTolerance">Допуск ошибки <output id="targetToleranceOut"></output></label><input id="targetTolerance" type="range" min="0.01" max="5" step="0.01" value="0.35">
-    <label for="correctionGain">Сила автокоррекции <output id="correctionGainOut"></output></label><input id="correctionGain" type="range" min="0" max="1" step="0.01" value="0.24">
-    <label for="correctionIterations">Итерации коррекции <output id="correctionIterationsOut"></output></label><input id="correctionIterations" type="range" min="1" max="64" step="1" value="16">
-    <div class="grid2">
-      <div><label for="clockBase">Базовая тактовая частота <output id="clockBaseOut"></output></label><input id="clockBase" type="range" min="0.1" max="30" step="0.1" value="6.0"></div>
-      <div><label for="clockFeedback">Обратная связь генератора <output id="clockFeedbackOut"></output></label><input id="clockFeedback" type="range" min="0" max="2" step="0.01" value="0.55"></div>
-    </div>
-    <label for="clockPhase">Начальная фаза генератора <output id="clockPhaseOut"></output></label><input id="clockPhase" type="range" min="0" max="360" step="1" value="0">
-  </div>
+    <main class="center">
+      <section class="card grid">
+        <div class="centerTop">
+          <div class="title">55,56 Hz Synchronization Template · 240 s Master Cycle</div>
+          <div class="badges">
+            <div class="badge">Несущая: <b>55,56 Гц</b></div>
+            <div class="badge">Мастер-цикл: <b>240 с</b></div>
+            <div class="badge">Медленная частота: <b>4,17 мГц</b></div>
+          </div>
+        </div>
+        <canvas id="mainCanvas" class="mainCanvas" width="1200" height="1200" aria-label="Главный CIC паттерн"></canvas>
 
-  <div class="group">
-    <h2>Многоядерный фотонный слой</h2>
-    <div class="grid2">
-      <div><label for="coreMode">Режим ядер</label><select id="coreMode"><option value="auto">Auto · по разрешению</option><option value="manual">Manual</option><option value="single">Single core</option></select></div>
-      <div><label for="coreAgg">Агрегация</label><select id="coreAgg"><option value="sum">Сумма</option><option value="avg">Среднее</option><option value="max">Максимум</option><option value="vote">Голосование</option></select></div>
-    </div>
-    <div class="grid2">
-      <div><label for="coreCount">Manual cores</label><input id="coreCount" type="number" min="1" max="4096" step="1" value="256"></div>
-      <div><label for="resolutionBasis">База разрешения</label><select id="resolutionBasis"><option value="phone">1206×2622</option><option value="4k">3840×2160</option><option value="canvas">Текущий canvas</option></select></div>
-    </div>
-    <label for="coreDensity">Плотность ядер / pixels-per-core <output id="coreDensityOut"></output></label>
-    <input id="coreDensity" type="range" min="1500" max="30000" step="100" value="7000">
-    <label for="coreSpread">Распределение по пространству <output id="coreSpreadOut"></output></label>
-    <input id="coreSpread" type="range" min="0" max="1" step="0.01" value="0.64">
-    <label for="coreCross">Перекрёстная связь ядер <output id="coreCrossOut"></output></label>
-    <input id="coreCross" type="range" min="0" max="1" step="0.01" value="0.22">
-    <div class="small">Число виртуальных фотонных ядер автоматически ограничивается доступным бюджетом разрешения и структурной ёмкостью цветка.</div>
-  </div>
+        <div class="footerMini">
+          <section class="card" style="margin:0;">
+            <h2>Текущее состояние цикла</h2>
+            <div class="content tableLike">
+              <div class="tableRow"><span class="label">Прошло в мастере</span><span id="elapsedMaster" class="val cyan">0,000 с</span></div>
+              <div class="tableRow"><span class="label">Осталось</span><span id="remainingMaster" class="val cyan">240,000 с</span></div>
+              <div class="tableRow"><span class="label">Фаза мастера</span><span id="phaseMaster" class="val magenta">0,00°</span></div>
+              <div class="tableRow"><span class="label">Фаза несущей</span><span id="phaseCarrier" class="val yellow">0,00°</span></div>
+              <div class="tableRow"><span class="label">Число T в 240 с</span><span class="val green">13 333,33 × T</span></div>
+              <div class="tableRow"><span class="label">Режим времени</span><span id="timeModeLabel" class="val">От запуска</span></div>
+            </div>
+          </section>
+          <section class="card" style="margin:0;">
+            <h2>Шкала цикла</h2>
+            <div class="content">
+              <canvas id="gaugeCanvas" class="gaugeCanvas" width="460" height="460" aria-label="Индикатор мастер-цикла"></canvas>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
 
-  <div class="group">
-    <h2>Общие свойства паттерна</h2>
-    <label for="petals">Лепестков-резонаторов <output id="petalsOut"></output></label><input id="petals" type="range" min="6" max="24" step="1" value="12">
-    <label for="rings">Венчики / глубина <output id="ringsOut"></output></label><input id="rings" type="range" min="2" max="10" step="1" value="6">
-    <label for="baseFreq">Базовая частота <output id="baseFreqOut"></output></label><input id="baseFreq" type="range" min="0.5" max="40" step="0.1" value="8.0">
-    <label for="spacing">Шаг резонансов <output id="spacingOut"></output></label><input id="spacing" type="range" min="0.2" max="12" step="0.1" value="2.3">
-    <label for="qFactor">Q-фактор <output id="qFactorOut"></output></label><input id="qFactor" type="range" min="0.5" max="30" step="0.1" value="8.0">
-    <label for="coupling">Связь камер <output id="couplingOut"></output></label><input id="coupling" type="range" min="0" max="1" step="0.01" value="0.25">
-    <label for="retention">Удержание энергии <output id="retentionOut"></output></label><input id="retention" type="range" min="0.70" max="0.999" step="0.001" value="0.955">
-    <label for="glow">Свечение <output id="glowOut"></output></label><input id="glow" type="range" min="0.2" max="4" step="0.01" value="2.2">
-    <label for="mirrorMix">Mirror Fusion <output id="mirrorMixOut"></output></label><input id="mirrorMix" type="range" min="0" max="1" step="0.01" value="0.58">
-    <label for="chirality">Хиральность <output id="chiralityOut"></output></label><input id="chirality" type="range" min="-1" max="1" step="0.01" value="0.24">
-  </div>
+    <aside class="side">
+      <section class="card">
+        <h2>Управление HTML-паттерном</h2>
+        <div class="content controls">
+          <div class="control">
+            <label for="mode">Тип паттерна <span id="modeOut" class="val">CIC Flower</span></label>
+            <select id="mode">
+              <option value="flower">CIC Flower</option>
+              <option value="rings">Концентрические кольца</option>
+              <option value="spiral">Спиральная интерференция</option>
+              <option value="hybrid">Гибридный режим</option>
+            </select>
+          </div>
+          <div class="control">
+            <label for="density">Плотность <span id="densityOut" class="val">22</span></label>
+            <input id="density" type="range" min="8" max="48" step="1" value="22">
+          </div>
+          <div class="control">
+            <label for="contrast">Контраст <span id="contrastOut" class="val">72%</span></label>
+            <input id="contrast" type="range" min="10" max="100" step="1" value="72">
+          </div>
+          <div class="control">
+            <label for="blend">Вклад несущей 55,56 Гц <span id="blendOut" class="val">68%</span></label>
+            <input id="blend" type="range" min="0" max="100" step="1" value="68">
+          </div>
+          <div class="control">
+            <label for="speedMode">Режим времени <span id="speedOut" class="val">От запуска</span></label>
+            <select id="speedMode">
+              <option value="monotonic">От запуска</option>
+              <option value="utc">По UTC</option>
+            </select>
+          </div>
+          <div class="buttons">
+            <button id="pauseBtn">Пауза</button>
+            <button id="resetBtn">Фаза = 0</button>
+            <button id="pngBtn">Сохранить PNG</button>
+            <button id="jsonBtn">Экспорт JSON</button>
+          </div>
+          <div class="note">Паттерн теперь использует две шкалы времени одновременно: <b>быструю</b> (18 мс / 55,56 Гц) для мелкой структуры и <b>медленную</b> (240 с / 4,17 мГц) для глобальной фазы.</div>
+        </div>
+      </section>
 
-  <div class="group">
-    <h2>Фотонный слой и матрица дисплея</h2>
-    <div class="grid2"><div><label for="matrixProfile">Профиль матрицы</label><select id="matrixProfile"><option value="oled">OLED</option><option value="amoled">AMOLED</option><option value="ips">IPS</option><option value="mini">Mini LED</option><option value="va">VA</option><option value="retina">Retina</option><option value="generic">Generic</option></select></div><div><label for="wavelengthBias">Смещение длины волны</label><select id="wavelengthBias"><option value="cyan">Cyan</option><option value="emerald">Emerald</option><option value="violet">Violet</option><option value="gold">Gold</option><option value="mix">Mixed</option></select></div></div>
-    <label for="refraction">Преломление <output id="refractionOut"></output></label><input id="refraction" type="range" min="0" max="1" step="0.01" value="0.68">
-    <label for="interference">Интерференция <output id="interferenceOut"></output></label><input id="interference" type="range" min="0" max="1" step="0.01" value="0.70">
-    <label for="diffraction">Дифракционная глубина <output id="diffractionOut"></output></label><input id="diffraction" type="range" min="0" max="1" step="0.01" value="0.54">
-    <label for="continuum">Continuum Sync <output id="continuumOut"></output></label><input id="continuum" type="range" min="0" max="1" step="0.01" value="0.62">
-    <div class="checks"><div class="chk"><input id="fullRest" type="checkbox"><label for="fullRest" style="margin:0">Полный покой после расчёта</label></div><div class="chk"><input id="autoRun" type="checkbox" checked><label for="autoRun" style="margin:0">Автозапуск</label></div><div class="chk"><input id="animate" type="checkbox" checked><label for="animate" style="margin:0">Живая фаза</label></div><div class="chk"><input id="showVeins" type="checkbox" checked><label for="showVeins" style="margin:0">Тонкие прожилки</label></div></div>
-    <div class="btns"><button class="primary" id="runBtn">Выполнить</button><button id="restBtn">Пауза / Покой</button></div>
+      <section class="card" style="margin-top:16px;">
+        <h2>Что изменено</h2>
+        <div class="content small">
+          <ul>
+            <li>Добавлена несущая <b>55,56 Гц</b> по данным осциллографа.</li>
+            <li>Сохранён мастер-цикл <b>240 с</b> как медленная фазовая оболочка.</li>
+            <li>Появились панели CH1/CH2, шкала цикла и опорные волны.</li>
+            <li>Экспорт PNG сохраняет текущий кадр паттерна.</li>
+            <li>Экспорт JSON сохраняет активные параметры визуализации.</li>
+          </ul>
+          <p>Файл автономный: открывается в браузере без установки.</p>
+        </div>
+      </section>
+    </aside>
   </div>
-
-  <div class="group">
-    <h2>Экспорт</h2>
-    <div class="btns"><button id="pngPhoneBtn">PNG iPhone</button><button id="png4kBtn">PNG 4K</button></div>
-    <div class="btns"><button id="jsonBtn">JSON</button><button id="htmlBtn">HTML snapshot</button></div>
-  </div>
-</section>
-
-<section class="view">
-  <div class="preview"><canvas id="mainCanvas" width="1206" height="2622"></canvas><div class="tag" id="tag">CIC Flower v11.2</div></div>
-  <canvas id="miniCanvas" width="1200" height="150"></canvas>
-  <canvas id="chartCanvas" width="1200" height="220"></canvas>
-  <canvas id="coreCanvas" width="1200" height="170"></canvas>
-  <div class="badges">
-    <div class="badge" id="bMode">Mode —</div><div class="badge" id="bAnswer">Answer —</div><div class="badge" id="bEnergy">Energy —</div><div class="badge" id="bStable">Stability —</div><div class="badge" id="bMirror">Mirror —</div><div class="badge" id="bCores">Cores —</div><div class="badge" id="bBudget">Budget —</div><div class="badge" id="bClock">Clock —</div><div class="badge" id="bTask">Task —</div>
-  </div>
-  <div class="table" id="tableOut"></div>
-  <div class="status" id="status">Готово.</div>
-</section>
 </div>
+
 <script>
-const $=id=>document.getElementById(id);
-const RANGE_IDS=['petals','rings','baseFreq','spacing','qFactor','coupling','retention','glow','mirrorMix','chirality','refraction','interference','diffraction','continuum','coreDensity','coreSpread','coreCross','targetFreq','targetTolerance','correctionGain','correctionIterations','clockBase','clockFeedback','clockPhase'];
-const OUT_FIXED={petals:0,rings:0,correctionIterations:0,clockPhase:0};
-const mainCanvas=$('mainCanvas'),ctx=mainCanvas.getContext('2d',{alpha:false,desynchronized:true});
-const miniCanvas=$('miniCanvas'),mctx=miniCanvas.getContext('2d',{alpha:false});
-const chartCanvas=$('chartCanvas'),cctx=chartCanvas.getContext('2d',{alpha:false});
-const coreCanvas=$('coreCanvas'),kctx=coreCanvas.getContext('2d',{alpha:false});
-const state={uid:'',seed:1,rand:null,petals:[],cores:[],energies:[],transfer:[],result:null,running:false,step:0,maxSteps:180,renderTime:0,frozen:false,mode:'photonic',coreInfo:null,clock:{phase:0,rate:0,tick:0,lastPerf:performance.now()},taskInfo:null};
-function xmur3(str){for(var i=0,h=1779033703^str.length;i<str.length;i++)h=Math.imul(h^str.charCodeAt(i),3432918353),h=h<<13|h>>>19;return function(){h=Math.imul(h^h>>>16,2246822507);h=Math.imul(h^h>>>13,3266489909);return (h^=h>>>16)>>>0;}}
-function mulberry32(a){return function(){var t=a+=0x6D2B79F5;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return ((t^t>>>14)>>>0)/4294967296;}}
-function clamp(v,a,b){return Math.max(a,Math.min(b,v));}function complex(re,im){return {re,im};}function cAdd(a,b){return {re:a.re+b.re,im:a.im+b.im};}function cMul(a,b){return {re:a.re*b.re-a.im*b.im,im:a.re*b.im+a.im*b.re};}function cScale(a,s){return {re:a.re*s,im:a.im*s};}function cAbs2(a){return a.re*a.re+a.im*a.im;}function expi(deg){const r=deg*Math.PI/180;return {re:Math.cos(r),im:Math.sin(r)};}
-function hsv(h,s,v){let c=v*s,x=c*(1-Math.abs((h/60)%2-1)),m=v-c,r=0,g=0,b=0;if(h<60)[r,g,b]=[c,x,0];else if(h<120)[r,g,b]=[x,c,0];else if(h<180)[r,g,b]=[0,c,x];else if(h<240)[r,g,b]=[0,x,c];else if(h<300)[r,g,b]=[x,0,c];else[r,g,b]=[c,0,x];return [Math.round((r+m)*255),Math.round((g+m)*255),Math.round((b+m)*255)];}
-function lorentz(f,f0,q){const bw=Math.max(0.01,f0/Math.max(0.1,q));const x=(f-f0)/bw;return 1/(1+x*x);}function uid(){return 'F-'+Math.random().toString(36).slice(2,10);} 
-function matrixProfileValues(name){const map={oled:[1.0,1.08,1.18],amoled:[1.05,1.10,1.24],ips:[0.95,0.98,1.02],mini:[1.04,1.02,1.12],va:[1.00,0.96,1.08],retina:[1.02,1.05,1.15],generic:[1,1,1]};const [sat,gamma,sharp]=map[name]||map.generic;return {sat,gamma,sharp};}
-function wavelengthBase(kind){if(kind==='emerald') return 142; if(kind==='violet') return 276; if(kind==='gold') return 45; if(kind==='mix') return 190; return 176;}
-function values(){return {solveMode:$('solveMode').value,preset:$('preset').value,px:[+$('px1').value,+$('px2').value,+$('px3').value,+$('px4').value],pp:[+$('pp1').value,+$('pp2').value,+$('pp3').value,+$('pp4').value],arithA:+$('arithA').value,arithB:+$('arithB').value,arithOp:$('arithOp').value,A:[[+$('a11').value,+$('a12').value],[+$('a21').value,+$('a22').value]],b:[+$('b1').value,+$('b2').value],f:[+$('f1').value,+$('f2').value,+$('f3').value,+$('f4').value],fa:[+$('fa1').value,+$('fa2').value,+$('fa3').value,+$('fa4').value],taskActive:$('taskActive').checked,autoCorrect:$('autoCorrect').checked,clockEnable:$('clockEnable').checked,clockLock:$('clockLock').checked,taskType:$('taskType').value,taskChannel:+$('taskChannel').value,targetFreq:+$('targetFreq').value,targetTolerance:+$('targetTolerance').value,correctionGain:+$('correctionGain').value,correctionIterations:+$('correctionIterations').value,clockBase:+$('clockBase').value,clockFeedback:+$('clockFeedback').value,clockPhase:+$('clockPhase').value,coreMode:$('coreMode').value,coreAgg:$('coreAgg').value,coreCount:+$('coreCount').value,resolutionBasis:$('resolutionBasis').value,coreDensity:+$('coreDensity').value,coreSpread:+$('coreSpread').value,coreCross:+$('coreCross').value,petals:+$('petals').value,rings:+$('rings').value,baseFreq:+$('baseFreq').value,spacing:+$('spacing').value,qFactor:+$('qFactor').value,coupling:+$('coupling').value,retention:+$('retention').value,glow:+$('glow').value,mirrorMix:+$('mirrorMix').value,chirality:+$('chirality').value,refraction:+$('refraction').value,interference:+$('interference').value,diffraction:+$('diffraction').value,continuum:+$('continuum').value,matrixProfile:$('matrixProfile').value,wavelengthBias:$('wavelengthBias').value,fullRest:$('fullRest').checked,autoRun:$('autoRun').checked,animate:$('animate').checked,showVeins:$('showVeins').checked};}
-function updateOutputs(){RANGE_IDS.forEach(id=>{$(id+'Out').textContent=(+$(id).value).toFixed(OUT_FIXED[id]??((+$(id).value)>=10?1:3));});}
-function applyPreset(name){if(name==='alpha'){ $('baseFreq').value=8; $('spacing').value=2.4; $('qFactor').value=8; $('f1').value=8; $('fa1').value=1; $('f2').value=10.5; $('fa2').value=.8; $('f3').value=14; $('fa3').value=.45; $('f4').value=24; $('fa4').value=.2; } else if(name==='theta'){ $('baseFreq').value=4; $('spacing').value=2; $('qFactor').value=7; $('f1').value=4.2; $('fa1').value=1; $('f2').value=6.0; $('fa2').value=.7; $('f3').value=9.5; $('fa3').value=.25; $('f4').value=14; $('fa4').value=.12; } else if(name==='beta'){ $('baseFreq').value=12; $('spacing').value=3.2; $('qFactor').value=9; $('f1').value=14; $('fa1').value=1; $('f2').value=18; $('fa2').value=.8; $('f3').value=24; $('fa3').value=.6; $('f4').value=32; $('fa4').value=.25; } else if(name==='broad'){ $('baseFreq').value=5; $('spacing').value=3.6; $('qFactor').value=6.8; $('f1').value=3.5; $('fa1').value=.9; $('f2').value=8.5; $('fa2').value=.7; $('f3').value=15; $('fa3').value=.8; $('f4').value=28; $('fa4').value=.55; } else if(name==='unknown'){ $('baseFreq').value=6; $('spacing').value=2.9; $('qFactor').value=7.9; $('f1').value=5.3; $('fa1').value=.45; $('f2').value=11.7; $('fa2').value=.92; $('f3').value=17.9; $('fa3').value=.52; $('f4').value=22.8; $('fa4').value=.65; } updateOutputs();}
-function refreshModeBoxes(){const m=$('solveMode').value;$('photonicBox').style.display=(m==='photonic')?'':'none';$('arithBox').style.display=(m==='arith')?'':'none';$('systemBox').style.display=(m==='system')?'':'none';$('passiveBox').style.display=(m==='passive')?'':'none';}
-function newSeed(){state.uid=uid();state.seed=xmur3(state.uid+'|'+performance.now().toFixed(4))();state.rand=mulberry32(state.seed);}
-function buildPetals(){const p=values(); if(!state.rand) newSeed(); state.petals=Array.from({length:p.petals},(_,i)=>{const t=i/p.petals, ring=1+(i%p.rings), ang=t*Math.PI*2+(state.rand()-0.5)*0.06+p.chirality*0.12*ring; return {id:i,ring,theta:ang,f0:Math.max(0.1,p.baseFreq+i*p.spacing*0.55+(state.rand()-0.5)*p.spacing*0.45),q:p.qFactor*(0.84+state.rand()*0.34),radius:0.52+0.08*ring+state.rand()*0.08,skew:(state.rand()-0.5)*0.30,hueShift:(state.rand()-0.5)*18};}); state.energies=Array(state.petals.length).fill(0); state.cores=[]; state.step=0; state.result=null; state.frozen=false; state.coreInfo=null;}
-function resolutionSize(p){ if(p.resolutionBasis==='4k') return {w:3840,h:2160}; if(p.resolutionBasis==='canvas') return {w:mainCanvas.width,h:mainCanvas.height}; return {w:1206,h:2622}; }
-function buildCores(){
-  const p=values(), res=resolutionSize(p);
-  const pixels=res.w*res.h, budget=Math.max(1, Math.floor(pixels/Math.max(1,p.coreDensity)));
-  const structural=Math.max(1, p.petals*p.rings*12);
-  const hardCap=2048;
-  let count=1;
-  if(p.coreMode==='single') count=1;
-  else if(p.coreMode==='manual') count=clamp(Math.floor(p.coreCount),1,Math.min(budget,structural,hardCap));
-  else count=Math.min(budget,structural,hardCap);
-  const cores=[];
-  for(let i=0;i<count;i++){
-    const frac=i/Math.max(1,count); const slot=i%state.petals.length; const pet=state.petals[slot];
-    const ring=1 + (i % p.rings); const jitter=(state.rand()-0.5)*0.25; const theta=pet.theta + jitter*p.coreSpread + (2*Math.PI/count)*Math.floor(i/state.petals.length)*0.1;
-    const radial=(0.22 + 0.10*ring + (state.rand()*0.12))* (0.7 + 0.6*p.coreSpread);
-    const load=0.6 + state.rand()*0.8;
-    const transfer=Array.from({length:4},(_,j)=>{
-      const reson=lorentz(p.baseFreq + j*p.spacing*0.9 + i*0.002, pet.f0*(1+(i%5-2)*0.002), pet.q*(0.8+0.35*state.rand()));
-      const refr=1 + p.refraction*0.55*Math.cos((j+1)*1.17 - theta*2 + pet.skew + i*0.007);
-      const inter=1 + p.interference*0.28*Math.sin((j+1)*(i+1)*0.047 + p.mirrorMix*Math.cos(theta*2));
-      const diff =1 + p.diffraction*0.35*Math.cos((i+1)*0.033 + (j+1)*0.64);
-      const cross=1 + p.coreCross*0.20*Math.cos((i+j)*0.083);
-      const amp=Math.max(0, reson*refr*inter*diff*cross*(0.58 + 0.42*load));
-      const phase=theta*180/Math.PI*(1+p.chirality*0.12)+(j+1)*33+i*0.37;
-      return cScale(expi(phase), amp);
-    });
-    cores.push({id:i,target:slot,theta,ring,radial,load,transfer,baseTransfer:transfer.map(t=>({re:t.re,im:t.im}))});
-  }
-  state.cores=cores; state.coreInfo={budget,used:count,util:count/Math.max(1,budget),structural,res};
+'use strict';
+const MASTER_T = 240.0;
+const CARRIER_T = 0.018;   // 18 ms
+const CARRIER_F = 1 / CARRIER_T; // 55.555...
+const TAU = Math.PI * 2;
+
+const $ = id => document.getElementById(id);
+const mainCanvas = $('mainCanvas');
+const mainCtx = mainCanvas.getContext('2d');
+const waveCanvas = $('waveCanvas');
+const waveCtx = waveCanvas.getContext('2d');
+const gaugeCanvas = $('gaugeCanvas');
+const gaugeCtx = gaugeCanvas.getContext('2d');
+
+let origin = performance.now() / 1000;
+let paused = false;
+let frozenElapsed = 0;
+
+function fmt(n, digits = 3) { return Number(n).toFixed(digits).replace('.', ','); }
+function nowSeconds(){ return $('speedMode').value === 'utc' ? Date.now()/1000 : performance.now()/1000; }
+function elapsedSeconds(){ return paused ? frozenElapsed : Math.max(0, nowSeconds() - origin); }
+
+function resetOrigin(){
+  origin = ($('speedMode').value === 'utc') ? 0 : performance.now() / 1000;
+  frozenElapsed = 0;
+  paused = false;
+  $('pauseBtn').textContent = 'Пауза';
 }
 
-function evaluateCoreEnergies(p, xin){
-  const N=state.petals.length; let accum=Array(N).fill(0), maxA=Array(N).fill(0), votes=Array(N).fill(0), counts=Array(N).fill(0);
-  state.cores.forEach((core)=>{
-    let out=complex(0,0);
-    for(let j=0;j<4;j++){
-      const clkPhase=(p.clockEnable?state.clock.phase:0) + (p.clockLock ? (core.id*0.07 + j*0.11)*p.clockFeedback*180/Math.PI : 0);
-      const mod=cMul(core.transfer[j], expi(clkPhase));
-      out=cAdd(out,cMul(mod, xin[j]));
-    }
-    const e=cAbs2(out)*core.load; const t=core.target; counts[t]++; accum[t]+=e; maxA[t]=Math.max(maxA[t],e);
-    const left=(t-1+N)%N, right=(t+1)%N, spill=e*(0.10+p.coreCross*0.18); accum[left]+=spill*0.5; accum[right]+=spill*0.5;
-    if(e>=Math.max(maxA[t],e)) votes[t]++;
-  });
-  const energies=accum.map((v,i)=>{ if(p.coreAgg==='avg') return v/Math.max(1,counts[i]); if(p.coreAgg==='max') return maxA[i]; if(p.coreAgg==='vote') return votes[i] + v*0.02; return v; });
-  const sumE=energies.reduce((a,b)=>a+b,0), maxE=Math.max(...energies), idx=energies.indexOf(maxE), second=[...energies].sort((a,b)=>b-a)[1]||0;
-  const weighted=sumE>0?energies.reduce((s,e,i)=>s+e*state.petals[i].f0,0)/sumE:0;
-  return {energies,sumE,maxE,idx,second,weighted};
-}
-function taskErrorMetrics(p, snap){
-  const targetIdx=clamp(p.taskChannel-1,0,Math.max(0,state.petals.length-1));
-  const targetPetal=state.petals.reduce((best,pet,i)=> Math.abs(pet.f0-p.targetFreq) < Math.abs(state.petals[best].f0-p.targetFreq) ? i : best, 0);
-  let err=0, target=targetPetal;
-  if(p.taskType==='targetChannel'){ target=targetIdx; err = 1 - ((snap.energies[target]||0)/(snap.maxE||1)); }
-  else if(p.taskType==='balance'){ const mean=snap.sumE/Math.max(1,snap.energies.length); err = Math.sqrt(snap.energies.reduce((s,e)=>s+(e-mean)*(e-mean),0)/Math.max(1,snap.energies.length))/Math.max(1e-6,mean); }
-  else { target=targetPetal; err = Math.abs(snap.weighted - p.targetFreq); }
-  return {err,targetIdx:target,targetFreq:state.petals[target].f0};
-}
-function applyErrorCorrection(p, metrics){
-  const normErr = p.taskType==='targetFreq' ? Math.min(1, metrics.err/Math.max(0.01,p.targetTolerance)) : Math.min(1, metrics.err);
-  state.cores.forEach(core=>{
-    const targetDist = Math.abs(core.target - metrics.targetIdx);
-    const focus = Math.exp(-targetDist*0.9);
-    for(let j=0;j<4;j++){
-      const b=core.baseTransfer[j];
-      const phaseShift = p.clockEnable ? (state.clock.phase*0.02 + p.clockFeedback*normErr*(j+1)*9*(focus+0.15)) : 0;
-      const amp0 = Math.sqrt(b.re*b.re + b.im*b.im);
-      const phi0 = Math.atan2(b.im,b.re)*180/Math.PI;
-      const gain = 1 + p.correctionGain*(focus*1.3 - (1-focus)*0.15)*normErr;
-      const damp = (p.taskType==='balance') ? (1 - p.correctionGain*0.22*normErr*(0.5-Math.abs(0.5-focus))) : 1;
-      const finalAmp = Math.max(0.0001, amp0*gain*damp);
-      core.transfer[j]=cScale(expi(phi0 + phaseShift), finalAmp);
-    }
-  });
-}
-function updateClock(p, metrics){
-  state.clock.rate = p.clockEnable ? Math.max(0.01, p.clockBase + (p.autoCorrect ? p.clockFeedback*Math.min(5, metrics.err) : 0)) : 0;
-  if(!p.clockEnable){ state.clock.phase = p.clockPhase; return; }
-  const now=performance.now(), dt=Math.min(0.15, Math.max(0,(now-state.clock.lastPerf)/1000));
-  state.clock.lastPerf = now;
-  state.clock.phase = (state.clock.phase + dt*state.clock.rate*360) % 360;
-  state.clock.tick += 1;
+function drawGrid(ctx,w,h,step,alpha=.18){
+  ctx.save();
+  ctx.strokeStyle = `rgba(77,167,201,${alpha})`;
+  ctx.lineWidth = 1;
+  for(let x=0;x<=w;x+=step){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke(); }
+  for(let y=0;y<=h;y+=step){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke(); }
+  ctx.restore();
 }
 
-function computePhotonic(){
-  const p=values(); buildCores();
-  state.clock.phase = p.clockPhase;
-  state.clock.lastPerf = performance.now();
-  const xin=p.px.map((x,i)=>cScale(expi(p.pp[i]),x));
-  let snap = evaluateCoreEnergies(p, xin);
-  let metrics = taskErrorMetrics(p, snap);
-  if(p.taskActive && p.autoCorrect){
-    for(let iter=0; iter<p.correctionIterations; iter++){
-      updateClock(p, metrics);
-      applyErrorCorrection(p, metrics);
-      snap = evaluateCoreEnergies(p, xin);
-      metrics = taskErrorMetrics(p, snap);
-      if(metrics.err <= p.targetTolerance) break;
-    }
-  } else if(p.clockEnable){
-    updateClock(p, metrics);
-    snap = evaluateCoreEnergies(p, xin);
-    metrics = taskErrorMetrics(p, snap);
+function drawWaveforms(){
+  const w=waveCanvas.width, h=waveCanvas.height;
+  waveCtx.clearRect(0,0,w,h);
+  waveCtx.fillStyle = '#04101a';
+  waveCtx.fillRect(0,0,w,h);
+  drawGrid(waveCtx,w,h,40,.18);
+
+  waveCtx.fillStyle = '#c7eff8';
+  waveCtx.font = 'bold 20px system-ui';
+  waveCtx.fillText('CH1', 16, 34);
+  waveCtx.fillStyle = '#ffe86e';
+  waveCtx.fillText('CH2', 16, 230);
+
+  // CH1 sine
+  waveCtx.save();
+  waveCtx.strokeStyle = '#ff43d5';
+  waveCtx.lineWidth = 4;
+  waveCtx.beginPath();
+  const y1 = 118;
+  for(let x=40;x<=w-30;x++){
+    const t = (x-40)/(w-70);
+    const y = y1 + Math.sin(t*TAU*4.4)*58;
+    if(x===40) waveCtx.moveTo(x,y); else waveCtx.lineTo(x,y);
   }
-  state.energies = snap.energies;
-  state.taskInfo = {error:metrics.err,targetIdx:metrics.targetIdx,targetFreq:metrics.targetFreq,locked:metrics.err<=p.targetTolerance};
-  state.result={answer:`Выход ${snap.idx+1} · f≈${state.petals[snap.idx].f0.toFixed(2)} · ε=${metrics.err.toFixed(3)}`,sumE:snap.sumE,stability:snap.maxE?((snap.maxE-snap.second)/snap.maxE):0,mirror:mirrorScore(),weighted:snap.weighted,mode:'photonic'};
+  waveCtx.stroke();
+  waveCtx.restore();
+
+  // CH2 square
+  waveCtx.save();
+  waveCtx.strokeStyle = '#ffe54f';
+  waveCtx.lineWidth = 4;
+  const yTop=248, yBottom=332, x0=40, x1=w-30, cycles=4;
+  const span=(x1-x0)/cycles;
+  waveCtx.beginPath();
+  let x=x0;
+  waveCtx.moveTo(x,yTop);
+  for(let i=0;i<cycles;i++){
+    waveCtx.lineTo(x+span*0.5,yTop);
+    waveCtx.lineTo(x+span*0.5,yBottom);
+    waveCtx.lineTo(x+span,yBottom);
+    x += span;
+    if(i<cycles-1){ waveCtx.lineTo(x,yTop); }
+  }
+  waveCtx.stroke();
+  waveCtx.restore();
+
+  // Right-side markers
+  function marker(text, top, bottom, x, color){
+    waveCtx.strokeStyle = '#d7f7ff';
+    waveCtx.lineWidth = 2;
+    waveCtx.beginPath(); waveCtx.moveTo(x,top); waveCtx.lineTo(x,bottom); waveCtx.stroke();
+    waveCtx.beginPath(); waveCtx.moveTo(x-9,top+10); waveCtx.lineTo(x,top); waveCtx.lineTo(x+9,top+10); waveCtx.stroke();
+    waveCtx.beginPath(); waveCtx.moveTo(x-9,bottom-10); waveCtx.lineTo(x,bottom); waveCtx.lineTo(x+9,bottom-10); waveCtx.stroke();
+    waveCtx.fillStyle = color; waveCtx.font = '18px system-ui'; waveCtx.fillText(text, x+14, (top+bottom)/2 + 6);
+  }
+  marker('2,00 мВ/дел', 64, 172, w-165, '#fff');
+  marker('5 В/дел', 223, 356, w-145, '#fff');
 }
-function computePassiveStep(){const p=values();const inject=state.petals.map((pet,k)=>{let s=0; for(let i=0;i<4;i++){const base=(p.fa[i]*p.fa[i])*lorentz(p.f[i],pet.f0,pet.q); const refr=1+p.refraction*0.65*Math.cos(p.f[i]*0.17-pet.theta*2+pet.skew); s += Math.max(0, base*refr);} return s;}); const N=state.petals.length, next=Array(N).fill(0); for(let k=0;k<N;k++){const left=state.energies[(k-1+N)%N], right=state.energies[(k+1)%N]; const coupled=p.coupling*0.5*(left+right-2*state.energies[k]); const raw=state.energies[k]*p.retention + inject[k] + coupled; next[k]=Math.tanh(Math.max(0,raw))*1.5;} state.energies=next; state.step++; const sumE=next.reduce((a,b)=>a+b,0), maxE=Math.max(...next), idx=next.indexOf(maxE), second=[...next].sort((a,b)=>b-a)[1]||0; state.result={answer:`Канал ${idx+1} · f≈${state.petals[idx].f0.toFixed(2)}`,sumE,stability:maxE?((maxE-second)/maxE):0,mirror:mirrorScore(),weighted:0,mode:'passive'};}
-function computeArithmetic(){const p=values(); const A=p.arithA,B=p.arithB,op=p.arithOp; let text='',val=null,extra=''; if(op==='+') val=A+B; else if(op==='-') val=A-B; else if(op==='×') val=A*B; else if(op==='÷'){ if(B===0){ text=(A===0)?'0/0 · неопределённость':`${A}/0 · особая точка`; val=null; extra='singularity'; } else { val=Math.trunc(A/B); extra=`остаток ${A%B}`; } } state.energies=state.petals.map((pet,i)=>{const base=Math.abs((val ?? (A||1)))/(i+2); const wave=Math.abs(Math.sin((i+1)*(A+1)*0.13)+Math.cos((i+1)*(B+1)*0.17)); return Math.max(0.03,(base*0.08+wave*0.45)/(1+i*0.03));}); const sumE=state.energies.reduce((a,b)=>a+b,0); text=text || `${A} ${op} ${B} = ${val}${extra?(' · '+extra):''}`; state.result={answer:text,sumE,stability:0.72,mirror:mirrorScore(),weighted:0,mode:'arith'}; state.cores=[]; state.coreInfo={budget:1,used:1,util:1,structural:1,res:resolutionSize(values())};}
-function computeSystem(){const p=values(); const [[a,b],[c,d]]=p.A; const [e,f]=p.b; const det=a*d-b*c; let answer=''; if(Math.abs(det)<1e-9){ const dep1=Math.abs(a*f-c*e)<1e-8, dep2=Math.abs(b*f-d*e)<1e-8; answer=dep1&&dep2?'Бесконечно много решений':'Нет решений'; state.energies=state.petals.map((pet,i)=>0.18+0.12*Math.abs(Math.sin((i+1)*0.73))); state.result={answer,sumE:state.energies.reduce((s,v)=>s+v,0),stability:0.2,mirror:mirrorScore(),weighted:0,mode:'system'}; } else { const x=(e*d-b*f)/det, y=(a*f-e*c)/det; state.energies=state.petals.map((pet,i)=>{const target=(i%2===0?Math.abs(x):Math.abs(y)); const wave=0.3*Math.abs(Math.sin((i+1)*(x+1)*0.35)+Math.cos((i+1)*(y+1)*0.31)); return 0.06+target*0.08+wave;}); const residual1=Math.abs(a*x+b*y-e), residual2=Math.abs(c*x+d*y-f); state.result={answer:`x=${x.toFixed(4)}, y=${y.toFixed(4)}`,sumE:state.energies.reduce((s,v)=>s+v,0),stability:1/(1+residual1+residual2),mirror:mirrorScore(),weighted:0,mode:'system'}; } state.cores=[]; state.coreInfo={budget:1,used:1,util:1,structural:1,res:resolutionSize(values())};}
-function mirrorScore(){const N=state.energies.length; if(!N) return 0; let same=0,total=0; for(let i=0;i<N;i++){ const j=(N-i)%N; const a=state.energies[i]||0,b=state.energies[j]||0; same += 1 - Math.abs(a-b)/(Math.max(1e-6,a,b)); total++; } return same/Math.max(1,total);}
-function runSolve(){const p=values(); buildPetals(); state.mode=p.solveMode; state.running=true; state.step=0; state.frozen=false; state.taskInfo=null; if(p.solveMode==='photonic'){ if(!p.taskActive){ buildCores(); state.energies=Array(state.petals.length).fill(0); state.result={answer:'Ожидание задачи',sumE:0,stability:1,mirror:mirrorScore(),weighted:0,mode:'photonic'}; state.clock.phase=p.clockPhase; state.clock.rate=p.clockEnable?p.clockBase:0; state.running=false; } else { computePhotonic(); state.running=false; } } else if(p.solveMode==='arith'){ computeArithmetic(); state.running=false; } else if(p.solveMode==='system'){ computeSystem(); state.running=false; } else { state.running=true; state.cores=[]; state.coreInfo={budget:1,used:0,util:0,structural:1,res:resolutionSize(values())}; } if(p.fullRest && p.solveMode!=='passive') state.frozen=true; renderAll();}
-function stopRun(){state.running=false; state.frozen=true; renderAll();}
-function renderFlower(rctx,w,h,phase){
-  const p=values(), prof=matrixProfileValues(p.matrixProfile), baseHue=wavelengthBase(p.wavelengthBias); rctx.clearRect(0,0,w,h);
-  const bg=rctx.createRadialGradient(w*0.5,h*0.52,0,w*0.5,h*0.56,Math.max(w,h)*0.82); bg.addColorStop(0,'rgb(16,37,57)'); bg.addColorStop(.45,'rgb(6,14,22)'); bg.addColorStop(1,'rgb(1,5,9)'); rctx.fillStyle=bg; rctx.fillRect(0,0,w,h);
-  const cx=w*0.5, cy=h*0.60, scale=Math.min(w,h), maxE=Math.max(1e-6,...state.energies,1);
-  rctx.save(); rctx.globalCompositeOperation='screen';
-  for(let ring=0; ring<p.rings+2; ring++){ const rr=scale*(0.14+ring*0.055), sy=0.76+ring*0.05; rctx.beginPath(); for(let a=0;a<=200;a++){ const ang=a/200*Math.PI*2; const deform=1 + 0.14*Math.cos(ang*2 + ring*0.6 + phase*0.25) + p.mirrorMix*0.08*Math.cos(ang*4); const x=cx + Math.cos(ang)*rr*deform; const y=cy + Math.sin(ang)*rr*deform*sy; if(a===0) rctx.moveTo(x,y); else rctx.lineTo(x,y);} rctx.strokeStyle=`rgba(120,230,255,${0.016+ring*0.007})`; rctx.lineWidth=1; rctx.shadowBlur=8+p.glow*7; rctx.shadowColor='rgba(120,230,255,.20)'; rctx.stroke(); }
-  rctx.restore();
-  for(let layer=p.rings; layer>=1; layer--){ const layerScale=0.60+layer*0.10; state.petals.forEach((pet,i)=>{ if(pet.ring!==layer) return; const e=(state.energies[i]||0)/maxE; const mirrorPush=p.mirrorMix*Math.sin(pet.theta*2 + phase*0.2)*0.22; const angle=-Math.PI/2+pet.theta+p.chirality*0.18*layer+mirrorPush; const swing=p.animate && !state.frozen ? Math.sin(phase*0.65 + i*0.55)*0.03*p.continuum : 0; const len=scale*(0.12 + pet.radius*0.10 + layer*0.012 + e*0.05)*layerScale*0.58; const wid=scale*(0.025 + 0.02*layer + e*0.01)*0.70; const lift=scale*(0.011*layer + 0.003*i); const a=angle+swing; const baseX=cx, baseY=cy-lift; const tipX=baseX+Math.cos(a)*len*0.25; const tipY=baseY+Math.sin(a)*len-scale*0.02*layer; const lx=baseX+Math.cos(a+Math.PI/2)*wid, ly=baseY+Math.sin(a+Math.PI/2)*wid*0.70; const rx=baseX+Math.cos(a-Math.PI/2)*wid, ry=baseY+Math.sin(a-Math.PI/2)*wid*0.70; const c1x=lx+Math.cos(a-0.8+pet.skew)*len*0.45, c1y=ly+Math.sin(a-0.8+pet.skew)*len*0.25; const c2x=tipX+Math.cos(a+Math.PI/2)*wid*0.40, c2y=tipY+Math.sin(a+Math.PI/2)*wid*0.18; const c3x=tipX+Math.cos(a-Math.PI/2)*wid*0.40, c3y=tipY+Math.sin(a-Math.PI/2)*wid*0.18; const c4x=rx+Math.cos(a+0.8+pet.skew)*len*0.45, c4y=ry+Math.sin(a+0.8+pet.skew)*len*0.25; const hue=(baseHue+pet.hueShift+i*7+layer*10+e*20)%360; const sat=clamp(0.48*prof.sat+e*0.26,0,1); const col=hsv(hue,sat,clamp(0.82+e*0.30,0,1)); const fill=rctx.createLinearGradient(baseX,baseY,tipX,tipY); fill.addColorStop(0,`rgba(${col[0]},${col[1]},${col[2]},${0.04+e*0.11})`); fill.addColorStop(.52,`rgba(${col[0]},${col[1]},${col[2]},${0.12+e*0.22})`); fill.addColorStop(1,`rgba(255,255,255,${0.02+e*0.04})`); rctx.save(); rctx.globalCompositeOperation='lighter'; rctx.beginPath(); rctx.moveTo(lx,ly); rctx.bezierCurveTo(c1x,c1y,c2x,c2y,tipX,tipY); rctx.bezierCurveTo(c3x,c3y,c4x,c4y,rx,ry); rctx.closePath(); rctx.fillStyle=fill; rctx.fill(); rctx.strokeStyle=`rgba(${col[0]},${col[1]},${col[2]},${0.14+e*0.48})`; rctx.lineWidth=0.9+layer*0.22+e*1.6; rctx.shadowBlur=(10+p.glow*7+e*18)*prof.sharp; rctx.shadowColor=`rgba(${col[0]},${col[1]},${col[2]},${0.28+e*0.34})`; rctx.stroke(); rctx.strokeStyle=`rgba(255,255,255,${0.08+e*0.18})`; rctx.lineWidth=0.5; rctx.beginPath(); rctx.moveTo(baseX,baseY); rctx.quadraticCurveTo((baseX+tipX)/2+Math.cos(a+Math.PI/2)*4,(baseY+tipY)/2+Math.sin(a+Math.PI/2)*4,tipX,tipY); rctx.stroke(); if(p.showVeins){ for(let v=1;v<=4;v++){ const tt=v/5,sx=baseX*(1-tt)+lx*tt,sy=baseY*(1-tt)+ly*tt,ex=tipX*(0.9+0.1*tt),ey=tipY*(0.9+0.1*tt); rctx.strokeStyle=`rgba(${col[0]},${col[1]},${col[2]},${0.04+e*0.09})`; rctx.lineWidth=0.38; rctx.beginPath(); rctx.moveTo(sx,sy); rctx.quadraticCurveTo((sx+ex)/2+Math.cos(a)*(v%2?5:-5),(sy+ey)/2+Math.sin(a)*(v%2?5:-5),ex,ey); rctx.stroke(); }} rctx.restore(); }); }
-  // multicore nodes
-  if(state.cores.length){ rctx.save(); rctx.globalCompositeOperation='screen'; const maxNodes=Math.min(state.cores.length,600); for(let i=0;i<maxNodes;i++){ const core=state.cores[i]; const pet=state.petals[core.target]; const rr=scale*(0.12+core.radial*0.27), ang=pet.theta + Math.sin(phase*0.22+i*0.01)*0.02*values().continuum; const x=cx + Math.cos(ang)*rr; const y=cy + Math.sin(ang)*rr*(0.84+core.ring*0.03) - core.ring*2.0; const alpha=0.10+0.16*(core.load/1.4); const radius=0.9 + (i%3)*0.55; rctx.fillStyle=`rgba(160,255,245,${alpha})`; rctx.shadowBlur=7+values().glow*4; rctx.shadowColor='rgba(120,255,240,.35)'; rctx.beginPath(); rctx.arc(x,y,radius,0,Math.PI*2); rctx.fill(); } rctx.restore(); }
-  const coreGrad=rctx.createRadialGradient(cx,cy,0,cx,cy,scale*0.13); coreGrad.addColorStop(0,'rgba(255,255,255,.97)'); coreGrad.addColorStop(.12,'rgba(195,255,246,.68)'); coreGrad.addColorStop(.30,'rgba(105,255,234,.24)'); coreGrad.addColorStop(.62,'rgba(125,200,255,.10)'); coreGrad.addColorStop(1,'rgba(0,0,0,0)'); rctx.save(); rctx.globalCompositeOperation='lighter'; rctx.fillStyle=coreGrad; rctx.beginPath(); rctx.arc(cx,cy,scale*0.13,0,Math.PI*2); rctx.fill(); rctx.restore();
-  const lg=rctx.createLinearGradient(cx,cy-scale*0.5,cx,cy+scale*0.38); lg.addColorStop(0,'rgba(130,255,242,0)'); lg.addColorStop(.45,'rgba(120,255,235,.52)'); lg.addColorStop(.5,'rgba(255,255,255,.95)'); lg.addColorStop(1,'rgba(130,255,242,0)'); rctx.save(); rctx.globalCompositeOperation='screen'; rctx.strokeStyle=lg; rctx.lineWidth=2.3; rctx.shadowBlur=14+values().glow*7; rctx.shadowColor='rgba(100,255,240,.33)'; rctx.beginPath(); rctx.moveTo(cx,cy-scale*0.52); rctx.lineTo(cx,cy+scale*0.40); rctx.stroke(); rctx.restore(); const vign=rctx.createRadialGradient(cx,cy,scale*0.10,cx,cy,Math.max(w,h)*0.86); vign.addColorStop(0,'rgba(255,255,255,0)'); vign.addColorStop(1,'rgba(0,0,0,.58)'); rctx.fillStyle=vign; rctx.fillRect(0,0,w,h);
+
+function drawGauge(masterPhase){
+  const w=gaugeCanvas.width,h=gaugeCanvas.height,cx=w/2,cy=h/2,r=Math.min(w,h)*0.34;
+  gaugeCtx.clearRect(0,0,w,h);
+  gaugeCtx.fillStyle='#04101a'; gaugeCtx.fillRect(0,0,w,h);
+  drawGrid(gaugeCtx,w,h,46,.10);
+
+  gaugeCtx.lineCap='round';
+  gaugeCtx.lineWidth=18;
+  gaugeCtx.strokeStyle='rgba(190,210,220,.24)';
+  gaugeCtx.beginPath(); gaugeCtx.arc(cx,cy,r,0,TAU); gaugeCtx.stroke();
+
+  gaugeCtx.strokeStyle='#88ff45';
+  gaugeCtx.beginPath(); gaugeCtx.arc(cx,cy,r,-Math.PI/2,-Math.PI/2 + TAU*masterPhase); gaugeCtx.stroke();
+
+  gaugeCtx.fillStyle='#f4fcff';
+  gaugeCtx.font='700 54px system-ui';
+  gaugeCtx.textAlign='center';
+  gaugeCtx.fillText('φₗ', cx, cy-18);
+  gaugeCtx.font='600 42px system-ui';
+  gaugeCtx.fillText('t / 240 s', cx, cy+42);
+  gaugeCtx.font='500 28px system-ui';
+  gaugeCtx.fillStyle='#c3d8e5';
+  gaugeCtx.fillText('(4,17 мГц)', cx, cy+r+58);
 }
-function drawMini(){ const w=miniCanvas.width,h=miniCanvas.height; mctx.fillStyle='#091420'; mctx.fillRect(0,0,w,h); const N=Math.max(1,state.petals.length), barW=(w-40)/N; const total=state.energies.reduce((a,b)=>a+b,0)||1; state.petals.forEach((pet,i)=>{ const x=20+i*barW, frac=(state.energies[i]||0)/total, hh=(h-30)*Math.min(1,frac*3); const col=hsv((wavelengthBase(values().wavelengthBias)+i*7)%360,0.78,1); mctx.fillStyle=`rgba(${col[0]},${col[1]},${col[2]},0.82)`; mctx.fillRect(x,h-14-hh,Math.max(4,barW-3),hh); }); mctx.fillStyle='#dff8ff'; mctx.font='12px Segoe UI'; mctx.fillText('Выходные интенсивности / каналы',10,14); }
-function drawChart(){ const w=chartCanvas.width,h=chartCanvas.height; cctx.fillStyle='#091521'; cctx.fillRect(0,0,w,h); cctx.strokeStyle='rgba(255,255,255,.08)'; for(let i=0;i<6;i++){ const y=20+(h-40)*i/5; cctx.beginPath(); cctx.moveTo(46,y); cctx.lineTo(w-10,y); cctx.stroke(); } const N=state.petals.length||1, maxE=Math.max(1e-6,...state.energies,1); state.petals.forEach((pet,i)=>{ const x=55+(w-75)*i/Math.max(1,N-1), y=h-20-(h-50)*(state.energies[i]/maxE), col=hsv((wavelengthBase(values().wavelengthBias)+i*7)%360,0.75,1); cctx.fillStyle=`rgba(${col[0]},${col[1]},${col[2]},0.88)`; cctx.fillRect(x-11,y,22,h-20-y); cctx.fillStyle='#dff6ff'; cctx.font='10px Segoe UI'; cctx.fillText(String(i+1),x-4,h-8); }); }
-function drawCoreMap(){ const w=coreCanvas.width,h=coreCanvas.height; kctx.fillStyle='#091521'; kctx.fillRect(0,0,w,h); const info=state.coreInfo||{budget:1,used:0,util:0,structural:1,res:{w:0,h:0}}; kctx.fillStyle='#dff6ff'; kctx.font='12px Segoe UI'; kctx.fillText(`Photonic cores: ${info.used} / budget ${info.budget} / structural ${info.structural} · base ${info.res.w}×${info.res.h} · clock ${state.clock.rate.toFixed(2)} Hz`, 10, 15); const slots=Math.min(state.cores.length, 240); const cols=24, rows=Math.ceil(slots/cols)||1, cellW=(w-20)/cols, cellH=(h-32)/Math.max(1,rows); for(let i=0;i<slots;i++){ const core=state.cores[i], c=i%cols, r=Math.floor(i/cols), x=10+c*cellW, y=24+r*cellH; const t=state.energies[core.target]||0; const col=hsv((wavelengthBase(values().wavelengthBias)+core.target*7)%360,0.78,Math.min(1,0.55+t*0.15)); kctx.fillStyle=`rgba(${col[0]},${col[1]},${col[2]},0.82)`; kctx.fillRect(x+1,y+1,Math.max(3,cellW-3),Math.max(3,cellH-3)); } }
-function updateTable(){ const total=state.energies.reduce((a,b)=>a+b,0)||1; const rows=[['Канал','f0','Энергия','Вклад','Q']]; state.petals.forEach((pet,i)=>rows.push([String(i+1),pet.f0.toFixed(2),(state.energies[i]||0).toFixed(3),(100*(state.energies[i]||0)/total).toFixed(1)+'%',pet.q.toFixed(2)])); $('tableOut').innerHTML=rows.flatMap(r=>r.map(v=>`<div>${v}</div>`)).join(''); }
-function renderAll(){ const p=values(); const t=(p.animate && !state.frozen)?performance.now()/1000:state.renderTime; if(!state.frozen) state.renderTime=t; const phase=t*(0.18+p.continuum*0.35); renderFlower(ctx,mainCanvas.width,mainCanvas.height,phase); drawMini(); drawChart(); drawCoreMap(); updateTable(); const res=state.result||{answer:'—',sumE:0,stability:0,mirror:0}; const info=state.coreInfo||{budget:1,used:0,util:0}; const task=state.taskInfo||{error:0,targetIdx:0,targetFreq:0,locked:false}; $('bMode').textContent='Mode '+p.solveMode; $('bAnswer').textContent='Answer '+res.answer; $('bEnergy').textContent='Energy '+(res.sumE||0).toFixed(3); $('bStable').textContent='Stability '+((res.stability||0)*100).toFixed(1)+'%'; $('bMirror').textContent='Mirror '+((res.mirror||0)*100).toFixed(1)+'%'; $('bCores').textContent='Cores '+info.used; $('bBudget').textContent='Budget '+info.budget; $('bClock').textContent='Clock '+state.clock.rate.toFixed(2)+' Hz'; $('bTask').textContent='Task '+(p.taskActive ? (`ε=${task.error.toFixed(3)}${task.locked?' · LOCK':''}`) : 'idle'); $('tag').textContent=`${state.uid||'flower'} · ${p.solveMode} · cores ${info.used}`; $('status').textContent = p.fullRest && state.frozen ? 'Режим полного покоя: расчёт завершён, дальнейшая активная работа остановлена.' : (p.solveMode==='photonic' ? `Фотонный тактовый генератор ${p.clockEnable?'активен':'выключен'}. Задача: ${p.taskActive ? p.taskType : 'ожидание'}. Ядер: ${info.used}/${info.budget}. Ошибка: ${task.error.toFixed(4)}. ${task.locked?'Состояние захвачено и удержано.':'Идёт подстройка.'}` : `Единый паттерн активен. Режим: ${p.solveMode}. Ядер: ${info.used}/${info.budget}. Ответ: ${res.answer}`); }
-function loop(){ const p=values(); if(p.solveMode==='photonic' && p.taskActive && p.clockEnable && !state.frozen){ const now=performance.now(); const dt=Math.min(0.15, Math.max(0,(now-state.clock.lastPerf)/1000)); state.clock.lastPerf=now; state.clock.phase=(state.clock.phase + dt*state.clock.rate*360)%360; } if(state.running && state.mode==='passive'){ computePassiveStep(); if(state.step>=state.maxSteps){ state.running=false; if(values().fullRest) state.frozen=true; } } if((p.solveMode==='photonic' && p.taskActive && p.autoCorrect && p.animate && !state.frozen) && (!state._nextRecalc || performance.now()>=state._nextRecalc)){ computePhotonic(); state._nextRecalc=performance.now()+220; } if(values().animate && !state.frozen || state.running) renderAll(); requestAnimationFrame(loop); }
-async function renderBlob(w,h){ const c=document.createElement('canvas'); c.width=w; c.height=h; const rc=c.getContext('2d',{alpha:false}); renderFlower(rc,w,h,state.renderTime); return await new Promise(resolve=>c.toBlob(resolve,'image/png')); }
-function saveBlob(blob,name){ const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(url),2500); }
-function exportJSON(){ const blob=new Blob([JSON.stringify({uid:state.uid,seed:state.seed,params:values(),result:state.result,petals:state.petals,energies:state.energies,coreInfo:state.coreInfo,cores:state.cores.slice(0,512)},null,2)],{type:'application/json'}); saveBlob(blob,'CIC_Flower_v11_1_state.json'); }
-function exportHTML(){ const blob=new Blob([document.documentElement.outerHTML],{type:'text/html'}); saveBlob(blob,'CIC_Flower_Ultimate_v11_1_snapshot.html'); }
-$('solveMode').addEventListener('change',()=>{refreshModeBoxes(); if(values().autoRun) runSolve(); else renderAll();}); $('preset').addEventListener('change',()=>{ if($('preset').value!=='custom') applyPreset($('preset').value); if(values().autoRun) runSolve(); else renderAll(); }); RANGE_IDS.forEach(id=>$(id).addEventListener('input',()=>{updateOutputs(); if(values().autoRun) runSolve(); else renderAll();})); ['px1','px2','px3','px4','pp1','pp2','pp3','pp4','arithA','arithB','arithOp','a11','a12','a21','a22','b1','b2','f1','f2','f3','f4','fa1','fa2','fa3','fa4','taskActive','autoCorrect','clockEnable','clockLock','taskType','taskChannel','matrixProfile','wavelengthBias','fullRest','autoRun','animate','showVeins','coreMode','coreAgg','coreCount','resolutionBasis'].forEach(id=>$(id).addEventListener('input',()=>{ if(values().autoRun) runSolve(); else renderAll(); }));
-$('autoBtn').addEventListener('click',()=>{ $('coreMode').value='auto'; if($('preset').value!=='custom') applyPreset($('preset').value); runSolve(); }); $('newSeedBtn').addEventListener('click',()=>{ newSeed(); runSolve();}); $('runBtn').addEventListener('click',runSolve); $('restBtn').addEventListener('click',stopRun); $('pngPhoneBtn').addEventListener('click',async()=>saveBlob(await renderBlob(1206,2622),'CIC_Flower_v11_1_iPhone17.png')); $('png4kBtn').addEventListener('click',async()=>saveBlob(await renderBlob(3840,2160),'CIC_Flower_v11_1_4K.png')); $('jsonBtn').addEventListener('click',exportJSON); $('htmlBtn').addEventListener('click',exportHTML);
-updateOutputs(); refreshModeBoxes(); applyPreset('alpha'); newSeed(); buildPetals(); computePhotonic(); renderAll(); if(values().autoRun) runSolve(); requestAnimationFrame(loop);
+
+function drawMain(){
+  const w = mainCanvas.width, h = mainCanvas.height, cx = w/2, cy = h/2;
+  mainCtx.clearRect(0,0,w,h);
+  mainCtx.fillStyle = '#040b13';
+  mainCtx.fillRect(0,0,w,h);
+  drawGrid(mainCtx,w,h,40,.12);
+
+  const elapsed = elapsedSeconds();
+  const masterPhase = ((elapsed % MASTER_T) + MASTER_T) % MASTER_T / MASTER_T;
+  const carrierPhase = ((elapsed % CARRIER_T) + CARRIER_T) % CARRIER_T / CARRIER_T;
+  const thetaMaster = TAU * masterPhase;
+  const thetaCarrier = TAU * carrierPhase;
+  const density = Number($('density').value);
+  const contrast = Number($('contrast').value)/100;
+  const blend = Number($('blend').value)/100;
+  const mode = $('mode').value;
+
+  const maxR = Math.min(w,h)*0.37;
+
+  // outer rings
+  mainCtx.save();
+  mainCtx.translate(cx,cy);
+  for(let i=0;i<5;i++){
+    mainCtx.strokeStyle = `rgba(182,239,255,${0.12 + i*0.04})`;
+    mainCtx.lineWidth = i===4?3:1.4;
+    mainCtx.beginPath(); mainCtx.arc(0,0,maxR*(0.68 + i*0.08),0,TAU); mainCtx.stroke();
+  }
+  // dotted green ring
+  for(let i=0;i<72;i++){
+    const a = (i/72)*TAU;
+    const rr = maxR*1.01;
+    mainCtx.fillStyle = i/72 <= masterPhase ? '#88ff45' : 'rgba(136,255,69,.35)';
+    mainCtx.beginPath(); mainCtx.arc(Math.cos(a)*rr,Math.sin(a)*rr,3.2,0,TAU); mainCtx.fill();
+  }
+  mainCtx.restore();
+
+  // axis cross
+  mainCtx.save();
+  mainCtx.strokeStyle='rgba(255,255,255,.55)';
+  mainCtx.setLineDash([7,9]);
+  mainCtx.lineWidth=2;
+  mainCtx.beginPath(); mainCtx.moveTo(cx-maxR*1.15,cy); mainCtx.lineTo(cx+maxR*1.15,cy); mainCtx.stroke();
+  mainCtx.beginPath(); mainCtx.moveTo(cx,cy-maxR*1.15); mainCtx.lineTo(cx,cy+maxR*1.15); mainCtx.stroke();
+  mainCtx.restore();
+
+  // angle labels
+  mainCtx.save();
+  mainCtx.fillStyle = '#f8fdff';
+  mainCtx.font = '600 34px system-ui';
+  mainCtx.textAlign = 'center';
+  mainCtx.textBaseline = 'middle';
+  for(let deg=0;deg<360;deg+=30){
+    const a = deg*Math.PI/180;
+    const rr = maxR*1.24;
+    mainCtx.fillText(`${deg}°`, cx + Math.cos(a)*rr, cy + Math.sin(a)*rr);
+  }
+  mainCtx.restore();
+
+  function strokeRose(color, petalMul, radiusMul, phaseMix, width, alpha){
+    mainCtx.save();
+    mainCtx.strokeStyle = color;
+    mainCtx.globalAlpha = alpha;
+    mainCtx.lineWidth = width;
+    mainCtx.beginPath();
+    const steps=2600;
+    for(let i=0;i<=steps;i++){
+      const t = i/steps*TAU*2;
+      let r;
+      if(mode==='rings'){
+        r = maxR*radiusMul*(0.55 + 0.42*Math.cos(t*petalMul + thetaCarrier*blend - thetaMaster*(1-blend) + phaseMix));
+      } else if(mode==='spiral'){
+        const s = (i/steps);
+        r = maxR*radiusMul*(0.18 + 0.80*s)*(0.72 + 0.28*Math.cos(t*petalMul + thetaCarrier + phaseMix));
+      } else if(mode==='hybrid'){
+        r = maxR*radiusMul*(0.46 + 0.30*Math.cos(t*petalMul + thetaMaster + phaseMix) + 0.22*Math.cos(t*(petalMul/2) - thetaCarrier + phaseMix));
+      } else {
+        r = maxR*radiusMul*(0.2 + 0.8*Math.abs(Math.cos(t*petalMul + thetaMaster + phaseMix)));
+      }
+      const a = t + phaseMix*0.25 + thetaCarrier*0.18*blend;
+      const x = cx + Math.cos(a)*r;
+      const y = cy + Math.sin(a)*r;
+      if(i===0) mainCtx.moveTo(x,y); else mainCtx.lineTo(x,y);
+    }
+    mainCtx.stroke();
+    mainCtx.restore();
+  }
+
+  const loops = Math.max(10, density);
+  for(let i=0;i<loops;i++){
+    const phaseMix = i/loops * TAU;
+    strokeRose('#22ebff', density/2, 1.0, phaseMix, 1.1, 0.10 + contrast*0.10);
+  }
+  for(let i=0;i<Math.round(loops*0.70);i++){
+    const phaseMix = i/Math.max(1,Math.round(loops*0.70)) * TAU;
+    strokeRose('#ff41da', density/3.4, 0.74, phaseMix + thetaMaster*0.18, 1.5, 0.16 + contrast*0.16);
+  }
+  for(let i=0;i<Math.round(loops*0.40);i++){
+    const phaseMix = i/Math.max(1,Math.round(loops*0.40)) * TAU;
+    strokeRose('#ffe54f', density/5.6, 0.50, phaseMix - thetaCarrier*0.15, 1.6, 0.22 + contrast*0.20);
+  }
+
+  // center glow
+  const grad = mainCtx.createRadialGradient(cx,cy,0,cx,cy,34);
+  grad.addColorStop(0,'rgba(255,255,255,.98)');
+  grad.addColorStop(.35,'rgba(36,235,255,.95)');
+  grad.addColorStop(1,'rgba(36,235,255,0)');
+  mainCtx.fillStyle=grad;
+  mainCtx.beginPath(); mainCtx.arc(cx,cy,40,0,TAU); mainCtx.fill();
+
+  // carrier pointer
+  mainCtx.strokeStyle='rgba(255,255,255,.80)';
+  mainCtx.lineWidth=3;
+  mainCtx.beginPath();
+  mainCtx.moveTo(cx,cy);
+  mainCtx.lineTo(cx + Math.cos(thetaMaster)*maxR*0.92, cy + Math.sin(thetaMaster)*maxR*0.92);
+  mainCtx.stroke();
+
+  // labels update
+  $('elapsedMaster').textContent = fmt(masterPhase * MASTER_T) + ' с';
+  $('remainingMaster').textContent = fmt(MASTER_T - masterPhase * MASTER_T) + ' с';
+  $('phaseMaster').textContent = fmt(masterPhase * 360, 2) + '°';
+  $('phaseCarrier').textContent = fmt(carrierPhase * 360, 2) + '°';
+  $('timeModeLabel').textContent = $('speedMode').value === 'utc' ? 'UTC' : 'От запуска';
+
+  drawGauge(masterPhase);
+  requestAnimationFrame(drawMain);
+}
+
+$('density').addEventListener('input', ()=> $('densityOut').textContent = $('density').value);
+$('contrast').addEventListener('input', ()=> $('contrastOut').textContent = $('contrast').value + '%');
+$('blend').addEventListener('input', ()=> $('blendOut').textContent = $('blend').value + '%');
+$('mode').addEventListener('change', ()=> $('modeOut').textContent = $('mode').selectedOptions[0].textContent);
+$('speedMode').addEventListener('change', ()=> { $('speedOut').textContent = $('speedMode').selectedOptions[0].textContent; resetOrigin(); });
+$('pauseBtn').addEventListener('click', ()=>{
+  if(!paused){ frozenElapsed = elapsedSeconds(); paused = true; $('pauseBtn').textContent = 'Продолжить'; }
+  else { origin = nowSeconds() - frozenElapsed; paused = false; $('pauseBtn').textContent = 'Пауза'; }
+});
+$('resetBtn').addEventListener('click', resetOrigin);
+$('pngBtn').addEventListener('click', ()=>{
+  const a=document.createElement('a');
+  a.href=mainCanvas.toDataURL('image/png');
+  a.download='CIC_Pattern_55_56Hz_Master240s.png';
+  a.click();
+});
+$('jsonBtn').addEventListener('click', ()=>{
+  const elapsed = elapsedSeconds();
+  const payload = {
+    name:'CIC Pattern 55.56Hz + 240s Master Cycle',
+    signal:{deltaX_ms:18.00, frequency_Hz:55.56, period_ms:18.00, x1_ms:-3.200, x2_ms:-21.20, ch1_mV_div:2.00, ch2_V_div:5.00, sampleRate_MSs:25, depth:'10M', timeBase_ms:20},
+    masterCycle:{period_s:240.0, frequency_mHz:4.166667},
+    render:{mode:$('mode').value,density:Number($('density').value),contrast:Number($('contrast').value)/100,carrierBlend:Number($('blend').value)/100,timeMode:$('speedMode').value},
+    phase:{master_deg:(((elapsed%MASTER_T)+MASTER_T)%MASTER_T/MASTER_T)*360, carrier_deg:(((elapsed%CARRIER_T)+CARRIER_T)%CARRIER_T/CARRIER_T)*360}
+  };
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download='CIC_Pattern_55_56Hz_Master240s.json'; a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+});
+
+$('modeOut').textContent = $('mode').selectedOptions[0].textContent;
+$('speedOut').textContent = $('speedMode').selectedOptions[0].textContent;
+drawWaveforms();
+resetOrigin();
+drawMain();
 </script>
 </body>
 </html>
